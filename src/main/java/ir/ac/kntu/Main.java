@@ -4,8 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("Hello World!");
-
+        System.out.println(Color.RED_BOLD_BRIGHT + "Hello World!" + Color.RESET);
     }
 
 }
