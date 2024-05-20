@@ -8,12 +8,17 @@ public class User {
     private String phoneNumber;
     private String securityNumber;
     private String password;
-    private String accountID;
-    //private CreditCard creditCard;
-    private double balance;
-    //private List<Receipt> receipts;
-    //private List<Contact> contacts;
-    //private List<User> recentUsers;
-    //private List<Ticket> tickets;
+    private List<Contact> contacts;
+    private List<User> recentUsers;
+    private List<Ticket> tickets;
+    private Account account;
     private boolean contactsActivated;
+
+    public User(String name , String lastName , String phoneNumber , String securityNumber , String password){
+        this.name = name;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.securityNumber = securityNumber;
+        this.password = password;
+    }
 }
