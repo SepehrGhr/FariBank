@@ -51,6 +51,10 @@ public class User {
         this.account = new Account();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void chargeAccount(){
         System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account");
         String input = InputManager.getInput();
@@ -96,5 +100,37 @@ public class User {
             i++;
         }
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+    }
+
+    public void showAndEditContact() {
+        System.out.println(Color.WHITE + "Enter the number of the contact you want to see or enter -1 to return to last menu" + Color.RESET);
+        String selection = InputManager.getInput();
+        if("-1".equals(selection)){
+            return;
+        }
+        while (!Menu.isInputValid(selection, contacts.size())) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 3 or enter -1" + Color.RESET);
+            selection = InputManager.getInput();
+            if("-1".equals(selection)){
+                return;
+            }
+        }
+        Contact selectedContact = contacts.get((Integer.parseInt(selection))-1);
+        System.out.println(selectedContact.toString());
+        editContactMenu(selectedContact);
+    }
+
+    private void editContactMenu(Contact selectedContact) {
+        System.out.println(Color.WHITE + "Enter 1 if you want to edit this contact and 2 to return" + Color.RESET);
+        String selection = InputManager.getInput();
+        while (!Menu.isInputValid(selection , 2)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 2" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        if("2".equals(selection)){
+            return;
+        }
+        selectedContact.edit();
+
     }
 }

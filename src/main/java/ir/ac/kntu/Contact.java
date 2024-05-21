@@ -46,7 +46,43 @@ public class Contact {
             return;
         }
         User contactUser = Main.getUsers().findUserByPhoneNumber(phoneNumber);
+        if(contactUser == null){
+            System.out.println(Color.RED + "There is no user with this phone number in our bank" + Color.RESET);
+            return;
+        }
         Main.getUsers().getCurrentUser().addNewContact(new Contact(contactUser , name , lastName , phoneNumber));
         System.out.println(Color.GREEN + "Your new contact has been successfully added!!" + Color.RESET);
+    }
+
+    @Override
+    public String toString() {
+        return  Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE +
+                "name : " + Color.BLUE + name + '\n' + Color.WHITE  +
+                "lastName : " + Color.BLUE + lastName + '\n' + Color.WHITE  +
+                "phoneNumber : " + Color.BLUE + phoneNumber + '\n' + Color.CYAN +
+                "*".repeat(35) + Color.RESET;
+    }
+
+    public void edit() {
+        System.out.println(Color.WHITE + "Please enter the new name (enter 1 to remain same)");
+        String selection = InputManager.getInput();
+        if (!"1".equals(selection)){
+            name = selection;
+        }
+        System.out.println(Color.WHITE + "Please enter the new last name (enter 1 to remain same)");
+        selection = InputManager.getInput();
+        if (!"1".equals(selection)){
+            lastName = selection;
+        }
+        System.out.println(Color.WHITE + "Please enter the new phone number (enter 1 to remain same)");
+        selection = InputManager.getInput();
+        if (!"1".equals(selection)){
+            while (!Menu.checkPhoneNumberValidity(selection)) {
+                System.out.println(Color.RED + "Please enter your phone number correctly" + Color.RESET);
+                selection = InputManager.getInput();
+            }
+            phoneNumber = selection;
+        }
+        System.out.println(Color.GREEN + "Selected contact has been successfully edited!!" + Color.RESET);
     }
 }

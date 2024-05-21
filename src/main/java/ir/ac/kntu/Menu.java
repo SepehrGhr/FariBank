@@ -31,7 +31,7 @@ public class Menu {
     private static void printAdminLoginMenu() {
     }
 
-    private static boolean isInputValid(String input, int max) {
+    public static boolean isInputValid(String input, int max) {
         String checkNumeric = "\\d+";
         Pattern checkNumericPattern = Pattern.compile(checkNumeric);
         Matcher checkNumericMatcher = checkNumericPattern.matcher(input);
@@ -178,7 +178,7 @@ public class Menu {
     }
 
     private static void printUserMainMenu() {
-        System.out.println(Color.PURPLE + "Welcome to our bank!!" + Color.RESET);
+        System.out.println(Color.PURPLE + "Welcome to our bank " + Main.getUsers().getCurrentUser().getName() + "!!" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Account management" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Contacts" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Transfer money" + Color.RESET);
@@ -238,6 +238,7 @@ public class Menu {
                 break;
             case "2":
                 Main.getUsers().getCurrentUser().displayAllContacts();
+                Main.getUsers().getCurrentUser().showAndEditContact();
                 printContactsMenu();
                 break;
             case "3":
