@@ -12,6 +12,9 @@ public class Main {
         //User test3 = new User("Hedie", "Tahmouresi", "09109056296", "0124523423", "H@Tah1384");
         test.setAuthenticated(true);
         test.setAccount();
+        test.addNewContact(new Contact(null , "Mahdi" , "Salman" , "09938634069" ));
+        test.addNewContact(new Contact(null , "Hedie" , "Tahmouresi" , "09109056296" ));
+        test.addNewContact(new Contact(null , "Mobin" , "Fallahi EshratAbadi" , "09999985628" ));
         users.addUser(test);
         //users.addUser(test2);
         //users.addUser(test3);

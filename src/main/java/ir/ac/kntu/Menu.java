@@ -127,7 +127,7 @@ public class Menu {
         return phoneNumber;
     }
 
-    private static boolean checkPhoneNumberValidity(String phoneNumber) {
+    public static boolean checkPhoneNumberValidity(String phoneNumber) {
         String numberRegex = "\\d{11}";
         Pattern numberPattern = Pattern.compile(numberRegex);
         Matcher numberMatcher = numberPattern.matcher(phoneNumber);
@@ -201,6 +201,7 @@ public class Menu {
                 printUserMainMenu();
                 break;
             case "2":
+                printContactsMenu();
                 break;
             case "3":
                 break;
@@ -213,6 +214,34 @@ public class Menu {
                 break;
             case "7":
                 endProgram();
+                break;
+        }
+    }
+
+    private static void printContactsMenu() {
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Add contact" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "View contacts" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        handleContactsInput();
+    }
+
+    private static void handleContactsInput() {
+        String selection = InputManager.getInput();
+        while (!isInputValid(selection, 3)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1":
+                Contact.getNewContactInfo();
+                printContactsMenu();
+                break;
+            case "2":
+                Main.getUsers().getCurrentUser().displayAllContacts();
+                printContactsMenu();
+                break;
+            case "3":
+                printUserMainMenu();
                 break;
         }
     }

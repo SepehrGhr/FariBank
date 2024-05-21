@@ -45,4 +45,8 @@ public class Account {
     public void setBalance(int balance) {
         this.balance = balance;
     }
+
+    public void addReceipt(Receipt receipt){
+        receipts.add(receipt);
+    }
 }

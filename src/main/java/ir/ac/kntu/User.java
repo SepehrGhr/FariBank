@@ -1,5 +1,6 @@
 package ir.ac.kntu;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +24,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.securityNumber = securityNumber;
         this.password = password;
+        contacts = new ArrayList<>();
     }
 
     public String getPhoneNumber() {
@@ -57,7 +59,9 @@ public class User {
             input = InputManager.getInput();
         }
         account.setBalance(account.getBalance() + Integer.parseInt(input));
-        //create receipt for charge and make print
+        ChargeReceipt.createChargeReceipt(account.getBalance());
+        System.out.println(Color.GREEN + "Your account has been successfully charged. new balance : " + Color.WHITE
+                + account.getBalance() + '$' +  Color.RESET);
     }
 
     private boolean chargeAmountValidity(String input) {
@@ -69,5 +73,28 @@ public class User {
 
     public void displayBalance() {
         System.out.println(Color.WHITE + "Your current balance is " + Color.GREEN + account.getBalance() + "$" + Color.RESET);
+    }
+
+    public void addNewContact(Contact newContact){
+        contacts.add(newContact);
+    }
+
+    public boolean contactAlreadyExists(String phoneNumber){
+        for(Contact contact : contacts){
+            if(contact.getPhoneNumber().equals(phoneNumber)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void displayAllContacts(){
+        int i=1;
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        for(Contact contact : contacts){
+            System.out.println(Color.WHITE + i + "-" + Color.BLUE + contact.getName() + " " + contact.getLastName());
+            i++;
+        }
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
     }
 }
