@@ -29,6 +29,49 @@ public class Menu {
     }
 
     private static void printAdminLoginMenu() {
+        System.out.println(Color.WHITE + "Please enter your username");
+        String input = InputManager.getInput();
+        Admin loggingIn = Main.getAdminData().findAdminByUsername(input);
+        if(loggingIn == null){
+            System.out.println(Color.RED + "There is no admin with this username" + Color.RESET);
+            printSelectRuleMenu();
+        } else{
+            System.out.println(Color.WHITE + "Please enter your password" + Color.RESET);
+            String password = InputManager.getInput();
+            while(!password.equals(loggingIn.getPassword())){
+                System.out.println(Color.RED + "Entered password is incorrect , please try again" + Color.RESET);
+                password = InputManager.getInput();
+            }
+            printAdminMenu();
+        }
+    }
+
+    public static void printAdminMenu() {
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Authentication requests" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Tickets" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Users" + Color.RESET);
+        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Log out" + Color.RESET);
+        handleAdminInput();
+    }
+
+    private static void handleAdminInput() {
+        String selection = InputManager.getInput();
+        while (!isInputValid(selection, 4)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1":
+                Main.getAdminData().showAuthenticationRequests();
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                printSelectRuleMenu();
+                break;
+        }
     }
 
     public static boolean isInputValid(String input, int max) {

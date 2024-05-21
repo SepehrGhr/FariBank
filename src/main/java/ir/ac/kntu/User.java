@@ -55,6 +55,14 @@ public class User {
         return name;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getSecurityNumber() {
+        return securityNumber;
+    }
+
     public void chargeAccount(){
         System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account");
         String input = InputManager.getInput();
@@ -109,7 +117,7 @@ public class User {
             return;
         }
         while (!Menu.isInputValid(selection, contacts.size())) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 3 or enter -1" + Color.RESET);
+            System.out.println(Color.RED + "Please enter a number between 1 and " + contacts.size() + " or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if("-1".equals(selection)){
                 return;

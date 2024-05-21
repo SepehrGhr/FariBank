@@ -34,7 +34,7 @@ public class UserData {
 
     public boolean accountIdAlreadyExists(String id) {
         for (User user : allUsers) {
-            if (user.getAccount().getAccountID().equals(id)) {
+            if (user.isAuthenticated() && user.getAccount().getAccountID().equals(id)) {
                 return true;
             }
         }

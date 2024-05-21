@@ -15,6 +15,8 @@ public class Main {
         test.addNewContact(new Contact(null , "Mahdi" , "Salman" , "09938634069" ));
         test.addNewContact(new Contact(null , "Hedie" , "Tahmouresi" , "09109056296" ));
         test.addNewContact(new Contact(null , "Mobin" , "Fallahi EshratAbadi" , "09999985628" ));
+        adminData.addAdmin(new Admin("sepi" , "Sepehr" , "12345"));
+        adminData.addAdmin(new Admin("Ali" , "Ali12" , "Ali123"));
         users.addUser(test);
         //users.addUser(test2);
         //users.addUser(test3);
