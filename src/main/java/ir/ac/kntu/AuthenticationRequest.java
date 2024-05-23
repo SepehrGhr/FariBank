@@ -33,6 +33,7 @@ public class AuthenticationRequest {
             selected.setApproved(true);
             selected.setChecked(true);
             selected.getUser().setAccount();
+            selected.getUser().setAuthenticated(true);
             System.out.println(Color.GREEN + "Selected request has been successfully accepted" + Color.RESET);
         } else if ("2".equals(selection)) {
             selected.setChecked(true);

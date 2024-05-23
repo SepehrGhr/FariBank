@@ -16,7 +16,7 @@ public class User {
     private List<Ticket> tickets;
     private Account account;
     private boolean authenticated = false;
-    private boolean contactsActivated;
+    private boolean contactsActivated = true;
 
     public User(String name, String lastName, String phoneNumber, String securityNumber, String password) {
         this.name = name;
@@ -25,6 +25,7 @@ public class User {
         this.securityNumber = securityNumber;
         this.password = password;
         contacts = new ArrayList<>();
+        recentUsers = new ArrayList<>();
     }
 
     public String getPhoneNumber() {
@@ -63,6 +64,10 @@ public class User {
         return securityNumber;
     }
 
+    public boolean isContactsActivated() {
+        return contactsActivated;
+    }
+
     public void chargeAccount(){
         System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account");
         String input = InputManager.getInput();
@@ -76,7 +81,7 @@ public class User {
                 + account.getBalance() + '$' +  Color.RESET);
     }
 
-    private boolean chargeAmountValidity(String input) {
+    public static boolean chargeAmountValidity(String input) {
         String numberRegex = "\\d+";
         Pattern numPattern = Pattern.compile(numberRegex);
         Matcher numMatcher = numPattern.matcher(input);
@@ -111,19 +116,10 @@ public class User {
     }
 
     public void showAndEditContact() {
-        System.out.println(Color.WHITE + "Enter the number of the contact you want to see or enter -1 to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
-        if("-1".equals(selection)){
+        Contact selectedContact = selectContactFromList();
+        if(selectedContact == null){
             return;
         }
-        while (!Menu.isInputValid(selection, contacts.size())) {
-            System.out.println(Color.RED + "Please enter a number between 1 and " + contacts.size() + " or enter -1" + Color.RESET);
-            selection = InputManager.getInput();
-            if("-1".equals(selection)){
-                return;
-            }
-        }
-        Contact selectedContact = contacts.get((Integer.parseInt(selection))-1);
         System.out.println(selectedContact.toString());
         editContactMenu(selectedContact);
     }
@@ -140,5 +136,62 @@ public class User {
         }
         selectedContact.edit();
 
+    }
+
+    public void addToRecentUsers(User destination) {
+        if(!recentUsers.contains(destination)) {
+            recentUsers.add(destination);
+        }
+    }
+
+    public Contact selectContactFromList() {
+        System.out.println(Color.WHITE + "Enter the number of the contact you want to see or enter -1 to return to last menu" + Color.RESET);
+        String selection = InputManager.getInput();
+        if("-1".equals(selection)){
+            return null;
+        }
+        while (!Menu.isInputValid(selection, contacts.size())) {
+            System.out.println(Color.RED + "Please enter a number between 1 and " + contacts.size() + " or enter -1" + Color.RESET);
+            selection = InputManager.getInput();
+            if("-1".equals(selection)){
+                return null;
+            }
+        }
+        return contacts.get((Integer.parseInt(selection))-1);
+    }
+
+    public boolean haveInContacts(Contact selected) {
+        for (Contact contact : selected.getUser().contacts){
+            if (contact.getUser().getPhoneNumber().equals(Main.getUsers().getCurrentUser().getPhoneNumber())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void displayRecentUsers(){
+        int i=1;
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        for(User recentUser : recentUsers){
+            System.out.println(Color.WHITE + i + "-" + Color.BLUE + recentUser.getName() + " " + recentUser.getLastName());
+            i++;
+        }
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+    }
+
+    public User selectRecentUserFromList() {
+        System.out.println(Color.WHITE + "Enter the number of the user you want to transfer money or enter -1 to return to last menu" + Color.RESET);
+        String selection = InputManager.getInput();
+        if("-1".equals(selection)){
+            return null;
+        }
+        while (!Menu.isInputValid(selection, recentUsers.size())) {
+            System.out.println(Color.RED + "Please enter a valid number or enter -1" + Color.RESET);
+            selection = InputManager.getInput();
+            if("-1".equals(selection)){
+                return null;
+            }
+        }
+        return recentUsers.get((Integer.parseInt(selection))-1);
     }
 }

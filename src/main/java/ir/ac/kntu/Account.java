@@ -3,6 +3,8 @@ package ir.ac.kntu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Account {
     private String accountID;
@@ -48,5 +50,12 @@ public class Account {
 
     public void addReceipt(Receipt receipt){
         receipts.add(receipt);
+    }
+
+    public static boolean accountIDValidity(String accountID){
+        String idRegex = "\\d{13}";
+        Pattern idPattern = Pattern.compile(idRegex);
+        Matcher idMatcher = idPattern.matcher(accountID);
+        return idMatcher.matches() && "0".equals(accountID.substring(0,1));
     }
 }

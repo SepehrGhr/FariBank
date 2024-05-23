@@ -78,7 +78,7 @@ public class Menu {
         String checkNumeric = "\\d+";
         Pattern checkNumericPattern = Pattern.compile(checkNumeric);
         Matcher checkNumericMatcher = checkNumericPattern.matcher(input);
-        return checkNumericMatcher.matches() && Integer.parseInt(input) <= max && Integer.parseInt(input) > 0;
+        return checkNumericMatcher.matches() && input.length() < 5 && Integer.parseInt(input) <= max && Integer.parseInt(input) > 0;
 
     }
 
@@ -247,6 +247,7 @@ public class Menu {
                 printContactsMenu();
                 break;
             case "3":
+                printTransferMenu();
                 break;
             case "4":
                 break;
@@ -257,6 +258,40 @@ public class Menu {
                 break;
             case "7":
                 endProgram();
+                break;
+        }
+    }
+
+    public static void printTransferMenu() {
+        System.out.println(Color.WHITE + "Please enter the number of the method you want to use for transfer");
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Account ID" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Contacts" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Recent Users" + Color.RESET);
+        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        handleTransferMethod();
+    }
+
+    private static void handleTransferMethod() {
+        String selection = InputManager.getInput();
+        while (!isInputValid(selection, 4)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1":
+                Main.getUsers().transferByAccountID();
+                printTransferMenu();
+                break;
+            case "2":
+                Main.getUsers().transferByContact();
+                printTransferMenu();
+                break;
+            case "3":
+                Main.getUsers().transferByRecentUser();
+                printTransferMenu();
+                break;
+            case "4":
+                printUserMainMenu();
                 break;
         }
     }
