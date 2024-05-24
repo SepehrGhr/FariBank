@@ -32,9 +32,9 @@ public class UserData {
         return null;
     }
 
-    public boolean accountIdAlreadyExists(String id) {
+    public boolean accountIdAlreadyExists(String accID) {
         for (User user : allUsers) {
-            if (user.isAuthenticated() && user.getAccount().getAccountID().equals(id)) {
+            if (user.isAuthenticated() && user.getAccount().getAccountID().equals(accID)) {
                 return true;
             }
         }
@@ -51,7 +51,7 @@ public class UserData {
             input = InputManager.getInput();
         }
         User destination = findUserByAccountID(input);
-        if(destination == null){
+        if (destination == null) {
             System.out.println(Color.RED + "There is no user with this account ID" + Color.RESET);
             Menu.printTransferMenu();
         } else {
@@ -62,16 +62,16 @@ public class UserData {
     private int transferMoney(User destination) {
         System.out.println(Color.WHITE + "Please enter the amount you want to transfer (Maximum : 10 million)");
         String amount = InputManager.getInput();
-        while(!User.chargeAmountValidity(amount) && Integer.parseInt(amount) > 10000000){
+        while (!User.chargeAmountValidity(amount) && Integer.parseInt(amount) > 10000000) {
             System.out.println(Color.RED + "Please enter a valid amount (Maximum : 10 million)" + Color.RESET);
             amount = InputManager.getInput();
         }
-        if(Integer.parseInt(amount) + 500 > currentUser.getAccount().getBalance()){
+        if (Integer.parseInt(amount) + 500 > currentUser.getAccount().getBalance()) {
             System.out.println(Color.RED + "Your balance is not enough. Current Balance : " +
-                               Color.GREEN +  currentUser.getAccount().getBalance() + '$' + Color.RESET);
+                    Color.GREEN + currentUser.getAccount().getBalance() + '$' + Color.RESET);
             return -1;
         }
-        updateBalances(destination , amount);
+        updateBalances(destination, amount);
         currentUser.addToRecentUsers(destination);
         return Integer.parseInt(amount);
     }
@@ -96,10 +96,10 @@ public class UserData {
         System.out.println(Color.WHITE + "Please select the contact you want to transfer money to" + Color.RESET);
         currentUser.displayAllContacts();
         Contact selected = currentUser.selectContactFromList();
-        if (selected == null){
+        if (selected == null) {
             return;
         }
-        if(selected.getUser().haveInContacts(selected) && selected.getUser().isContactsActivated()){
+        if (selected.getUser().haveInContacts(selected) && selected.getUser().isContactsActivated()) {
             amount = transferMoney(selected.getUser());
         } else {
             System.out.println(Color.RED + "Selected contact does not have you in their contacts or they have deactivated getting money from contacts" + Color.RESET);
@@ -111,7 +111,7 @@ public class UserData {
         System.out.println(Color.WHITE + "Please select the user you want to transfer money to" + Color.RESET);
         currentUser.displayRecentUsers();
         User selected = currentUser.selectRecentUserFromList();
-        if (selected == null){
+        if (selected == null) {
             return;
         }
         amount = transferMoney(selected);

@@ -112,11 +112,11 @@ public class User {
     }
 
     public void displayAllContacts() {
-        int i = 1;
+        int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Contact contact : contacts) {
-            System.out.println(Color.WHITE + i + "-" + Color.BLUE + contact.getName() + " " + contact.getLastName());
-            i++;
+            System.out.println(Color.WHITE + count + "-" + Color.BLUE + contact.getName() + " " + contact.getLastName());
+            count++;
         }
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
     }
@@ -163,7 +163,7 @@ public class User {
                 return null;
             }
         }
-        return contacts.get((Integer.parseInt(selection)) - 1);
+        return contacts.get(Integer.parseInt(selection) - 1);
     }
 
     public boolean haveInContacts(Contact selected) {
@@ -176,11 +176,11 @@ public class User {
     }
 
     public void displayRecentUsers() {
-        int i = 1;
+        int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (User recentUser : recentUsers) {
-            System.out.println(Color.WHITE + i + "-" + Color.BLUE + recentUser.getName() + " " + recentUser.getLastName());
-            i++;
+            System.out.println(Color.WHITE + count + "-" + Color.BLUE + recentUser.getName() + " " + recentUser.getLastName());
+            count++;
         }
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
     }
@@ -198,7 +198,7 @@ public class User {
                 return null;
             }
         }
-        return recentUsers.get((Integer.parseInt(selection)) - 1);
+        return recentUsers.get(Integer.parseInt(selection) - 1);
     }
 
     public void changePassword() {
@@ -252,14 +252,14 @@ public class User {
     private void selectTicket() {
         System.out.println(Color.WHITE + "Enter the number of the ticket you want to see or enter -1 to return to last menu" + Color.RESET);
         String selection = InputManager.getInput();
-        if("-1".equals(selection)){
+        if ("-1".equals(selection)) {
             Menu.printSupportMenu();
             return;
         }
         while (!Menu.isInputValid(selection, tickets.size())) {
             System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
             selection = InputManager.getInput();
-            if("-1".equals(selection)){
+            if ("-1".equals(selection)) {
                 Menu.printSupportMenu();
                 return;
             }

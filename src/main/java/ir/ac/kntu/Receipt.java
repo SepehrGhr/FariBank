@@ -7,7 +7,7 @@ import java.time.Instant;
 public class Receipt {
     private Instant time;
 
-    public Receipt(){
+    public Receipt() {
         time = Calendar.now();
     }
 }

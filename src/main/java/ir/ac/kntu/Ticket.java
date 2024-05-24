@@ -1,7 +1,8 @@
 package ir.ac.kntu;
-enum Status{SUBMITTED,PENDING,CLOSED}
 
-enum Type{REPORT,CONTACTS,TRANSFER,SETTINGS}
+enum Status {SUBMITTED, PENDING, CLOSED}
+
+enum Type {REPORT, CONTACTS, TRANSFER, SETTINGS}
 
 public class Ticket {
     private String userMessage;
@@ -10,7 +11,7 @@ public class Ticket {
     private Type type;
     private User submitter;
 
-    public Ticket(String userMessage , Type type , User submitter){
+    public Ticket(String userMessage, Type type, User submitter) {
         this.userMessage = userMessage;
         this.type = type;
         this.status = Status.PENDING;
@@ -46,26 +47,28 @@ public class Ticket {
         switch (selection) {
             case "1":
                 message = getTicketMessage();
-                newTicket = new Ticket(message , Type.REPORT , Main.getUsers().getCurrentUser());
+                newTicket = new Ticket(message, Type.REPORT, Main.getUsers().getCurrentUser());
                 addTicketToDatabase(newTicket);
                 break;
             case "2":
                 message = getTicketMessage();
-                newTicket = new Ticket(message , Type.CONTACTS , Main.getUsers().getCurrentUser());
+                newTicket = new Ticket(message, Type.CONTACTS, Main.getUsers().getCurrentUser());
                 addTicketToDatabase(newTicket);
                 break;
             case "3":
                 message = getTicketMessage();
-                newTicket = new Ticket(message , Type.TRANSFER , Main.getUsers().getCurrentUser());
+                newTicket = new Ticket(message, Type.TRANSFER, Main.getUsers().getCurrentUser());
                 addTicketToDatabase(newTicket);
                 break;
             case "4":
                 message = getTicketMessage();
-                newTicket = new Ticket(message , Type.SETTINGS , Main.getUsers().getCurrentUser());
+                newTicket = new Ticket(message, Type.SETTINGS, Main.getUsers().getCurrentUser());
                 addTicketToDatabase(newTicket);
                 break;
             case "5":
                 return;
+            default:
+                break;
         }
 
     }

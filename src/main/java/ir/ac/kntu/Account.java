@@ -12,7 +12,7 @@ public class Account {
     private int balance;
     private List<Receipt> receipts;
 
-    public Account(){
+    public Account() {
         setAccountID();
         creditCard = new CreditCard();
         this.balance = 0;
@@ -23,21 +23,21 @@ public class Account {
         return creditCard;
     }
 
-    public String generateAccountID(){
-        String id = "0";
+    public String generateAccountID() {
+        String accID = "0";
         Random random = new Random();
-        for(int i=1;i <10;i++){
-            id += Integer.toString(random.nextInt(10));
+        for (int i = 1; i < 10; i++) {
+            accID += Integer.toString(random.nextInt(10));
         }
-        return id + "000";
+        return accID + "000";
     }
 
-    public void setAccountID(){
-        String id = generateAccountID();
-        while(Main.getUsers().accountIdAlreadyExists(id)){
-            id = generateAccountID();
+    public void setAccountID() {
+        String accID = generateAccountID();
+        while (Main.getUsers().accountIdAlreadyExists(accID)) {
+            accID = generateAccountID();
         }
-        accountID = id;
+        accountID = accID;
     }
 
     public String getAccountID() {
@@ -52,14 +52,14 @@ public class Account {
         this.balance = balance;
     }
 
-    public void addReceipt(Receipt receipt){
+    public void addReceipt(Receipt receipt) {
         receipts.add(receipt);
     }
 
-    public static boolean accountIDValidity(String accountID){
+    public static boolean accountIDValidity(String accountID) {
         String idRegex = "\\d{13}";
         Pattern idPattern = Pattern.compile(idRegex);
         Matcher idMatcher = idPattern.matcher(accountID);
-        return idMatcher.matches() && "0".equals(accountID.substring(0,1));
+        return idMatcher.matches() && "0".equals(accountID.substring(0, 1));
     }
 }

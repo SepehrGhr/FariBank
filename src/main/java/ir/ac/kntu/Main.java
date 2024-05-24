@@ -18,11 +18,11 @@ public class Main {
         System.out.println(test2.getAccount().getAccountID());
         System.out.println(test3.getAccount().getAccountID());
         //test.addNewContact(new Contact(null , "Mahdi" , "Salman" , "09938634069" ));
-        test.addNewContact(new Contact(test3 , "Hedieeee" , "Tah" , "09109056296" ));
-        test.addNewContact(new Contact( test2 , "Sina" , " " , "09121103946" ));
-        test3.addNewContact(new Contact(test , "Sep" , "khals" , "09111262338"));
-        adminData.addAdmin(new Admin("sepi" , "Sepehr" , "12345"));
-        adminData.addAdmin(new Admin("Ali" , "Ali12" , "Ali123"));
+        test.addNewContact(new Contact(test3, "Hedieeee", "Tah", "09109056296"));
+        test.addNewContact(new Contact(test2, "Sina", " ", "09121103946"));
+        test3.addNewContact(new Contact(test, "Sep", "khals", "09111262338"));
+        adminData.addAdmin(new Admin("sepi", "Sepehr", "12345"));
+        adminData.addAdmin(new Admin("Ali", "Ali12", "Ali123"));
         users.addUser(test);
         users.addUser(test2);
         users.addUser(test3);

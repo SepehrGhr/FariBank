@@ -32,13 +32,13 @@ public class Menu {
         System.out.println(Color.WHITE + "Please enter your username");
         String input = InputManager.getInput();
         Admin loggingIn = Main.getAdminData().findAdminByUsername(input);
-        if(loggingIn == null){
+        if (loggingIn == null) {
             System.out.println(Color.RED + "There is no admin with this username" + Color.RESET);
             printSelectRuleMenu();
-        } else{
+        } else {
             System.out.println(Color.WHITE + "Please enter your password" + Color.RESET);
             String password = InputManager.getInput();
-            while(!password.equals(loggingIn.getPassword())){
+            while (!password.equals(loggingIn.getPassword())) {
                 System.out.println(Color.RED + "Entered password is incorrect , please try again" + Color.RESET);
                 password = InputManager.getInput();
             }
@@ -71,14 +71,16 @@ public class Menu {
             case "4":
                 printSelectRuleMenu();
                 break;
+            default:
+                break;
         }
     }
 
     public static boolean isInputValid(String input, int max) {
         String checkNumeric = "\\d+";
-        Pattern checkNumericPattern = Pattern.compile(checkNumeric);
-        Matcher checkNumericMatcher = checkNumericPattern.matcher(input);
-        return checkNumericMatcher.matches() && input.length() < 5 && Integer.parseInt(input) <= max && Integer.parseInt(input) > 0;
+        Pattern pattern = Pattern.compile(checkNumeric);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches() && input.length() < 5 && Integer.parseInt(input) <= max && Integer.parseInt(input) > 0;
 
     }
 
@@ -189,9 +191,9 @@ public class Menu {
 
     public static boolean checkStringValidity(String name) {
         String regex = "[a-zA-z]+";
-        Pattern checkStringPattern = Pattern.compile(regex);
-        Matcher checkStringMatcher = checkStringPattern.matcher(name);
-        return checkStringMatcher.matches();
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
     }
 
     private static void printUserLoginMenu() {
@@ -239,28 +241,19 @@ public class Menu {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
+            case "1" -> {
                 printManagementMenu();
                 printUserMainMenu();
+            }
+            case "2" -> printContactsMenu();
+            case "3" -> printTransferMenu();
+            case "4" -> printSupportMenu();
+            case "5" -> printSettingsMenu();
+            case "6" -> userLogout();
+            case "7" -> endProgram();
+            default -> {
                 break;
-            case "2":
-                printContactsMenu();
-                break;
-            case "3":
-                printTransferMenu();
-                break;
-            case "4":
-                printSupportMenu();
-                break;
-            case "5":
-                printSettingsMenu();
-                break;
-            case "6":
-                userLogout();
-                break;
-            case "7":
-                endProgram();
-                break;
+            }
         }
     }
 
@@ -279,17 +272,18 @@ public class Menu {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
+            case "1" -> {
                 Ticket.submitNewTicket();
                 printSupportMenu();
-                break;
-            case "2":
+            }
+            case "2" -> {
                 Main.getUsers().getCurrentUser().displayTickets();
                 printSupportMenu();
+            }
+            case "3" -> printUserMainMenu();
+            default -> {
                 break;
-            case "3":
-                printUserMainMenu();
-                break;
+            }
         }
     }
 
@@ -309,21 +303,22 @@ public class Menu {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
+            case "1" -> {
                 Main.getUsers().getCurrentUser().changePassword();
                 printSettingsMenu();
-                break;
-            case "2":
+            }
+            case "2" -> {
                 Main.getUsers().getCurrentUser().changeCreditPassword();
                 printSettingsMenu();
-                break;
-            case "3":
+            }
+            case "3" -> {
                 Main.getUsers().getCurrentUser().changeContactStatus();
                 printSettingsMenu();
+            }
+            case "4" -> printUserMainMenu();
+            default -> {
                 break;
-            case "4":
-                printUserMainMenu();
-                break;
+            }
         }
     }
 
@@ -343,21 +338,22 @@ public class Menu {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
+            case "1" -> {
                 Main.getUsers().transferByAccountID();
                 printTransferMenu();
-                break;
-            case "2":
+            }
+            case "2" -> {
                 Main.getUsers().transferByContact();
                 printTransferMenu();
-                break;
-            case "3":
+            }
+            case "3" -> {
                 Main.getUsers().transferByRecentUser();
                 printTransferMenu();
+            }
+            case "4" -> printUserMainMenu();
+            default -> {
                 break;
-            case "4":
-                printUserMainMenu();
-                break;
+            }
         }
     }
 
@@ -375,18 +371,19 @@ public class Menu {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
+            case "1" -> {
                 Contact.getNewContactInfo();
                 printContactsMenu();
-                break;
-            case "2":
+            }
+            case "2" -> {
                 Main.getUsers().getCurrentUser().displayAllContacts();
                 Main.getUsers().getCurrentUser().showAndEditContact();
                 printContactsMenu();
+            }
+            case "3" -> printUserMainMenu();
+            default -> {
                 break;
-            case "3":
-                printUserMainMenu();
-                break;
+            }
         }
     }
 
@@ -406,19 +403,19 @@ public class Menu {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
+            case "1" -> {
                 Main.getUsers().getCurrentUser().chargeAccount();
                 printManagementMenu();
-                break;
-            case "2":
+            }
+            case "2" -> {
                 Main.getUsers().getCurrentUser().displayBalance();
                 printManagementMenu();
+            }
+            case "3" -> Main.getUsers().getCurrentUser().displayBalance();
+            case "4" -> printUserMainMenu();
+            default -> {
                 break;
-            case "3":
-                break;
-            case "4":
-                printUserMainMenu();
-                break;
+            }
         }
     }
 

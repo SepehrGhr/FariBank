@@ -66,18 +66,18 @@ public class AuthenticationRequest {
         Main.getAdminData().addAuthenticationRequest(newRequest);
     }
 
-    public void showErrorMassage(){
+    public void showErrorMassage() {
         System.out.println(errorMassage);
     }
 
-    public void showUserInformation(){
+    public void showUserInformation() {
         System.out.println(Color.CYAN + "*".repeat(35));
         System.out.println(Color.WHITE + "name : " + Color.BLUE + user.getName() + '\n' +
-                          Color.WHITE + "last name : " + Color.BLUE + user.getLastName() +
-                          '\n' + Color.WHITE + "security number : " + Color.BLUE + user.getSecurityNumber() +
-                          '\n' + Color.WHITE + "phone number : " + Color.BLUE + user.getPhoneNumber() + '\n' +
-                           Color.WHITE + "password : " + Color.BLUE + user.getPassword() + '\n' + Color.CYAN +
-                           "*".repeat(35) + Color.RESET);
+                Color.WHITE + "last name : " + Color.BLUE + user.getLastName() +
+                '\n' + Color.WHITE + "security number : " + Color.BLUE + user.getSecurityNumber() +
+                '\n' + Color.WHITE + "phone number : " + Color.BLUE + user.getPhoneNumber() + '\n' +
+                Color.WHITE + "password : " + Color.BLUE + user.getPassword() + '\n' + Color.CYAN +
+                "*".repeat(35) + Color.RESET);
     }
 
 }
