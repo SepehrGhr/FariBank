@@ -11,6 +11,7 @@ public class Account {
     private CreditCard creditCard;
     private int balance;
     private List<Receipt> receipts;
+    private List<Integer> balances;
 
     public Account() {
         setAccountID();

@@ -77,4 +77,99 @@ public class AdminData {
     public void addNewTicket(Ticket newTicket) {
         tickets.add(newTicket);
     }
+
+
+    public void displayTicketsMenu() {
+        System.out.println(Color.WHITE + "Please select the filter you want to use" + Color.RESET);
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Status" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Type" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "User" + Color.RESET);
+        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        selectTicketFilter();
+    }
+
+    private void selectTicketFilter() {
+        String selection = InputManager.getInput();
+        while (!Menu.isInputValid(selection, 4)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1":
+                showTicketsByStatus();
+                break;
+            case "2":
+                showTicketsByType();
+                break;
+            case "3":
+                showTicketsByUser();
+                break;
+            case "4":
+                Menu.printAdminMenu();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void showTicketsByUser() {
+        int count = 1;
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        for (Ticket ticket : tickets) {
+            System.out.println(Color.WHITE + count + "-" + Color.BLUE + ticket.getSubmitter().getPhoneNumber() + Color.RESET);
+            count++;
+        }
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        selectTicket();
+    }
+
+    private void selectTicket() {
+        System.out.println(Color.WHITE + "Enter the number of the ticket you want to see or enter -1 to return to last menu" + Color.RESET);
+        String selection = InputManager.getInput();
+        if ("-1".equals(selection)) {
+            Menu.printAdminMenu();
+            return;
+        }
+        while (!Menu.isInputValid(selection, tickets.size())) {
+            System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
+            selection = InputManager.getInput();
+            if ("-1".equals(selection)) {
+                Menu.printAdminMenu();
+                return;
+            }
+        }
+        Ticket selected = tickets.get(Integer.parseInt(selection) - 1);
+        System.out.println(selected.toString());
+        submitAdminMessage(selected);
+    }
+
+    private void submitAdminMessage(Ticket selected) {
+        System.out.println(Color.WHITE + "Please enter your message for them" + Color.RESET);
+        String adminMessage = InputManager.getInput();
+        selected.setAdminMessage(adminMessage);
+        selected.setStatus(Status.CLOSED);
+        System.out.println(Color.GREEN + "Your message has been submitted and ticket status has been updated" + Color.RESET);
+    }
+
+    private void showTicketsByType() {
+        int count = 1;
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        for (Ticket ticket : tickets) {
+            System.out.println(Color.WHITE + count + "-" + Color.BLUE + ticket.getType().toString() + Color.RESET);
+            count++;
+        }
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        selectTicket();
+    }
+
+    private void showTicketsByStatus() {
+        int count = 1;
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        for (Ticket ticket : tickets) {
+            System.out.println(Color.WHITE + count + "-" + Color.BLUE + ticket.getStatus().toString() + Color.RESET);
+            count++;
+        }
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        selectTicket();
+    }
 }

@@ -116,4 +116,145 @@ public class UserData {
         }
         amount = transferMoney(selected);
     }
+
+    public void handleAdminUserInput() {
+        String selection = InputManager.getInput();
+        while (!Menu.isInputValid(selection, 3)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1" -> {
+                showAllUsers();
+                selectUserToDisplay();
+                Menu.printAdminUserMenu();
+            }
+            case "2" -> {
+                printSearchMethod();
+            }
+            case "3" -> Menu.printAdminMenu();
+            default -> {
+                break;
+            }
+        }
+    }
+
+    private void printSearchMethod() {
+        System.out.println(Color.WHITE + "Please select your search method" + Color.RESET);
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Name" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Lastname" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Phone Number" + Color.RESET);
+        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        handleSearchMethod();
+    }
+
+    private void handleSearchMethod() {
+        String selection = InputManager.getInput();
+        while (!Menu.isInputValid(selection, 4)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1" -> {
+                searchByName();
+                Menu.printAdminUserMenu();
+            }
+            case "2" -> {
+                searchByLastname();
+                Menu.printAdminUserMenu();
+            }
+            case "3" -> {
+                searchByPhoneNumber();
+                Menu.printAdminUserMenu();
+            }
+            case "4" -> Menu.printAdminMenu();
+            default -> {
+                break;
+            }
+        }
+    }
+
+    private void searchByPhoneNumber() {
+        System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
+        String phoneNumber = InputManager.getInput();
+        for(User user : allUsers){
+            if(distance(phoneNumber , user.getPhoneNumber()) < 3){
+                System.out.println(user);
+                return;
+            }
+        }
+        System.out.println(Color.RED + "No user with this phone number was found" + Color.RESET);
+    }
+
+    private void searchByLastname() {
+        System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
+        String lastname = InputManager.getInput();
+        for(User user : allUsers){
+            if(distance(lastname , user.getLastName()) < 4){
+                System.out.println(user);
+                return;
+            }
+        }
+        System.out.println(Color.RED + "No user with this lastname was found" + Color.RESET);
+    }
+
+    private void searchByName() {
+        System.out.println(Color.WHITE + "Please enter the name your searching for" + Color.RESET);
+        String name = InputManager.getInput();
+        for(User user : allUsers){
+            if(distance(name , user.getName()) < 4){
+                System.out.println(user);
+                return;
+            }
+        }
+        System.out.println(Color.RED + "No user with this name was found" + Color.RESET);
+    }
+
+    private void selectUserToDisplay() {
+        System.out.println(Color.WHITE + "Enter the number of the user you want to see or enter -1 to return to last menu" + Color.RESET);
+        String selection = InputManager.getInput();
+        if ("-1".equals(selection)) {
+            Menu.printAdminUserMenu();
+            return;
+        }
+        while (!Menu.isInputValid(selection, allUsers.size())) {
+            System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
+            selection = InputManager.getInput();
+            if ("-1".equals(selection)) {
+                Menu.printAdminUserMenu();
+                return;
+            }
+        }
+        User selected = allUsers.get(Integer.parseInt(selection) - 1);
+        System.out.println(selected.toString());
+    }
+
+    private void showAllUsers() {
+        int count = 1;
+        for(User user: allUsers ){
+            System.out.println(Color.WHITE + count + "-" + Color.BLUE + user.getName() + " " + user.getLastName());
+            count++;
+        }
+    }
+
+    public static int distance(String str1, String str2) {
+        int length1 = str1.length();
+        int length2 = str2.length();
+        int[][] distances = new int[length1 + 1][length2 + 1];
+        for (int i = 0; i <= length1; i++) {
+            for (int j = 0; j <= length2; j++) {
+                if (i == 0) {
+                    distances[i][j] = j;
+                } else if (j == 0) {
+                    distances[i][j] = i;
+                } else {
+                    int insertion = distances[i][j - 1] + 1;
+                    int deletion = distances[i - 1][j] + 1;
+                    int substitution = distances[i - 1][j - 1] + (str1.charAt(i - 1) == str2.charAt(j - 1) ? 0 : 1);
+                    distances[i][j] = Math.min(insertion, Math.min(deletion, substitution));
+                }
+            }
+        }
+        return distances[length1][length2];
+    }
 }

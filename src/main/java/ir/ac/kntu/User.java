@@ -267,4 +267,12 @@ public class User {
         Ticket selected = tickets.get(Integer.parseInt(selection) - 1);
         System.out.println(selected.toString());
     }
+
+    @Override
+    public String toString() {
+        return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "Fullname : " + Color.BLUE +
+                name + " " + lastName + '\n' + Color.WHITE + "Phone number : " + Color.BLUE +
+                phoneNumber + '\n' + Color.WHITE + "Account ID : " + Color.BLUE + account.getAccountID() +
+                '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
+    }
 }

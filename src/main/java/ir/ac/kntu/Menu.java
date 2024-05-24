@@ -65,8 +65,11 @@ public class Menu {
                 Main.getAdminData().showAuthenticationRequests();
                 break;
             case "2":
+                Main.getAdminData().displayTicketsMenu();
+                printAdminMenu();
                 break;
             case "3":
+                printAdminUserMenu();
                 break;
             case "4":
                 printSelectRuleMenu();
@@ -74,6 +77,13 @@ public class Menu {
             default:
                 break;
         }
+    }
+
+    public static void printAdminUserMenu() {
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "View All" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Search" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        Main.getUsers().handleAdminUserInput();
     }
 
     public static boolean isInputValid(String input, int max) {

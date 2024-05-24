@@ -27,6 +27,18 @@ public class Ticket {
         return adminMessage;
     }
 
+    public User getSubmitter() {
+        return submitter;
+    }
+
+    public void setAdminMessage(String adminMessage) {
+        this.adminMessage = adminMessage;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Status getStatus() {
         return status;
     }
