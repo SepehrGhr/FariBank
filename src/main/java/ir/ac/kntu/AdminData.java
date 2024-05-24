@@ -9,11 +9,13 @@ public class AdminData {
     //private List<AuthenticationRequest> authenticationRequests;
     private Map<User,AuthenticationRequest> requests;
     private List<Admin> admins;
+    private List<Ticket> tickets;
 
 
     public AdminData() {
         requests = new HashMap<>();
         admins = new ArrayList<>();
+        tickets = new ArrayList<>();
     }
 
     public void addAdmin(Admin newAdmin){
@@ -70,5 +72,9 @@ public class AdminData {
         AuthenticationRequest selected = requestList.get(Integer.parseInt(selection) - 1);
         selected.showUserInformation();
         AuthenticationRequest.chooseAcceptOrReject(selected);
+    }
+
+    public void addNewTicket(Ticket newTicket){
+        tickets.add(newTicket);
     }
 }

@@ -128,7 +128,7 @@ public class Menu {
         Main.getUsers().addUser(newUser);
     }
 
-    private static String setPassword() {
+    public static String setPassword() {
         String password = InputManager.getInput();
         while (!checkPasswordValidity(password)) {
             System.out.println(Color.RED + "Your password must contain at least one lowercase,uppercase,number and" +
@@ -250,14 +250,79 @@ public class Menu {
                 printTransferMenu();
                 break;
             case "4":
+                printSupportMenu();
                 break;
             case "5":
+                printSettingsMenu();
                 break;
             case "6":
                 userLogout();
                 break;
             case "7":
                 endProgram();
+                break;
+        }
+    }
+
+    public static void printSupportMenu() {
+        System.out.println(Color.WHITE + "Please enter the number of the option you want to select");
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "new Ticket" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Tickets" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        handleSupportInput();
+    }
+
+    private static void handleSupportInput() {
+        String selection = InputManager.getInput();
+        while (!isInputValid(selection, 3)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1":
+                Ticket.submitNewTicket();
+                printSupportMenu();
+                break;
+            case "2":
+                Main.getUsers().getCurrentUser().displayTickets();
+                printSupportMenu();
+                break;
+            case "3":
+                printUserMainMenu();
+                break;
+        }
+    }
+
+    private static void printSettingsMenu() {
+        System.out.println(Color.WHITE + "Please enter the number of the option you want to select");
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Change password" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Change credit card password" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Activate/Deactivate contacts option" + Color.RESET);
+        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        handleSettingsInput();
+    }
+
+    private static void handleSettingsInput() {
+        String selection = InputManager.getInput();
+        while (!isInputValid(selection, 4)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1":
+                Main.getUsers().getCurrentUser().changePassword();
+                printSettingsMenu();
+                break;
+            case "2":
+                Main.getUsers().getCurrentUser().changeCreditPassword();
+                printSettingsMenu();
+                break;
+            case "3":
+                Main.getUsers().getCurrentUser().changeContactStatus();
+                printSettingsMenu();
+                break;
+            case "4":
+                printUserMainMenu();
                 break;
         }
     }

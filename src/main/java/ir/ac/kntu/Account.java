@@ -19,6 +19,10 @@ public class Account {
         receipts = new ArrayList<>();
     }
 
+    public CreditCard getCreditCard() {
+        return creditCard;
+    }
+
     public String generateAccountID(){
         String id = "0";
         Random random = new Random();
