@@ -1,8 +1,10 @@
 package ir.ac.kntu;
 
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +17,7 @@ public class User {
     private List<Contact> contacts;
     private List<User> recentUsers;
     private List<Ticket> tickets;
+    private List<Receipt> receipts;
     private Account account;
     private boolean authenticated = false;
     private boolean contactsActivated = true;
@@ -28,6 +31,7 @@ public class User {
         contacts = new ArrayList<>();
         recentUsers = new ArrayList<>();
         tickets = new ArrayList<>();
+        receipts = new ArrayList<>();
     }
 
     public String getPhoneNumber() {
@@ -74,6 +78,10 @@ public class User {
         return contactsActivated;
     }
 
+    public void addReceipt(Receipt newReceipt) {
+        receipts.add(newReceipt);
+    }
+
     public void chargeAccount() {
         System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account");
         String input = InputManager.getInput();
@@ -82,9 +90,7 @@ public class User {
             input = InputManager.getInput();
         }
         account.setBalance(account.getBalance() + Integer.parseInt(input));
-        ChargeReceipt.createChargeReceipt(account.getBalance());
-        System.out.println(Color.GREEN + "Your account has been successfully charged. new balance : " + Color.WHITE
-                + account.getBalance() + '$' + Color.RESET);
+        ChargeReceipt.createChargeReceipt(Integer.parseInt(input), account.getBalance());
     }
 
     public static boolean chargeAmountValidity(String input) {
@@ -275,4 +281,88 @@ public class User {
                 phoneNumber + '\n' + Color.WHITE + "Account ID : " + Color.BLUE + account.getAccountID() +
                 '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
     }
+
+    public Contact findContact(String phoneNumber) {
+        for (Contact contact : contacts) {
+            if (contact.getPhoneNumber().equals(phoneNumber)) {
+                return contact;
+            }
+        }
+        return null;
+    }
+
+    public void displayReceipts() {
+        int count = 1;
+        Collections.reverse(receipts);
+        for (Receipt receipt : receipts) {
+            if (receipt instanceof ChargeReceipt) {
+                System.out.println(Color.WHITE + count + "-" + Color.GREEN + receipt.timeToString(receipt.getTime()) + Color.RESET);
+            } else {
+                System.out.println(Color.WHITE + count + "-" + Color.YELLOW + receipt.timeToString(receipt.getTime()) + Color.RESET);
+            }
+            count++;
+        }
+        Receipt selected = selectReceipt(receipts);
+        Collections.reverse(receipts);
+        if (selected == null) {
+            return;
+        }
+        System.out.println(selected);
+    }
+
+    private Receipt selectReceipt(List<Receipt> receipts) {
+        System.out.println(Color.WHITE + "Enter the number of the receipt you want to see or enter -1 to return to last menu" + Color.RESET);
+        String selection = InputManager.getInput();
+        if ("-1".equals(selection)) {
+            return null;
+        }
+        while (!Menu.isInputValid(selection, receipts.size())) {
+            System.out.println(Color.RED + "Please enter a valid number or enter -1" + Color.RESET);
+            selection = InputManager.getInput();
+            if ("-1".equals(selection)) {
+                return null;
+            }
+        }
+        return receipts.get(Integer.parseInt(selection) - 1);
+    }
+
+    public void filterReceipt() {
+        System.out.println(Color.WHITE + "Please enter the start date for your filter in YYYY-MM-DD format" + Color.RESET);
+        Instant start = getDateInput();
+        System.out.println(Color.WHITE + "Please enter the end date for your filter in YYYY-MM-DD format" + Color.RESET);
+        Instant end = getDateInput();
+        int count = 1;
+        List<Receipt> matchedReceipts = new ArrayList<>();
+        for (Receipt receipt : receipts) {
+            if (receipt.getTime().isAfter(start) && end.isAfter(receipt.getTime())) {
+                matchedReceipts.add(receipt);
+                if (receipt instanceof ChargeReceipt) {
+                    System.out.println(Color.WHITE + count + "-" + Color.GREEN + receipt.timeToString(receipt.getTime()) + Color.RESET);
+                } else {
+                    System.out.println(Color.WHITE + count + "-" + Color.YELLOW + receipt.timeToString(receipt.getTime()) + Color.RESET);
+                }
+                count++;
+            }
+        }
+        Receipt selected = selectReceipt(matchedReceipts);
+        if (selected == null) {
+            return;
+        }
+        System.out.println(selected);
+    }
+
+    private Instant getDateInput() {
+        Instant instant = null;
+        while (instant == null) {
+            String input = InputManager.getInput();
+            input += "T00:00:00.000Z";
+            try {
+                instant = Instant.parse(input);
+            } catch (DateTimeParseException e) {
+                System.out.println(Color.RED + "Please enter a valid date. example: 2024-05-14" + Color.RESET);
+            }
+        }
+        return instant;
+    }
 }
+

@@ -1,23 +1,24 @@
 package ir.ac.kntu;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class Account {
     private String accountID;
     private CreditCard creditCard;
     private int balance;
-    private List<Receipt> receipts;
     private List<Integer> balances;
 
     public Account() {
         setAccountID();
         creditCard = new CreditCard();
         this.balance = 0;
-        receipts = new ArrayList<>();
+        balances = new ArrayList<>();
     }
 
     public CreditCard getCreditCard() {
@@ -51,10 +52,7 @@ public class Account {
 
     public void setBalance(int balance) {
         this.balance = balance;
-    }
-
-    public void addReceipt(Receipt receipt) {
-        receipts.add(receipt);
+        balances.add(this.balance);
     }
 
     public static boolean accountIDValidity(String accountID) {

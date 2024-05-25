@@ -56,6 +56,11 @@ public class UserData {
             Menu.printTransferMenu();
         } else {
             amount = transferMoney(destination);
+            if (amount != -1) {
+                TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), destination, Method.ACCOUNT);
+                Main.getUsers().getCurrentUser().addReceipt(newReceipt);
+                System.out.println(newReceipt);
+            }
         }
     }
 
@@ -101,6 +106,11 @@ public class UserData {
         }
         if (selected.getUser().haveInContacts(selected) && selected.getUser().isContactsActivated()) {
             amount = transferMoney(selected.getUser());
+            if (amount != -1) {
+                TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), selected.getUser(), Method.CONTACT);
+                Main.getUsers().getCurrentUser().addReceipt(newReceipt);
+                System.out.println(newReceipt);
+            }
         } else {
             System.out.println(Color.RED + "Selected contact does not have you in their contacts or they have deactivated getting money from contacts" + Color.RESET);
         }
@@ -115,6 +125,12 @@ public class UserData {
             return;
         }
         amount = transferMoney(selected);
+        if (amount != -1) {
+            TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), selected, Method.ACCOUNT);
+            Main.getUsers().getCurrentUser().addReceipt(newReceipt);
+            selected.addReceipt(newReceipt);
+            System.out.println(newReceipt);
+        }
     }
 
     public void handleAdminUserInput() {
@@ -177,8 +193,8 @@ public class UserData {
     private void searchByPhoneNumber() {
         System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
         String phoneNumber = InputManager.getInput();
-        for(User user : allUsers){
-            if(distance(phoneNumber , user.getPhoneNumber()) < 3){
+        for (User user : allUsers) {
+            if (distance(phoneNumber, user.getPhoneNumber()) < 3) {
                 System.out.println(user);
                 return;
             }
@@ -189,8 +205,8 @@ public class UserData {
     private void searchByLastname() {
         System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
         String lastname = InputManager.getInput();
-        for(User user : allUsers){
-            if(distance(lastname , user.getLastName()) < 4){
+        for (User user : allUsers) {
+            if (distance(lastname, user.getLastName()) < 4) {
                 System.out.println(user);
                 return;
             }
@@ -201,8 +217,8 @@ public class UserData {
     private void searchByName() {
         System.out.println(Color.WHITE + "Please enter the name your searching for" + Color.RESET);
         String name = InputManager.getInput();
-        for(User user : allUsers){
-            if(distance(name , user.getName()) < 4){
+        for (User user : allUsers) {
+            if (distance(name, user.getName()) < 4) {
                 System.out.println(user);
                 return;
             }
@@ -231,7 +247,7 @@ public class UserData {
 
     private void showAllUsers() {
         int count = 1;
-        for(User user: allUsers ){
+        for (User user : allUsers) {
             System.out.println(Color.WHITE + count + "-" + Color.BLUE + user.getName() + " " + user.getLastName());
             count++;
         }

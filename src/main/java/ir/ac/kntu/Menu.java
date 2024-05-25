@@ -1,5 +1,6 @@
 package ir.ac.kntu;
 
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -421,8 +422,40 @@ public class Menu {
                 Main.getUsers().getCurrentUser().displayBalance();
                 printManagementMenu();
             }
-            case "3" -> Main.getUsers().getCurrentUser().displayBalance();
+            case "3" -> {
+                printShowReceipts();
+            }
             case "4" -> printUserMainMenu();
+            default -> {
+                break;
+            }
+        }
+    }
+
+    private static void printShowReceipts() {
+        System.out.println(Color.WHITE + "Please select an option" + Color.RESET);
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "View all receipts" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Filter by time span" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        handleShowReceipt();
+    }
+
+    private static void handleShowReceipt() {
+        String selection = InputManager.getInput();
+        while (!isInputValid(selection, 3)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1" -> {
+                Main.getUsers().getCurrentUser().displayReceipts();
+                printManagementMenu();
+            }
+            case "2" -> {
+                Main.getUsers().getCurrentUser().filterReceipt();
+                printManagementMenu();
+            }
+            case "3" -> printManagementMenu();
             default -> {
                 break;
             }
