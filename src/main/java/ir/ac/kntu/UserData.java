@@ -32,6 +32,15 @@ public class UserData {
         return null;
     }
 
+    public User findUserBySecurityNumber(String securityNumber) {
+        for (User user : allUsers) {
+            if (user.getSecurityNumber().equals(securityNumber)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public boolean accountIdAlreadyExists(String accID) {
         for (User user : allUsers) {
             if (user.isAuthenticated() && user.getAccount().getAccountID().equals(accID)) {

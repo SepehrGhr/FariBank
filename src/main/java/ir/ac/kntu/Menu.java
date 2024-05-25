@@ -1,6 +1,5 @@
 package ir.ac.kntu;
 
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,9 +125,17 @@ public class Menu {
         String lastName = setUserName();
         System.out.println(Color.YELLOW + "Please enter your phone number" + Color.RESET);
         String phoneNumber = setPhoneNumber();
+        if ("".equals(phoneNumber)){
+            printSignOrLoginMenu();
+            return;
+        }
         System.out.println(Color.YELLOW + "Please enter your security number" + Color.RESET);
         String securityNumber = setSecurityNumber();
-        System.out.println(Color.YELLOW + "Please enter your password" + Color.WHITE + "(it must contain at least " +
+        if ("".equals(securityNumber)){
+            printSignOrLoginMenu();
+            return;
+        }
+        System.out.println(Color.YELLOW + "Please enter your password" + Color.WHITE + " (it must contain at least " +
                 "one lowercase,uppercase,number and character)" + Color.RESET);
         String password = setPassword();
         System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
@@ -158,11 +165,15 @@ public class Menu {
         return passwordMatcher.matches();
     }
 
-    private static String setSecurityNumber() {
+    public static String setSecurityNumber() {
         String securityNumber = InputManager.getInput();
         while (!checkSecurityNumberValidity(securityNumber)) {
             System.out.println(Color.RED + "Please enter your security number correctly (10 digits)" + Color.RESET);
             securityNumber = InputManager.getInput();
+        }
+        if(Main.getUsers().findUserBySecurityNumber(securityNumber) != null){
+            System.out.println(Color.RED + "You already have an account in our bank!! please login" + Color.RESET);
+            return "";
         }
         return securityNumber;
     }
@@ -174,11 +185,15 @@ public class Menu {
         return ssnMatcher.matches();
     }
 
-    private static String setPhoneNumber() {
+    public static String setPhoneNumber() {
         String phoneNumber = InputManager.getInput();
         while (!checkPhoneNumberValidity(phoneNumber)) {
             System.out.println(Color.RED + "Please enter your phone number correctly" + Color.RESET);
             phoneNumber = InputManager.getInput();
+        }
+        if(Main.getUsers().findUserByPhoneNumber(phoneNumber) != null){
+            System.out.println(Color.RED + "You already have an account in our bank!! please login" + Color.RESET);
+            return "";
         }
         return phoneNumber;
     }
@@ -190,7 +205,7 @@ public class Menu {
         return numberMatcher.matches() && "09".equals(phoneNumber.substring(0, 2));
     }
 
-    private static String setUserName() {
+    public static String setUserName() {
         String name = InputManager.getInput();
         while (!checkStringValidity(name)) {
             System.out.println(Color.RED + "Please enter your name correctly" + Color.RESET);
@@ -223,7 +238,7 @@ public class Menu {
         } else {
             if (Main.getAdminData().getRequests().get(loggingIn).isChecked() && !Main.getAdminData().getRequests().get(loggingIn).isApproved()) {
                 Main.getAdminData().getRequests().get(loggingIn).showErrorMassage();
-                //editInformations();
+                AuthenticationRequest.editInformation();
             } else {
                 System.out.println(Color.RED + "We are sorry but your authentication request has not been checked yet, please come back later");
                 System.out.println(Color.WHITE + "enter any key to log out" + Color.RESET);
@@ -467,7 +482,7 @@ public class Menu {
         System.exit(0);
     }
 
-    private static void userLogout() {
+    public static void userLogout() {
         Main.getUsers().setCurrentUser(null);
         printSelectRuleMenu();
     }

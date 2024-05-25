@@ -1,5 +1,6 @@
 package ir.ac.kntu;
 
+
 public class AuthenticationRequest {
     private User user;
     private boolean checked = false;
@@ -8,6 +9,41 @@ public class AuthenticationRequest {
 
     public AuthenticationRequest(User user) {
         this.user = user;
+    }
+
+    public static void editInformation() {
+        String selection = InputManager.getInput();
+        while (!Menu.isInputValid(selection, 2)) {
+            System.out.println(Color.RED + "Please enter a number between 1 and 2" + Color.RESET);
+            selection = InputManager.getInput();
+        }
+        switch (selection) {
+            case "1" -> {
+                getNewInformation();
+            }
+            case "2" -> Menu.userLogout();
+            default -> {
+                break;
+            }
+        }
+    }
+
+    private static void getNewInformation() {
+        Main.getAdminData().removeRequest(Main.getUsers().getCurrentUser());
+        System.out.println(Color.YELLOW + "Please enter your name" + Color.RESET);
+        Main.getUsers().getCurrentUser().setName(Menu.setUserName());
+        System.out.println(Color.YELLOW + "Please enter your last name" + Color.RESET);
+        Main.getUsers().getCurrentUser().setLastName(Menu.setUserName());
+        System.out.println(Color.YELLOW + "Please enter your phone number" + Color.RESET);
+        Main.getUsers().getCurrentUser().setPhoneNumber(Menu.setPhoneNumber());
+        System.out.println(Color.YELLOW + "Please enter your security number" + Color.RESET);
+        Main.getUsers().getCurrentUser().setSecurityNumber(Menu.setSecurityNumber());
+        System.out.println(Color.YELLOW + "Please enter your password" + Color.WHITE + " (it must contain at least " +
+                "one lowercase,uppercase,number and character)" + Color.RESET);
+        Main.getUsers().getCurrentUser().setPassword(Menu.setPassword());
+        System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
+        newAuthenticationRequest(Main.getUsers().getCurrentUser());
+        Menu.userLogout();
     }
 
     public void setChecked(boolean checked) {
@@ -67,7 +103,10 @@ public class AuthenticationRequest {
     }
 
     public void showErrorMassage() {
-        System.out.println(errorMassage);
+        System.out.println(Color.RED + "Your authentication request has been declined by our admins." + Color.RESET);
+        System.out.println(Color.WHITE + "Admin's message: " + Color.RED + errorMassage + Color.RESET);
+        System.out.println(Color.WHITE + "Enter " + Color.BLUE + "1" + Color.WHITE + " to edit your information or enter " +
+                Color.BLUE + "2 " + Color.WHITE + "to log out" + Color.RESET);
     }
 
     public void showUserInformation() {

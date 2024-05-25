@@ -78,6 +78,26 @@ public class User {
         return contactsActivated;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setSecurityNumber(String securityNumber) {
+        this.securityNumber = securityNumber;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public void addReceipt(Receipt newReceipt) {
         receipts.add(newReceipt);
     }

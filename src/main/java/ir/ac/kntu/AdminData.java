@@ -31,6 +31,10 @@ public class AdminData {
         return null;
     }
 
+    public void removeRequest(User user){
+        requests.remove(user);
+    }
+
     public Map<User, AuthenticationRequest> getRequests() {
         return requests;
     }
