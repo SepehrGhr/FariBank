@@ -15,6 +15,14 @@ public class CreditCard {
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
     private String generateCardNumber() {
         String number = "5892";
         Random random = new Random();

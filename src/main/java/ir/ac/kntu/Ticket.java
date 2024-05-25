@@ -54,28 +54,18 @@ public class Ticket {
             System.out.println(Color.RED + "Please enter a number between 1 and 5" + Color.RESET);
             selection = InputManager.getInput();
         }
-        String message;
-        Ticket newTicket;
         switch (selection) {
             case "1":
-                message = getTicketMessage();
-                newTicket = new Ticket(message, Type.REPORT, Main.getUsers().getCurrentUser());
-                addTicketToDatabase(newTicket);
+                createTicket(Type.REPORT);
                 break;
             case "2":
-                message = getTicketMessage();
-                newTicket = new Ticket(message, Type.CONTACTS, Main.getUsers().getCurrentUser());
-                addTicketToDatabase(newTicket);
+                createTicket(Type.CONTACTS);
                 break;
             case "3":
-                message = getTicketMessage();
-                newTicket = new Ticket(message, Type.TRANSFER, Main.getUsers().getCurrentUser());
-                addTicketToDatabase(newTicket);
+                createTicket(Type.TRANSFER);
                 break;
             case "4":
-                message = getTicketMessage();
-                newTicket = new Ticket(message, Type.SETTINGS, Main.getUsers().getCurrentUser());
-                addTicketToDatabase(newTicket);
+                createTicket(Type.SETTINGS);
                 break;
             case "5":
                 return;
@@ -83,6 +73,12 @@ public class Ticket {
                 break;
         }
 
+    }
+
+    private static void createTicket(Type type) {
+        String message = getTicketMessage();
+        Ticket newTicket = new Ticket(message, type, Main.getUsers().getCurrentUser());
+        addTicketToDatabase(newTicket);
     }
 
     private static void addTicketToDatabase(Ticket newTicket) {

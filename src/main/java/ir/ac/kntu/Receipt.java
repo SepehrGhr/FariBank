@@ -20,10 +20,10 @@ public class Receipt {
     @Override
     public String toString() {
         return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "Date : " + Color.YELLOW + timeToString(time) +
-                           '\n' + Color.WHITE + "Amount : " + Color.GREEN + amount + '\n' + Color.RESET;
+                '\n' + Color.WHITE + "Amount : " + Color.GREEN + amount + '\n' + Color.RESET;
     }
 
-    public String timeToString(Instant time){
-        return time.toString().substring(0 ,10) + " " + time.toString().substring(11 , 19);
+    public String timeToString(Instant time) {
+        return time.toString().substring(0, 10) + " " + time.toString().substring(11, 19);
     }
 }

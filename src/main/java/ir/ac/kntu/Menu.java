@@ -125,13 +125,13 @@ public class Menu {
         String lastName = setUserName();
         System.out.println(Color.YELLOW + "Please enter your phone number" + Color.RESET);
         String phoneNumber = setPhoneNumber();
-        if ("".equals(phoneNumber)){
+        if ("".equals(phoneNumber)) {
             printSignOrLoginMenu();
             return;
         }
         System.out.println(Color.YELLOW + "Please enter your security number" + Color.RESET);
         String securityNumber = setSecurityNumber();
-        if ("".equals(securityNumber)){
+        if ("".equals(securityNumber)) {
             printSignOrLoginMenu();
             return;
         }
@@ -171,7 +171,7 @@ public class Menu {
             System.out.println(Color.RED + "Please enter your security number correctly (10 digits)" + Color.RESET);
             securityNumber = InputManager.getInput();
         }
-        if(Main.getUsers().findUserBySecurityNumber(securityNumber) != null){
+        if (Main.getUsers().findUserBySecurityNumber(securityNumber) != null) {
             System.out.println(Color.RED + "You already have an account in our bank!! please login" + Color.RESET);
             return "";
         }
@@ -191,7 +191,7 @@ public class Menu {
             System.out.println(Color.RED + "Please enter your phone number correctly" + Color.RESET);
             phoneNumber = InputManager.getInput();
         }
-        if(Main.getUsers().findUserByPhoneNumber(phoneNumber) != null){
+        if (Main.getUsers().findUserByPhoneNumber(phoneNumber) != null) {
             System.out.println(Color.RED + "You already have an account in our bank!! please login" + Color.RESET);
             return "";
         }

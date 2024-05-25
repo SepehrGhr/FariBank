@@ -31,7 +31,7 @@ public class AdminData {
         return null;
     }
 
-    public void removeRequest(User user){
+    public void removeRequest(User user) {
         requests.remove(user);
     }
 
