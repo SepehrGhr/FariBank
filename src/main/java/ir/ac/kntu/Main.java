@@ -17,7 +17,6 @@ public class Main {
         System.out.println(test.getAccount().getAccountID());
         System.out.println(test2.getAccount().getAccountID());
         System.out.println(test3.getAccount().getAccountID());
-        //test.addNewContact(new Contact(null , "Mahdi" , "Salman" , "09938634069" ));
         test.addNewContact(new Contact(test3, "Hedieeee", "Tah", "09109056296"));
         test.addNewContact(new Contact(test2, "Sina", " ", "09121103946"));
         test3.addNewContact(new Contact(test, "Sep", "khals", "09111262338"));
@@ -26,9 +25,6 @@ public class Main {
         users.addUser(test);
         users.addUser(test2);
         users.addUser(test3);
-        //users.addUser(test2);
-        //users.addUser(test3);
-
         Menu.printSelectRuleMenu();
     }
 

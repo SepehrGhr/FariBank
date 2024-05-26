@@ -61,21 +61,15 @@ public class Menu {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
-                Main.getAdminData().showAuthenticationRequests();
-                break;
-            case "2":
+            case "1" -> Main.getAdminData().showAuthenticationRequests();
+            case "2" -> {
                 Main.getAdminData().displayTicketsMenu();
                 printAdminMenu();
-                break;
-            case "3":
-                printAdminUserMenu();
-                break;
-            case "4":
-                printSelectRuleMenu();
-                break;
-            default:
-                break;
+            }
+            case "3" -> printAdminUserMenu();
+            case "4" -> printSelectRuleMenu();
+            default -> {
+            }
         }
     }
 
@@ -377,9 +371,7 @@ public class Menu {
                 printTransferMenu();
             }
             case "4" -> printUserMainMenu();
-            default -> {
-                break;
-            }
+            default -> {}
         }
     }
 
@@ -407,9 +399,7 @@ public class Menu {
                 printContactsMenu();
             }
             case "3" -> printUserMainMenu();
-            default -> {
-                break;
-            }
+            default -> {}
         }
     }
 
@@ -430,7 +420,7 @@ public class Menu {
         }
         switch (selection) {
             case "1" -> {
-                Main.getUsers().getCurrentUser().chargeAccount();
+                Main.getUsers().getCurrentUser().printChargeAccount();
                 printManagementMenu();
             }
             case "2" -> {
@@ -441,9 +431,7 @@ public class Menu {
                 printShowReceipts();
             }
             case "4" -> printUserMainMenu();
-            default -> {
-                break;
-            }
+            default -> {}
         }
     }
 
@@ -472,7 +460,6 @@ public class Menu {
             }
             case "3" -> printManagementMenu();
             default -> {
-                break;
             }
         }
     }

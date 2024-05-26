@@ -102,15 +102,20 @@ public class User {
         receipts.add(newReceipt);
     }
 
-    public void chargeAccount() {
+    public void printChargeAccount() {
         System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account");
         String input = InputManager.getInput();
         while (!chargeAmountValidity(input)) {
             System.out.println(Color.RED + "Please enter a valid number" + Color.RESET);
             input = InputManager.getInput();
         }
-        account.setBalance(account.getBalance() + Integer.parseInt(input));
-        ChargeReceipt.createChargeReceipt(Integer.parseInt(input), account.getBalance());
+        chargeAccount(Integer.parseInt(input));
+
+    }
+
+    public void chargeAccount(int amount) {
+        account.setBalance(account.getBalance() + amount);
+        ChargeReceipt.createChargeReceipt(amount, account.getBalance());
     }
 
     public static boolean chargeAmountValidity(String input) {

@@ -68,6 +68,7 @@ public class UserData {
             if (amount != -1) {
                 TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), destination, Method.ACCOUNT);
                 Main.getUsers().getCurrentUser().addReceipt(newReceipt);
+                destination.addReceipt(newReceipt);
                 System.out.println(newReceipt);
             }
         }
@@ -82,7 +83,8 @@ public class UserData {
         }
         if (Integer.parseInt(amount) + 500 > currentUser.getAccount().getBalance()) {
             System.out.println(Color.RED + "Your balance is not enough. Current Balance : " +
-                    Color.GREEN + currentUser.getAccount().getBalance() + '$' + Color.RESET);
+                    Color.GREEN + currentUser.getAccount().getBalance() + '$' + Color.RED + "required balance:"
+                    + Color.GREEN + (Integer.parseInt(amount) + 500) + Color.RESET);
             return -1;
         }
         updateBalances(destination, amount);
@@ -118,6 +120,8 @@ public class UserData {
             if (amount != -1) {
                 TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), selected.getUser(), Method.CONTACT);
                 Main.getUsers().getCurrentUser().addReceipt(newReceipt);
+                TransferReceipt destReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), selected.getUser(), Method.ACCOUNT);
+                selected.getUser().addReceipt(destReceipt);
                 System.out.println(newReceipt);
             }
         } else {
@@ -262,7 +266,7 @@ public class UserData {
         }
     }
 
-    public static int distance(String str1, String str2) {
+    public int distance(String str1, String str2) {
         int length1 = str1.length();
         int length2 = str2.length();
         int[][] distances = new int[length1 + 1][length2 + 1];
