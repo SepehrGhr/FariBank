@@ -50,7 +50,7 @@ public class Ticket {
     public static void submitNewTicket() {
         printTicketTypes();
         String selection = InputManager.getInput();
-        while (!Menu.isInputValid(selection, 5)) {
+        while (!InputManager.isInputValid(selection, 5)) {
             System.out.println(Color.RED + "Please enter a number between 1 and 5" + Color.RESET);
             selection = InputManager.getInput();
         }

@@ -13,7 +13,7 @@ public class AuthenticationRequest {
 
     public static void editInformation() {
         String selection = InputManager.getInput();
-        while (!Menu.isInputValid(selection, 2)) {
+        while (!InputManager.isInputValid(selection, 2)) {
             System.out.println(Color.RED + "Please enter a number between 1 and 2" + Color.RESET);
             selection = InputManager.getInput();
         }
@@ -61,7 +61,7 @@ public class AuthenticationRequest {
     public static void chooseAcceptOrReject(AuthenticationRequest selected) {
         System.out.println(Color.WHITE + "enter 1 to accept and 2 to reject" + Color.RESET);
         String selection = InputManager.getInput();
-        while (!Menu.isInputValid(selection, 2)) {
+        while (!InputManager.isInputValid(selection, 2)) {
             System.out.println(Color.RED + "Please enter a number between 1 and 2" + Color.RESET);
             selection = InputManager.getInput();
         }

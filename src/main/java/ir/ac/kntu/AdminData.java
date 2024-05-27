@@ -65,7 +65,7 @@ public class AdminData {
             Menu.printAdminMenu();
             return;
         }
-        while (!Menu.isInputValid(selection, requestList.size())) {
+        while (!InputManager.isInputValid(selection, requestList.size())) {
             System.out.println(Color.RED + "Please enter a number between 1 and " + requestList.size() + " or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
@@ -94,7 +94,7 @@ public class AdminData {
 
     private void selectTicketFilter() {
         String selection = InputManager.getInput();
-        while (!Menu.isInputValid(selection, 4)) {
+        while (!InputManager.isInputValid(selection, 4)) {
             System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
             selection = InputManager.getInput();
         }
@@ -134,7 +134,7 @@ public class AdminData {
             Menu.printAdminMenu();
             return;
         }
-        while (!Menu.isInputValid(selection, tickets.size())) {
+        while (!InputManager.isInputValid(selection, tickets.size())) {
             System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {

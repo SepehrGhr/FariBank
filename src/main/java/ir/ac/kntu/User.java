@@ -105,24 +105,16 @@ public class User {
     public void printChargeAccount() {
         System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account");
         String input = InputManager.getInput();
-        while (!chargeAmountValidity(input)) {
+        while (!InputManager.chargeAmountValidity(input)) {
             System.out.println(Color.RED + "Please enter a valid number" + Color.RESET);
             input = InputManager.getInput();
         }
         chargeAccount(Integer.parseInt(input));
-
     }
 
     public void chargeAccount(int amount) {
         account.setBalance(account.getBalance() + amount);
         ChargeReceipt.createChargeReceipt(amount, account.getBalance());
-    }
-
-    public static boolean chargeAmountValidity(String input) {
-        String numberRegex = "\\d+";
-        Pattern numPattern = Pattern.compile(numberRegex);
-        Matcher numMatcher = numPattern.matcher(input);
-        return numMatcher.matches() && input.length() < 10;
     }
 
     public void displayBalance() {
@@ -163,16 +155,11 @@ public class User {
 
     private void editContactMenu(Contact selectedContact) {
         System.out.println(Color.WHITE + "Enter 1 if you want to edit this contact and 2 to return" + Color.RESET);
-        String selection = InputManager.getInput();
-        while (!Menu.isInputValid(selection, 2)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 2" + Color.RESET);
-            selection = InputManager.getInput();
-        }
+        String selection = InputManager.getSelection(2);
         if ("2".equals(selection)) {
             return;
         }
         selectedContact.edit();
-
     }
 
     public void addToRecentUsers(User destination) {
@@ -183,16 +170,9 @@ public class User {
 
     public Contact selectContactFromList() {
         System.out.println(Color.WHITE + "Enter the number of the contact you want to see or enter -1 to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
+        String selection = getMenuSelection(contacts.size());
         if ("-1".equals(selection)) {
             return null;
-        }
-        while (!Menu.isInputValid(selection, contacts.size())) {
-            System.out.println(Color.RED + "Please enter a number between 1 and " + contacts.size() + " or enter -1" + Color.RESET);
-            selection = InputManager.getInput();
-            if ("-1".equals(selection)) {
-                return null;
-            }
         }
         return contacts.get(Integer.parseInt(selection) - 1);
     }
@@ -218,18 +198,23 @@ public class User {
 
     public User selectRecentUserFromList() {
         System.out.println(Color.WHITE + "Enter the number of the user you want to transfer money or enter -1 to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
+        String selection = getMenuSelection(recentUsers.size());
         if ("-1".equals(selection)) {
             return null;
         }
-        while (!Menu.isInputValid(selection, recentUsers.size())) {
+        return recentUsers.get(Integer.parseInt(selection) - 1);
+    }
+
+    private String getMenuSelection(int size) {
+        String selection = InputManager.getInput();
+        while (!InputManager.isInputValid(selection, size)) {
             System.out.println(Color.RED + "Please enter a valid number or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
-                return null;
+                return selection;
             }
         }
-        return recentUsers.get(Integer.parseInt(selection) - 1);
+        return selection;
     }
 
     public void changePassword() {
@@ -287,7 +272,7 @@ public class User {
             Menu.printSupportMenu();
             return;
         }
-        while (!Menu.isInputValid(selection, tickets.size())) {
+        while (!InputManager.isInputValid(selection, tickets.size())) {
             System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
@@ -320,11 +305,7 @@ public class User {
         int count = 1;
         Collections.reverse(receipts);
         for (Receipt receipt : receipts) {
-            if (receipt instanceof ChargeReceipt) {
-                System.out.println(Color.WHITE + count + "-" + Color.GREEN + receipt.timeToString(receipt.getTime()) + Color.RESET);
-            } else {
-                System.out.println(Color.WHITE + count + "-" + Color.YELLOW + receipt.timeToString(receipt.getTime()) + Color.RESET);
-            }
+            Receipt.printSimpleReceipt(receipt, count);
             count++;
         }
         Receipt selected = selectReceipt(receipts);
@@ -341,7 +322,7 @@ public class User {
         if ("-1".equals(selection)) {
             return null;
         }
-        while (!Menu.isInputValid(selection, receipts.size())) {
+        while (!InputManager.isInputValid(selection, receipts.size())) {
             System.out.println(Color.RED + "Please enter a valid number or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
@@ -353,41 +334,21 @@ public class User {
 
     public void filterReceipt() {
         System.out.println(Color.WHITE + "Please enter the start date for your filter in YYYY-MM-DD format" + Color.RESET);
-        Instant start = getDateInput();
+        Instant start = Receipt.getDateInput();
         System.out.println(Color.WHITE + "Please enter the end date for your filter in YYYY-MM-DD format" + Color.RESET);
-        Instant end = getDateInput();
+        Instant end = Receipt.getDateInput();
         int count = 1;
         List<Receipt> matchedReceipts = new ArrayList<>();
         for (Receipt receipt : receipts) {
             if (receipt.getTime().isAfter(start) && end.isAfter(receipt.getTime())) {
                 matchedReceipts.add(receipt);
-                if (receipt instanceof ChargeReceipt) {
-                    System.out.println(Color.WHITE + count + "-" + Color.GREEN + receipt.timeToString(receipt.getTime()) + Color.RESET);
-                } else {
-                    System.out.println(Color.WHITE + count + "-" + Color.YELLOW + receipt.timeToString(receipt.getTime()) + Color.RESET);
-                }
+                Receipt.printSimpleReceipt(receipt, count);
                 count++;
             }
         }
         Receipt selected = selectReceipt(matchedReceipts);
-        if (selected == null) {
-            return;
+        if (selected != null) {
+            System.out.println(selected);
         }
-        System.out.println(selected);
-    }
-
-    private Instant getDateInput() {
-        Instant instant = null;
-        while (instant == null) {
-            String input = InputManager.getInput();
-            input += "T00:00:00.000Z";
-            try {
-                instant = Instant.parse(input);
-            } catch (DateTimeParseException e) {
-                System.out.println(Color.RED + "Please enter a valid date. example: 2024-05-14" + Color.RESET);
-            }
-        }
-        return instant;
     }
 }
-

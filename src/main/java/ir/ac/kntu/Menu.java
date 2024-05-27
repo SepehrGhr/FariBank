@@ -9,26 +9,10 @@ public class Menu {
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "User");
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Admin" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Quit" + Color.RESET);
-        handleSelectRuleInput();
+        InputManager.handleSelectRuleInput();
     }
 
-    private static void handleSelectRuleInput() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 3)) {
-            System.out.println(Color.RED + "Please enter a number between 1,2 or 3" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        if ("1".equals(selection)) {
-            printSignOrLoginMenu();
-            return;
-        } else if ("2".equals(selection)) {
-            printAdminLoginMenu();
-            return;
-        }
-        endProgram();
-    }
-
-    private static void printAdminLoginMenu() {
+    public static void printAdminLoginMenu() {
         System.out.println(Color.WHITE + "Please enter your username");
         String input = InputManager.getInput();
         Admin loggingIn = Main.getAdminData().findAdminByUsername(input);
@@ -51,26 +35,7 @@ public class Menu {
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Tickets" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Users" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Log out" + Color.RESET);
-        handleAdminInput();
-    }
-
-    private static void handleAdminInput() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 4)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> Main.getAdminData().showAuthenticationRequests();
-            case "2" -> {
-                Main.getAdminData().displayTicketsMenu();
-                printAdminMenu();
-            }
-            case "3" -> printAdminUserMenu();
-            case "4" -> printSelectRuleMenu();
-            default -> {
-            }
-        }
+        InputManager.handleAdminInput();
     }
 
     public static void printAdminUserMenu() {
@@ -80,39 +45,15 @@ public class Menu {
         Main.getUsers().handleAdminUserInput();
     }
 
-    public static boolean isInputValid(String input, int max) {
-        String checkNumeric = "\\d+";
-        Pattern pattern = Pattern.compile(checkNumeric);
-        Matcher matcher = pattern.matcher(input);
-        return matcher.matches() && input.length() < 5 && Integer.parseInt(input) <= max && Integer.parseInt(input) > 0;
-
-    }
-
-    private static void printSignOrLoginMenu() {
+    public static void printSignOrLoginMenu() {
         System.out.println(Color.YELLOW + "choose an option");
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Login");
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Sign up" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return to previous menu" + Color.RESET);
-        handleSignOrLogin();
+        InputManager.handleSignOrLogin();
     }
 
-    private static void handleSignOrLogin() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 3)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        if ("1".equals(selection)) {
-            printUserLoginMenu();
-            return;
-        }
-        if ("2".equals(selection)) {
-            printSignUpMenu();
-        }
-        printSelectRuleMenu();
-    }
-
-    private static void printSignUpMenu() {
+    public static void printSignUpMenu() {
         System.out.println(Color.YELLOW + "Please enter your name" + Color.RESET);
         String name = setUserName();
         System.out.println(Color.YELLOW + "Please enter your last name" + Color.RESET);
@@ -134,12 +75,7 @@ public class Menu {
         String password = setPassword();
         System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
         User newUser = new User(name, lastName, phoneNumber, securityNumber, password);
-        addNewUserToDatabase(newUser);
-    }
-
-    private static void addNewUserToDatabase(User newUser) {
-        AuthenticationRequest.newAuthenticationRequest(newUser);
-        Main.getUsers().addUser(newUser);
+        Main.getUsers().addNewUserToDatabase(newUser);
     }
 
     public static String setPassword() {
@@ -216,7 +152,7 @@ public class Menu {
         return matcher.matches();
     }
 
-    private static void printUserLoginMenu() {
+    public static void printUserLoginMenu() {
         System.out.println(Color.YELLOW + "Please enter your username (phone number)" + Color.RESET);
         User loggingIn = getUsername();
         System.out.println(Color.YELLOW + "Please enter your password " + Color.RESET);
@@ -242,7 +178,7 @@ public class Menu {
         }
     }
 
-    private static void printUserMainMenu() {
+    public static void printUserMainMenu() {
         System.out.println(Color.PURPLE + "Welcome to our bank " + Main.getUsers().getCurrentUser().getName() + "!!" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Account management" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Contacts" + Color.RESET);
@@ -251,30 +187,7 @@ public class Menu {
         System.out.println(Color.WHITE + "5-" + Color.BLUE + "Settings" + Color.RESET);
         System.out.println(Color.WHITE + "6-" + Color.BLUE + "Log out" + Color.RESET);
         System.out.println(Color.WHITE + "7-" + Color.BLUE + "Quit" + Color.RESET);
-        handleUserMainMenuInput();
-    }
-
-    private static void handleUserMainMenuInput() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 7)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 7" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> {
-                printManagementMenu();
-                printUserMainMenu();
-            }
-            case "2" -> printContactsMenu();
-            case "3" -> printTransferMenu();
-            case "4" -> printSupportMenu();
-            case "5" -> printSettingsMenu();
-            case "6" -> userLogout();
-            case "7" -> endProgram();
-            default -> {
-                break;
-            }
-        }
+        InputManager.handleUserMainMenuInput();
     }
 
     public static void printSupportMenu() {
@@ -282,64 +195,16 @@ public class Menu {
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "new Ticket" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Tickets" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
-        handleSupportInput();
+        InputManager.handleSupportInput();
     }
 
-    private static void handleSupportInput() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 3)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> {
-                Ticket.submitNewTicket();
-                printSupportMenu();
-            }
-            case "2" -> {
-                Main.getUsers().getCurrentUser().displayTickets();
-                printSupportMenu();
-            }
-            case "3" -> printUserMainMenu();
-            default -> {
-                break;
-            }
-        }
-    }
-
-    private static void printSettingsMenu() {
+    public static void printSettingsMenu() {
         System.out.println(Color.WHITE + "Please enter the number of the option you want to select");
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Change password" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Change credit card password" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Activate/Deactivate contacts option" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
-        handleSettingsInput();
-    }
-
-    private static void handleSettingsInput() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 4)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> {
-                Main.getUsers().getCurrentUser().changePassword();
-                printSettingsMenu();
-            }
-            case "2" -> {
-                Main.getUsers().getCurrentUser().changeCreditPassword();
-                printSettingsMenu();
-            }
-            case "3" -> {
-                Main.getUsers().getCurrentUser().changeContactStatus();
-                printSettingsMenu();
-            }
-            case "4" -> printUserMainMenu();
-            default -> {
-                break;
-            }
-        }
+        InputManager.handleSettingsInput();
     }
 
     public static void printTransferMenu() {
@@ -348,123 +213,33 @@ public class Menu {
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Contacts" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Recent Users" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
-        handleTransferMethod();
+        InputManager.handleTransferMethod();
     }
 
-    private static void handleTransferMethod() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 4)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> {
-                Main.getUsers().transferByAccountID();
-                printTransferMenu();
-            }
-            case "2" -> {
-                Main.getUsers().transferByContact();
-                printTransferMenu();
-            }
-            case "3" -> {
-                Main.getUsers().transferByRecentUser();
-                printTransferMenu();
-            }
-            case "4" -> printUserMainMenu();
-            default -> {}
-        }
-    }
-
-    private static void printContactsMenu() {
+    public static void printContactsMenu() {
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Add contact" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "View contacts" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
-        handleContactsInput();
+        InputManager.handleContactsInput();
     }
 
-    private static void handleContactsInput() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 3)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> {
-                Contact.getNewContactInfo();
-                printContactsMenu();
-            }
-            case "2" -> {
-                Main.getUsers().getCurrentUser().displayAllContacts();
-                Main.getUsers().getCurrentUser().showAndEditContact();
-                printContactsMenu();
-            }
-            case "3" -> printUserMainMenu();
-            default -> {}
-        }
-    }
-
-    private static void printManagementMenu() {
+    public static void printManagementMenu() {
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Charge" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "View balance" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "View receipts" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
-        handleManagementInput();
-
+        InputManager.handleManagementInput();
     }
 
-    private static void handleManagementInput() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 4)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> {
-                Main.getUsers().getCurrentUser().printChargeAccount();
-                printManagementMenu();
-            }
-            case "2" -> {
-                Main.getUsers().getCurrentUser().displayBalance();
-                printManagementMenu();
-            }
-            case "3" -> {
-                printShowReceipts();
-            }
-            case "4" -> printUserMainMenu();
-            default -> {}
-        }
-    }
-
-    private static void printShowReceipts() {
+    public static void printShowReceipts() {
         System.out.println(Color.WHITE + "Please select an option" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "View all receipts" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Filter by time span" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
-        handleShowReceipt();
+        InputManager.handleShowReceipt();
     }
 
-    private static void handleShowReceipt() {
-        String selection = InputManager.getInput();
-        while (!isInputValid(selection, 3)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
-            selection = InputManager.getInput();
-        }
-        switch (selection) {
-            case "1" -> {
-                Main.getUsers().getCurrentUser().displayReceipts();
-                printManagementMenu();
-            }
-            case "2" -> {
-                Main.getUsers().getCurrentUser().filterReceipt();
-                printManagementMenu();
-            }
-            case "3" -> printManagementMenu();
-            default -> {
-            }
-        }
-    }
-
-    private static void endProgram() {
+    public static void endProgram() {
         System.out.println(Color.PURPLE + "Thanks for choosing our bank!" + Color.RESET);
         System.exit(0);
     }

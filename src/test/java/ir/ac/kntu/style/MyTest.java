@@ -2,7 +2,6 @@ package ir.ac.kntu.style;
 
 import ir.ac.kntu.Main;
 import ir.ac.kntu.User;
-import ir.ac.kntu.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,17 +22,17 @@ public class MyTest {
     @Test
     public void testCharge() {
         user1.chargeAccount(5000);
-        assertEquals(5000 , user1.getAccount().getBalance());
+        assertEquals(5000, user1.getAccount().getBalance());
     }
 
     @Test
-    public void testAccID(){
-        assertEquals(13 , user1.getAccount().getAccountID().length());
+    public void testAccID() {
+        assertEquals(13, user1.getAccount().getAccountID().length());
     }
 
     @Test
-    public void testDistance(){
-        assertEquals(2 , Main.getUsers().distance("Sepehr" , "sephr"));
-        assertEquals(3 , Main.getUsers().distance("Careless" , "Hopeless"));
+    public void testDistance() {
+        assertEquals(2, Main.getUsers().distance("Sepehr", "sephr"));
+        assertEquals(3, Main.getUsers().distance("Careless", "Hopeless"));
     }
 }

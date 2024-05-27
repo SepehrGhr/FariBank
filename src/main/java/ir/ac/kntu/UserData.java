@@ -50,7 +50,6 @@ public class UserData {
         return false;
     }
 
-
     public void transferByAccountID() {
         int amount = 0;
         System.out.println(Color.WHITE + "Please enter the account ID you want to transfer money to" + Color.RESET);
@@ -77,7 +76,7 @@ public class UserData {
     private int transferMoney(User destination) {
         System.out.println(Color.WHITE + "Please enter the amount you want to transfer (Maximum : 10 million)");
         String amount = InputManager.getInput();
-        while (!User.chargeAmountValidity(amount) && Integer.parseInt(amount) > 10000000) {
+        while (!InputManager.chargeAmountValidity(amount) && Integer.parseInt(amount) > 10000000) {
             System.out.println(Color.RED + "Please enter a valid amount (Maximum : 10 million)" + Color.RESET);
             amount = InputManager.getInput();
         }
@@ -147,11 +146,7 @@ public class UserData {
     }
 
     public void handleAdminUserInput() {
-        String selection = InputManager.getInput();
-        while (!Menu.isInputValid(selection, 3)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 3" + Color.RESET);
-            selection = InputManager.getInput();
-        }
+        String selection = InputManager.getSelection(3);
         switch (selection) {
             case "1" -> {
                 showAllUsers();
@@ -161,10 +156,7 @@ public class UserData {
             case "2" -> {
                 printSearchMethod();
             }
-            case "3" -> Menu.printAdminMenu();
-            default -> {
-                break;
-            }
+            default -> Menu.printAdminMenu();
         }
     }
 
@@ -178,11 +170,7 @@ public class UserData {
     }
 
     private void handleSearchMethod() {
-        String selection = InputManager.getInput();
-        while (!Menu.isInputValid(selection, 4)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
-            selection = InputManager.getInput();
-        }
+        String selection = InputManager.getSelection(4);
         switch (selection) {
             case "1" -> {
                 searchByName();
@@ -196,10 +184,7 @@ public class UserData {
                 searchByPhoneNumber();
                 Menu.printAdminUserMenu();
             }
-            case "4" -> Menu.printAdminMenu();
-            default -> {
-                break;
-            }
+            default -> Menu.printAdminMenu();
         }
     }
 
@@ -246,7 +231,7 @@ public class UserData {
             Menu.printAdminUserMenu();
             return;
         }
-        while (!Menu.isInputValid(selection, allUsers.size())) {
+        while (!InputManager.isInputValid(selection, allUsers.size())) {
             System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
@@ -285,5 +270,10 @@ public class UserData {
             }
         }
         return distances[length1][length2];
+    }
+
+    public void addNewUserToDatabase(User newUser) {
+        AuthenticationRequest.newAuthenticationRequest(newUser);
+        Main.getUsers().addUser(newUser);
     }
 }
