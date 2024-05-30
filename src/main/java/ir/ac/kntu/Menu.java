@@ -71,12 +71,14 @@ public class Menu {
         System.out.println(Color.WHITE + "-Please enter your phone number-" + Color.RESET);
         String phoneNumber = setPhoneNumber();
         if ("".equals(phoneNumber)) {
+            System.out.println(Color.WHITE + "Please login instead" + Color.RESET);
             printSignOrLoginMenu();
             return;
         }
         System.out.println(Color.WHITE + "-Please enter your security number-" + Color.RESET);
         String securityNumber = setSecurityNumber();
         if ("".equals(securityNumber)) {
+            System.out.println(Color.WHITE + "Please login instead" + Color.RESET);
             printSignOrLoginMenu();
             return;
         }
@@ -112,7 +114,7 @@ public class Menu {
             securityNumber = InputManager.getInput();
         }
         if (Main.getUsers().findUserBySecurityNumber(securityNumber) != null) {
-            System.out.println(Color.RED + "You already have an account in our bank!! please login" + Color.RESET);
+            System.out.println(Color.RED + "There is already an account with this security number in our bank" + Color.RESET);
             return "";
         }
         return securityNumber;
@@ -132,7 +134,7 @@ public class Menu {
             phoneNumber = InputManager.getInput();
         }
         if (Main.getUsers().findUserByPhoneNumber(phoneNumber) != null) {
-            System.out.println(Color.RED + "You already have an account in our bank!! please login" + Color.RESET);
+            System.out.println(Color.RED + "There is already an user registered with this phone number" + Color.RESET);
             return "";
         }
         return phoneNumber;
@@ -179,6 +181,7 @@ public class Menu {
             if (Main.getAdminData().getRequests().get(loggingIn).isChecked() && !Main.getAdminData().getRequests().get(loggingIn).isApproved()) {
                 Main.getAdminData().getRequests().get(loggingIn).showErrorMassage();
                 AuthenticationRequest.editInformation();
+                Menu.userLogout();
             } else {
                 System.out.println(Color.RED + "We are sorry but your authentication request has not been checked yet, please come back later");
                 System.out.println(Color.WHITE + "enter any key to log out" + Color.RESET);
@@ -235,7 +238,7 @@ public class Menu {
     }
 
     public static void printContactsMenu() {
-        if(!Main.getUsers().getCurrentUser().isContactsActivated()){
+        if (!Main.getUsers().getCurrentUser().isContactsActivated()) {
             System.out.println(Color.RED + "You have deactivated contacts option! change it from settings and try again" + Color.RESET);
             return;
         }

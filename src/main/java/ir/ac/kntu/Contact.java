@@ -64,23 +64,32 @@ public class Contact {
     }
 
     public void edit() {
-        System.out.println(Color.WHITE + "Please enter the new name (enter 1 to remain same)");
+        System.out.println(Color.WHITE + "Please enter the new name (enter 1 to remain the same)");
         String selection = InputManager.getInput();
         if (!"1".equals(selection)) {
             name = selection;
         }
-        System.out.println(Color.WHITE + "Please enter the new last name (enter 1 to remain same)");
+        System.out.println(Color.WHITE + "Please enter the new last name (enter 1 to remain the same)");
         selection = InputManager.getInput();
         if (!"1".equals(selection)) {
             lastName = selection;
         }
-        System.out.println(Color.WHITE + "Please enter the new phone number (enter 1 to remain same)");
+        System.out.println(Color.WHITE + "Please enter the new phone number (enter 1 to remain the same)");
         selection = InputManager.getInput();
         if (!"1".equals(selection)) {
             while (!Menu.checkPhoneNumberValidity(selection)) {
                 System.out.println(Color.RED + "Please enter your phone number correctly" + Color.RESET);
                 selection = InputManager.getInput();
             }
+            if (Main.getUsers().getCurrentUser().contactAlreadyExists(selection)) {
+                System.out.println(Color.RED + "A contact with this phone number already exists" + Color.RESET);
+                return;
+            }
+            if (Main.getUsers().findUserByPhoneNumber(selection) == null) {
+                System.out.println(Color.RED + "There is no user with this phone number in our bank" + Color.RESET);
+                return;
+            }
+            user = Main.getUsers().findUserByPhoneNumber(selection);
             phoneNumber = selection;
         }
         System.out.println(Color.GREEN + "Selected contact has been successfully edited!!" + Color.RESET);

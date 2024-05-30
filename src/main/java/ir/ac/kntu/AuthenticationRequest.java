@@ -30,20 +30,31 @@ public class AuthenticationRequest {
 
     private static void getNewInformation() {
         Main.getAdminData().removeRequest(Main.getUsers().getCurrentUser());
+        Main.getUsers().removeUser(Main.getUsers().getCurrentUser());
         System.out.println(Color.YELLOW + "Please enter your name" + Color.RESET);
         Main.getUsers().getCurrentUser().setName(Menu.setUserName());
         System.out.println(Color.YELLOW + "Please enter your last name" + Color.RESET);
         Main.getUsers().getCurrentUser().setLastName(Menu.setUserName());
         System.out.println(Color.YELLOW + "Please enter your phone number" + Color.RESET);
-        Main.getUsers().getCurrentUser().setPhoneNumber(Menu.setPhoneNumber());
+        String phoneNumber = Menu.setPhoneNumber();
+        while ("".equals(phoneNumber)) {
+            System.out.println(Color.WHITE + "Please enter another phone number" + Color.RESET);
+            phoneNumber = Menu.setPhoneNumber();
+        }
+        Main.getUsers().getCurrentUser().setPhoneNumber(phoneNumber);
         System.out.println(Color.YELLOW + "Please enter your security number" + Color.RESET);
+        String securityNumber = Menu.setSecurityNumber();
+        while ("".equals(securityNumber)) {
+            System.out.println(Color.WHITE + "Please enter your correct security number" + Color.RESET);
+            securityNumber = Menu.setSecurityNumber();
+        }
         Main.getUsers().getCurrentUser().setSecurityNumber(Menu.setSecurityNumber());
         System.out.println(Color.YELLOW + "Please enter your password" + Color.WHITE + " (it must contain at least " +
                 "one lowercase,uppercase,number and character)" + Color.RESET);
         Main.getUsers().getCurrentUser().setPassword(Menu.setPassword());
         System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
         newAuthenticationRequest(Main.getUsers().getCurrentUser());
-        Menu.userLogout();
+        Main.getUsers().addUser(Main.getUsers().getCurrentUser());
     }
 
     public void setChecked(boolean checked) {

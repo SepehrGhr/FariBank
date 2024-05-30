@@ -80,6 +80,10 @@ public class UserData {
             System.out.println(Color.RED + "Please enter a valid amount (Maximum : 10 million)" + Color.RESET);
             amount = InputManager.getInput();
         }
+        boolean confirmation = printConfirmation(destination, amount);
+        if (!confirmation) {
+            return -1;
+        }
         if (Long.parseLong(amount) + 500 > currentUser.getAccount().getBalance()) {
             System.out.println(Color.RED + "Your balance is not enough. Current Balance : " +
                     Color.GREEN + currentUser.getAccount().getBalance() + "$ " + Color.RED + "required balance:"
@@ -89,6 +93,19 @@ public class UserData {
         updateBalances(destination, amount);
         currentUser.addToRecentUsers(destination);
         return Long.parseLong(amount);
+    }
+
+    private boolean printConfirmation(User destination, String amount) {
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Your transfer's details:" + Color.RESET);
+        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + Color.RESET);
+        System.out.println(Color.WHITE + "Destination name : " + Color.BLUE + destination.getName() + " "
+                + destination.getLastName() + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Enter " + Color.GREEN + "1 " + Color.WHITE + "to confirm and " + Color.RED +
+                "2 " + Color.WHITE + "to cancel" + Color.RESET);
+        String selection = InputManager.getSelection(2);
+        return "1".equals(selection);
     }
 
     private void updateBalances(User destination, String amount) {
@@ -246,8 +263,10 @@ public class UserData {
     private void showAllUsers() {
         int count = 1;
         for (User user : allUsers) {
-            System.out.println(Color.WHITE + count + "-" + Color.BLUE + user.getName() + " " + user.getLastName());
-            count++;
+            if(user.isAuthenticated()) {
+                System.out.println(Color.WHITE + count + "-" + Color.BLUE + user.getName() + " " + user.getLastName());
+                count++;
+            }
         }
     }
 
@@ -275,5 +294,9 @@ public class UserData {
     public void addNewUserToDatabase(User newUser) {
         AuthenticationRequest.newAuthenticationRequest(newUser);
         Main.getUsers().addUser(newUser);
+    }
+
+    public void removeUser(User user){
+        allUsers.remove(user);
     }
 }

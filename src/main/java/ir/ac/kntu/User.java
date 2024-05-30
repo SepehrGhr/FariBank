@@ -134,6 +134,10 @@ public class User {
     }
 
     public void displayAllContacts() {
+        if (contacts.size() == 0) {
+            System.out.println(Color.RED + "You don't have any contacts yet!" + Color.RESET);
+            return;
+        }
         int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Contact contact : contacts) {
@@ -144,6 +148,9 @@ public class User {
     }
 
     public void showAndEditContact() {
+        if(contacts.size() == 0){
+            return;
+        }
         Contact selectedContact = selectContactFromList();
         if (selectedContact == null) {
             return;
@@ -186,6 +193,10 @@ public class User {
     }
 
     public void displayRecentUsers() {
+        if (recentUsers.size() == 0) {
+            System.out.println(Color.RED + "You haven't transferred money to anyone yet" + Color.RESET);
+            return;
+        }
         int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (User recentUser : recentUsers) {
@@ -196,7 +207,8 @@ public class User {
     }
 
     public User selectRecentUserFromList() {
-        System.out.println(Color.WHITE + "Enter the number of the user you want to transfer money or enter -1 to return to last menu" + Color.RESET);
+        System.out.println(Color.WHITE + "Enter the number of the user you want to transfer money or enter " + Color.RED +
+                "-1 " + Color.WHITE + "to return to last menu" + Color.RESET);
         String selection = getMenuSelection(recentUsers.size());
         if ("-1".equals(selection)) {
             return null;
@@ -254,6 +266,10 @@ public class User {
     }
 
     public void displayTickets() {
+        if(tickets.size() == 0){
+            System.out.println(Color.RED + "You don't have any tickets yet!" + Color.RESET);
+            return;
+        }
         int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Ticket ticket : tickets) {
@@ -265,7 +281,8 @@ public class User {
     }
 
     private void selectTicket() {
-        System.out.println(Color.WHITE + "Enter the number of the ticket you want to see or enter -1 to return to last menu" + Color.RESET);
+        System.out.println(Color.WHITE + "Enter the number of the ticket you want to see or enter " + Color.RED + "-1 " +
+                Color.WHITE + "to return to last menu" + Color.RESET);
         String selection = InputManager.getInput();
         if ("-1".equals(selection)) {
             Menu.printSupportMenu();
@@ -301,12 +318,18 @@ public class User {
     }
 
     public void displayReceipts() {
+        if(receipts.size() == 0){
+            System.out.println(Color.RED + "There is no receipts for you yet!" + Color.RESET);
+            return;
+        }
         int count = 1;
         Collections.reverse(receipts);
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Receipt receipt : receipts) {
             Receipt.printSimpleReceipt(receipt, count);
             count++;
         }
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         Receipt selected = selectReceipt(receipts);
         Collections.reverse(receipts);
         if (selected == null) {
@@ -316,7 +339,8 @@ public class User {
     }
 
     private Receipt selectReceipt(List<Receipt> receipts) {
-        System.out.println(Color.WHITE + "Enter the number of the receipt you want to see or enter -1 to return to last menu" + Color.RESET);
+        System.out.println(Color.WHITE + "Enter the number of the receipt you want to see or enter " + Color.RED + "-1 "
+                + Color.WHITE + "to return to last menu" + Color.RESET);
         String selection = InputManager.getInput();
         if ("-1".equals(selection)) {
             return null;
