@@ -1,14 +1,14 @@
 package ir.ac.kntu;
 
 public class ChargeReceipt extends Receipt {
-    private int newBalance;
+    private long newBalance;
 
-    public ChargeReceipt(int amount, int newBalance) {
+    public ChargeReceipt(long amount, long newBalance) {
         super(amount);
         this.newBalance = newBalance;
     }
 
-    public static void createChargeReceipt(int amount, int balance) {
+    public static void createChargeReceipt(long amount, long balance) {
         ChargeReceipt newReceipt = new ChargeReceipt(amount, balance);
         Main.getUsers().getCurrentUser().addReceipt(newReceipt);
         System.out.println(newReceipt);

@@ -71,7 +71,10 @@ public class InputManager {
                 Menu.printManagementMenu();
                 Menu.printUserMainMenu();
             }
-            case "2" -> Menu.printContactsMenu();
+            case "2" -> {
+                Menu.printContactsMenu();
+                Menu.printUserMainMenu();
+            }
             case "3" -> Menu.printTransferMenu();
             case "4" -> Menu.printSupportMenu();
             case "5" -> Menu.printSettingsMenu();
@@ -186,6 +189,6 @@ public class InputManager {
         String numberRegex = "\\d+";
         Pattern numPattern = Pattern.compile(numberRegex);
         Matcher numMatcher = numPattern.matcher(input);
-        return numMatcher.matches() && input.length() < 10;
+        return numMatcher.matches() && input.length() < 13 && Long.parseLong(input) != 0;
     }
 }

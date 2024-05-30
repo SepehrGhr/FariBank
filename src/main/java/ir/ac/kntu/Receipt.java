@@ -7,9 +7,9 @@ import java.time.format.DateTimeParseException;
 
 public class Receipt {
     private Instant time;
-    private int amount;
+    private long amount;
 
-    public Receipt(int amount) {
+    public Receipt(long amount) {
         this.time = Calendar.now();
         this.amount = amount;
     }

@@ -5,11 +5,12 @@ import java.util.regex.Pattern;
 
 public class Menu {
     public static void printSelectRuleMenu() {
-        System.out.println();
-        System.out.println(Color.WHITE + "-Please enter what you want to login as-" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please enter what you want to login as" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "User");
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Admin" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Quit" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleSelectRuleInput();
     }
 
@@ -32,46 +33,54 @@ public class Menu {
     }
 
     public static void printAdminMenu() {
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the option you want" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Authentication requests" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Tickets" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Users" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Log out" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleAdminInput();
     }
 
     public static void printAdminUserMenu() {
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the option you want" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "View All" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Search" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         Main.getUsers().handleAdminUserInput();
     }
 
     public static void printSignOrLoginMenu() {
-        System.out.println(Color.YELLOW + "choose an option");
-        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Login");
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the option you want" + Color.RESET);
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Login" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Sign up" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return to previous menu" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleSignOrLogin();
     }
 
     public static void printSignUpMenu() {
-        System.out.println(Color.YELLOW + "Please enter your name" + Color.RESET);
+        System.out.println(Color.WHITE + "-Please enter your name-" + Color.RESET);
         String name = setUserName();
-        System.out.println(Color.YELLOW + "Please enter your last name" + Color.RESET);
+        System.out.println(Color.WHITE + "-Please enter your last name-" + Color.RESET);
         String lastName = setUserName();
-        System.out.println(Color.YELLOW + "Please enter your phone number" + Color.RESET);
+        System.out.println(Color.WHITE + "-Please enter your phone number-" + Color.RESET);
         String phoneNumber = setPhoneNumber();
         if ("".equals(phoneNumber)) {
             printSignOrLoginMenu();
             return;
         }
-        System.out.println(Color.YELLOW + "Please enter your security number" + Color.RESET);
+        System.out.println(Color.WHITE + "-Please enter your security number-" + Color.RESET);
         String securityNumber = setSecurityNumber();
         if ("".equals(securityNumber)) {
             printSignOrLoginMenu();
             return;
         }
-        System.out.println(Color.YELLOW + "Please enter your password" + Color.WHITE + " (it must contain at least " +
+        System.out.println(Color.WHITE + "-Please enter your password-" + Color.WHITE + " (it must contain at least " +
                 "one lowercase,uppercase,number and character)" + Color.RESET);
         String password = setPassword();
         System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
@@ -154,9 +163,9 @@ public class Menu {
     }
 
     public static void printUserLoginMenu() {
-        System.out.println(Color.YELLOW + "Please enter your username (phone number)" + Color.RESET);
+        System.out.println(Color.WHITE + "-Please enter your username (Phone number)-" + Color.RESET);
         User loggingIn = getUsername();
-        System.out.println(Color.YELLOW + "Please enter your password " + Color.RESET);
+        System.out.println(Color.WHITE + "-Please enter your password-" + Color.RESET);
         getPasswordInput(loggingIn);
         System.out.println(Color.GREEN + "You have successfully logged in!" + Color.RESET);
         Main.getUsers().setCurrentUser(loggingIn);
@@ -180,7 +189,8 @@ public class Menu {
     }
 
     public static void printUserMainMenu() {
-        System.out.println(Color.PURPLE + "Welcome to our bank " + Main.getUsers().getCurrentUser().getName() + "!!" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.PURPLE + "Welcome to your bank " + Main.getUsers().getCurrentUser().getName() + "!!" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Account management" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Contacts" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Transfer money" + Color.RESET);
@@ -188,55 +198,74 @@ public class Menu {
         System.out.println(Color.WHITE + "5-" + Color.BLUE + "Settings" + Color.RESET);
         System.out.println(Color.WHITE + "6-" + Color.BLUE + "Log out" + Color.RESET);
         System.out.println(Color.WHITE + "7-" + Color.BLUE + "Quit" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleUserMainMenuInput();
     }
 
     public static void printSupportMenu() {
-        System.out.println(Color.WHITE + "Please enter the number of the option you want to select");
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the option you want" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "new Ticket" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Tickets" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleSupportInput();
     }
 
     public static void printSettingsMenu() {
-        System.out.println(Color.WHITE + "Please enter the number of the option you want to select");
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the option you want" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Change password" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Change credit card password" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Activate/Deactivate contacts option" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleSettingsInput();
     }
 
     public static void printTransferMenu() {
-        System.out.println(Color.WHITE + "Please enter the number of the method you want to use for transfer");
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the method you want to use for transfer");
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Account ID" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Contacts" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Recent Users" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleTransferMethod();
     }
 
     public static void printContactsMenu() {
+        if(!Main.getUsers().getCurrentUser().isContactsActivated()){
+            System.out.println(Color.RED + "You have deactivated contacts option! change it from settings and try again" + Color.RESET);
+            return;
+        }
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the option you want" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Add contact" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "View contacts" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleContactsInput();
     }
 
     public static void printManagementMenu() {
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
+        System.out.println(Color.WHITE + "Please select the option you want" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Charge" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "View balance" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "View receipts" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleManagementInput();
     }
 
     public static void printShowReceipts() {
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         System.out.println(Color.WHITE + "Please select an option" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "View all receipts" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Filter by time span" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleShowReceipt();
     }
 

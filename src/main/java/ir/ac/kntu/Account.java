@@ -11,14 +11,12 @@ import java.util.regex.Pattern;
 public class Account {
     private String accountID;
     private CreditCard creditCard;
-    private int balance;
-    private List<Integer> balances;
+    private long balance;
 
     public Account() {
         setAccountID();
         creditCard = new CreditCard();
         this.balance = 0;
-        balances = new ArrayList<>();
     }
 
     public CreditCard getCreditCard() {
@@ -46,13 +44,12 @@ public class Account {
         return accountID;
     }
 
-    public int getBalance() {
+    public long getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(long balance) {
         this.balance = balance;
-        balances.add(this.balance);
     }
 
     public static boolean accountIDValidity(String accountID) {

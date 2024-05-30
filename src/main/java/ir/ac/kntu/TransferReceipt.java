@@ -10,7 +10,7 @@ public class TransferReceipt extends Receipt {
     private String transferId;
     private Method method;
 
-    public TransferReceipt(int amount, User transmitter, User receiver, Method method) {
+    public TransferReceipt(long amount, User transmitter, User receiver, Method method) {
         super(amount);
         this.transmitter = transmitter;
         this.receiver = receiver;

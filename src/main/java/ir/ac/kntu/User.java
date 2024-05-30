@@ -102,16 +102,16 @@ public class User {
     }
 
     public void printChargeAccount() {
-        System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account");
+        System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account (Maximum 12 digits)" + Color.RESET);
         String input = InputManager.getInput();
         while (!InputManager.chargeAmountValidity(input)) {
-            System.out.println(Color.RED + "Please enter a valid number" + Color.RESET);
+            System.out.println(Color.RED + "Please enter a valid number (Maximum 12 digits , Minimum 1)" + Color.RESET);
             input = InputManager.getInput();
         }
-        chargeAccount(Integer.parseInt(input));
+        chargeAccount(Long.parseLong(input));
     }
 
-    public void chargeAccount(int amount) {
+    public void chargeAccount(long amount) {
         account.setBalance(account.getBalance() + amount);
         ChargeReceipt.createChargeReceipt(amount, account.getBalance());
     }
@@ -148,7 +148,7 @@ public class User {
         if (selectedContact == null) {
             return;
         }
-        System.out.println(selectedContact.toString());
+        System.out.println(selectedContact);
         editContactMenu(selectedContact);
     }
 
