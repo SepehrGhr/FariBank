@@ -218,6 +218,9 @@ public class User {
 
     private String getMenuSelection(int size) {
         String selection = InputManager.getInput();
+        if ("-1".equals(selection)) {
+            return selection;
+        }
         while (!InputManager.isInputValid(selection, size)) {
             System.out.println(Color.RED + "Please enter a valid number or enter -1" + Color.RESET);
             selection = InputManager.getInput();

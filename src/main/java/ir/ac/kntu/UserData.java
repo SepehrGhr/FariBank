@@ -25,7 +25,7 @@ public class UserData {
 
     public User findUserByPhoneNumber(String phoneNumber) {
         for (User user : allUsers) {
-            if (user.getPhoneNumber().equals(phoneNumber)) {
+            if (user.getPhoneNumber().equals(phoneNumber) && user.isAuthenticated()) {
                 return user;
             }
         }
@@ -114,7 +114,7 @@ public class UserData {
         System.out.println(Color.GREEN + "The money has been transferred successfully!!" + Color.RESET);
     }
 
-    private User findUserByAccountID(String accountID) {
+    public User findUserByAccountID(String accountID) {
         for (User user : allUsers) {
             if (user.isAuthenticated() && user.getAccount().getAccountID().equals(accountID)) {
                 return user;

@@ -1,5 +1,6 @@
 package ir.ac.kntu;
 
+import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,7 +101,7 @@ public class Menu {
         return password;
     }
 
-    private static boolean checkPasswordValidity(String password) {
+    public static boolean checkPasswordValidity(String password) {
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()-+=?])[^\\s]{8,}$";
         Pattern passwordPattern = Pattern.compile(passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(password);
@@ -199,8 +200,9 @@ public class Menu {
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Transfer money" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Support" + Color.RESET);
         System.out.println(Color.WHITE + "5-" + Color.BLUE + "Settings" + Color.RESET);
-        System.out.println(Color.WHITE + "6-" + Color.BLUE + "Log out" + Color.RESET);
-        System.out.println(Color.WHITE + "7-" + Color.BLUE + "Quit" + Color.RESET);
+        System.out.println(Color.WHITE + "6-" + Color.BLUE + "Account details" + Color.RESET);
+        System.out.println(Color.WHITE + "7-" + Color.BLUE + "Log out" + Color.RESET);
+        System.out.println(Color.WHITE + "8-" + Color.BLUE + "Quit" + Color.RESET);
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         InputManager.handleUserMainMenuInput();
     }
@@ -299,5 +301,16 @@ public class Menu {
             toLoginUser = Main.getUsers().findUserByPhoneNumber(input);
         }
         return toLoginUser;
+    }
+
+    public static void printAccountDetails() {
+        User curUser = Main.getUsers().getCurrentUser();
+        System.out.println(Color.CYAN + "*".repeat(30) + Color.RESET);
+        System.out.println(Color.WHITE + "Fullname : " + Color.BLUE + curUser.getName() + " " + curUser.getLastName() + Color.RESET);
+        System.out.println(Color.WHITE + "Phone Number: " + Color.BLUE + curUser.getPhoneNumber() + Color.RESET);
+        System.out.println(Color.WHITE + "Security Number: " + Color.BLUE + curUser.getSecurityNumber() + Color.RESET);
+        System.out.println(Color.WHITE + "Account ID: " + Color.BLUE + curUser.getAccount().getAccountID() + Color.RESET);
+        System.out.println(Color.WHITE + "CreditCard Number: " + Color.BLUE + curUser.getAccount().getCreditCard().getCardNumber() + Color.RESET);
+        System.out.println(Color.CYAN + "*".repeat(30) + Color.RESET);
     }
 }

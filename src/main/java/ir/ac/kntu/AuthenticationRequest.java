@@ -28,6 +28,8 @@ public class AuthenticationRequest {
         }
     }
 
+
+
     private static void getNewInformation() {
         Main.getAdminData().removeRequest(Main.getUsers().getCurrentUser());
         Main.getUsers().removeUser(Main.getUsers().getCurrentUser());
@@ -77,10 +79,7 @@ public class AuthenticationRequest {
             selection = InputManager.getInput();
         }
         if ("1".equals(selection)) {
-            selected.setApproved(true);
-            selected.setChecked(true);
-            selected.getUser().setAccount();
-            selected.getUser().setAuthenticated(true);
+            setupAccepted(selected);
             System.out.println(Color.GREEN + "Selected request has been successfully accepted" + Color.RESET);
         } else if ("2".equals(selection)) {
             selected.setChecked(true);
@@ -89,6 +88,13 @@ public class AuthenticationRequest {
             System.out.println(Color.GREEN + "Selected request has been successfully rejected" + Color.RESET);
         }
         Main.getAdminData().showAuthenticationRequests();
+    }
+
+    public static void setupAccepted(AuthenticationRequest selected) {
+        selected.setApproved(true);
+        selected.setChecked(true);
+        selected.getUser().setAccount();
+        selected.getUser().setAuthenticated(true);
     }
 
     private static String setRejectReason() {

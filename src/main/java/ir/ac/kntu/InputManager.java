@@ -65,7 +65,7 @@ public class InputManager {
     }
 
     public static void handleUserMainMenuInput() {
-        String selection = getSelection(7);
+        String selection = getSelection(8);
         switch (selection) {
             case "1" -> {
                 Menu.printManagementMenu();
@@ -78,7 +78,11 @@ public class InputManager {
             case "3" -> Menu.printTransferMenu();
             case "4" -> Menu.printSupportMenu();
             case "5" -> Menu.printSettingsMenu();
-            case "6" -> Menu.userLogout();
+            case "6" -> {
+                Menu.printAccountDetails();
+                Menu.printUserMainMenu();
+            }
+            case "7" -> Menu.userLogout();
             default -> Menu.endProgram();
         }
     }

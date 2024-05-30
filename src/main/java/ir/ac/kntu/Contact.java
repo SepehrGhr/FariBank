@@ -68,11 +68,13 @@ public class Contact {
         String selection = InputManager.getInput();
         if (!"1".equals(selection)) {
             name = selection;
+            System.out.println(Color.GREEN + "Contact name was successfully updated" + Color.RESET);
         }
         System.out.println(Color.WHITE + "Please enter the new last name (enter 1 to remain the same)");
         selection = InputManager.getInput();
         if (!"1".equals(selection)) {
             lastName = selection;
+            System.out.println(Color.GREEN + "Contact lastname was successfully updated" + Color.RESET);
         }
         System.out.println(Color.WHITE + "Please enter the new phone number (enter 1 to remain the same)");
         selection = InputManager.getInput();
@@ -89,9 +91,13 @@ public class Contact {
                 System.out.println(Color.RED + "There is no user with this phone number in our bank" + Color.RESET);
                 return;
             }
-            user = Main.getUsers().findUserByPhoneNumber(selection);
-            phoneNumber = selection;
+            updatePhoneNumber(selection);
         }
+    }
+
+    private void updatePhoneNumber(String selection) {
+        user = Main.getUsers().findUserByPhoneNumber(selection);
+        phoneNumber = selection;
         System.out.println(Color.GREEN + "Selected contact has been successfully edited!!" + Color.RESET);
     }
 }
