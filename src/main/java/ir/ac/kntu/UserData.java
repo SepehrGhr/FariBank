@@ -182,63 +182,127 @@ public class UserData {
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Name" + Color.RESET);
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Lastname" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Phone Number" + Color.RESET);
-        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Combination" + Color.RESET);
+        System.out.println(Color.WHITE + "5-" + Color.BLUE + "Return" + Color.RESET);
         handleSearchMethod();
     }
 
     private void handleSearchMethod() {
-        String selection = InputManager.getSelection(4);
+        String selection = InputManager.getSelection(5);
         switch (selection) {
             case "1" -> {
-                searchByName();
+                List<User> matched = searchByName();
+                printMatched(matched);
                 Menu.printAdminUserMenu();
             }
             case "2" -> {
-                searchByLastname();
+                List<User> matched = searchByLastname();
+                printMatched(matched);
                 Menu.printAdminUserMenu();
             }
             case "3" -> {
-                searchByPhoneNumber();
+                List<User> matched = searchByPhoneNumber();
+                printMatched(matched);
+                Menu.printAdminUserMenu();
+            }
+            case "4" ->{
+                List<User> matched = combinedSearch();
+                printMatched(matched);
                 Menu.printAdminUserMenu();
             }
             default -> Menu.printAdminMenu();
         }
     }
 
-    private void searchByPhoneNumber() {
-        System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
-        String phoneNumber = InputManager.getInput();
-        for (User user : allUsers) {
-            if (distance(phoneNumber, user.getPhoneNumber()) < 3) {
-                System.out.println(user);
-                return;
-            }
-        }
-        System.out.println(Color.RED + "No user with this phone number was found" + Color.RESET);
-    }
-
-    private void searchByLastname() {
-        System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
-        String lastname = InputManager.getInput();
-        for (User user : allUsers) {
-            if (distance(lastname, user.getLastName()) < 4) {
-                System.out.println(user);
-                return;
-            }
-        }
-        System.out.println(Color.RED + "No user with this lastname was found" + Color.RESET);
-    }
-
-    private void searchByName() {
+    private List<User> combinedSearch() {
         System.out.println(Color.WHITE + "Please enter the name your searching for" + Color.RESET);
         String name = InputManager.getInput();
-        for (User user : allUsers) {
-            if (distance(name, user.getName()) < 4) {
-                System.out.println(user);
-                return;
+        System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
+        String lastName = InputManager.getInput();
+        System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
+        String phoneNumber = InputManager.getInput();
+        String lookingFor = name + lastName + phoneNumber;
+        List<User> matched = new ArrayList<>();
+        for(User user : allUsers){
+            if(lookingFor.equals(user.getName()+user.getLastName()+user.getPhoneNumber())){
+                matched.add(user);
             }
         }
-        System.out.println(Color.RED + "No user with this name was found" + Color.RESET);
+        if(matched.size() == 0){
+            for (User user : allUsers) {
+                if (distance(lookingFor, user.getName()+user.getLastName()+user.getPhoneNumber()) < 7) {
+                    matched.add(user);
+                }
+            }
+        }
+        return matched;
+    }
+
+    private void printMatched(List<User> matched) {
+        if(matched.size() == 0){
+            System.out.println(Color.RED + "No user with this information was found" + Color.RESET);
+            return;
+        }
+        for(User user : matched){
+            System.out.println(user);
+        }
+    }
+
+    private List<User> searchByPhoneNumber() {
+        List<User> matched = new ArrayList<>();
+        System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
+        String phoneNumber = InputManager.getInput();
+        for(User user : allUsers){
+            if(phoneNumber.equals(user.getPhoneNumber())){
+                matched.add(user);
+            }
+        }
+        if(matched.size() == 0) {
+            for (User user : allUsers) {
+                if (distance(phoneNumber, user.getPhoneNumber()) < 2) {
+                    matched.add(user);
+                }
+            }
+        }
+        return matched;
+    }
+
+    private List<User> searchByLastname() {
+        List<User> matched = new ArrayList<>();
+        System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
+        String lastname = InputManager.getInput();
+        for(User user : allUsers){
+            if(lastname.equals(user.getLastName())){
+                matched.add(user);
+            }
+        }
+        if(matched.size() == 0) {
+            for (User user : allUsers) {
+                if (distance(lastname, user.getLastName()) < 4) {
+                    matched.add(user);
+                }
+            }
+        }
+        return matched;
+    }
+
+    private List<User> searchByName() {
+        List<User> matched = new ArrayList<>();
+        System.out.println(Color.WHITE + "Please enter the name your searching for" + Color.RESET);
+        String name = InputManager.getInput();
+        for(User user : allUsers){
+            if(name.equals(user.getName())){
+                matched.add(user);
+            }
+        }
+        if(matched.size() == 0) {
+            for (User user : allUsers) {
+                if (distance(name, user.getName()) < 4) {
+                    matched.add(user);
+                }
+            }
+        }
+        return matched;
     }
 
     private void selectUserToDisplay() {

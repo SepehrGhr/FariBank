@@ -107,6 +107,10 @@ public class AdminData {
     }
 
     private void showTicketsByUser() {
+        if(tickets.size() == 0){
+            System.out.println(Color.RED + "There is no ticket currently" + Color.RESET);
+            return;
+        }
         int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Ticket ticket : tickets) {
@@ -146,6 +150,10 @@ public class AdminData {
     }
 
     private void showTicketsByType() {
+        if(tickets.size() == 0){
+            System.out.println(Color.RED + "There is no ticket currently" + Color.RESET);
+            return;
+        }
         int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Ticket ticket : tickets) {
@@ -157,6 +165,10 @@ public class AdminData {
     }
 
     private void showTicketsByStatus() {
+        if(tickets.size() == 0){
+            System.out.println(Color.RED + "There is no ticket currently" + Color.RESET);
+            return;
+        }
         int count = 1;
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Ticket ticket : tickets) {
@@ -168,7 +180,7 @@ public class AdminData {
     }
 
     public void adminSetup() {
-        addAdmin(new Admin("sepi", "Sepehr", "12345"));
+        addAdmin(new Admin("Sep", "Sepehr", "12345"));
         addAdmin(new Admin("Ali", "Ali12", "Ali123"));
     }
 }
