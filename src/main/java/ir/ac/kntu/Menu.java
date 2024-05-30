@@ -5,7 +5,8 @@ import java.util.regex.Pattern;
 
 public class Menu {
     public static void printSelectRuleMenu() {
-        System.out.println(Color.YELLOW + "please enter what you want to login as" + Color.RESET);
+        System.out.println();
+        System.out.println(Color.WHITE + "-Please enter what you want to login as-" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "User");
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Admin" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Quit" + Color.RESET);

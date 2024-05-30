@@ -99,20 +99,10 @@ public class AdminData {
             selection = InputManager.getInput();
         }
         switch (selection) {
-            case "1":
-                showTicketsByStatus();
-                break;
-            case "2":
-                showTicketsByType();
-                break;
-            case "3":
-                showTicketsByUser();
-                break;
-            case "4":
-                Menu.printAdminMenu();
-                break;
-            default:
-                break;
+            case "1" -> showTicketsByStatus();
+            case "2" -> showTicketsByType();
+            case "3" -> showTicketsByUser();
+            default -> Menu.printAdminMenu();
         }
     }
 
@@ -175,5 +165,10 @@ public class AdminData {
         }
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         selectTicket();
+    }
+
+    public void adminSetup() {
+        addAdmin(new Admin("sepi", "Sepehr", "12345"));
+        addAdmin(new Admin("Ali", "Ali12", "Ali123"));
     }
 }
