@@ -89,8 +89,10 @@ public class InputManager {
     }
 
     private static void generateReports() {
-        String chartFilePath = "balance_chart.jpg";
-        String htmlFilePath = "account_report.html";
+        String chartFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
+                               Main.getUsers().getCurrentUser().getLastName() + "_balance_chart.jpg";
+        String htmlFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
+                              Main.getUsers().getCurrentUser().getLastName() + "_account_report.html";
         Main.getUsers().getCurrentUser().generateReport(chartFilePath, htmlFilePath);
         System.out.println(Color.GREEN + "Your account reports have been successfully generated" + Color.RESET);
     }
