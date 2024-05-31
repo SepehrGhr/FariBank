@@ -80,11 +80,19 @@ public class InputManager {
             case "5" -> Menu.printSettingsMenu();
             case "6" -> {
                 Menu.printAccountDetails();
+                generateReports();
                 Menu.printUserMainMenu();
             }
             case "7" -> Menu.userLogout();
             default -> Menu.endProgram();
         }
+    }
+
+    private static void generateReports() {
+        String chartFilePath = "balance_chart.jpg";
+        String htmlFilePath = "account_report.html";
+        Main.getUsers().getCurrentUser().generateReport(chartFilePath, htmlFilePath);
+        System.out.println(Color.GREEN + "Your account reports have been successfully generated" + Color.RESET);
     }
 
     public static void handleSupportInput() {

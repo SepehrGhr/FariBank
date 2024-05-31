@@ -1,5 +1,7 @@
 package ir.ac.kntu;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,11 +11,13 @@ public class Account {
     private String accountID;
     private CreditCard creditCard;
     private long balance;
+    private List<Long> balances;
 
     public Account() {
         setAccountID();
         creditCard = new CreditCard();
         this.balance = 0;
+        balances = new ArrayList<>();
     }
 
     public CreditCard getCreditCard() {
@@ -47,6 +51,7 @@ public class Account {
 
     public void setBalance(long balance) {
         this.balance = balance;
+        balances.add(getBalance());
     }
 
     public static boolean accountIDValidity(String accountID) {

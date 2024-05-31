@@ -18,6 +18,10 @@ public class Receipt {
         return time;
     }
 
+    public long getAmount() {
+        return amount;
+    }
+
     @Override
     public String toString() {
         return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "Date : " + Color.YELLOW + timeToString(time) +

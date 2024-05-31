@@ -1,5 +1,17 @@
 package ir.ac.kntu;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -148,7 +160,7 @@ public class User {
     }
 
     public void showAndEditContact() {
-        if(contacts.size() == 0){
+        if (contacts.size() == 0) {
             return;
         }
         Contact selectedContact = selectContactFromList();
@@ -269,7 +281,7 @@ public class User {
     }
 
     public void displayTickets() {
-        if(tickets.size() == 0){
+        if (tickets.size() == 0) {
             System.out.println(Color.RED + "You don't have any tickets yet!" + Color.RESET);
             return;
         }
@@ -321,7 +333,7 @@ public class User {
     }
 
     public void displayReceipts() {
-        if(receipts.size() == 0){
+        if (receipts.size() == 0) {
             System.out.println(Color.RED + "There is no receipts for you yet!" + Color.RESET);
             return;
         }
@@ -376,5 +388,49 @@ public class User {
         if (selected != null) {
             System.out.println(selected);
         }
+    }
+
+    public void generateBalanceChart(String filePath) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (Receipt receipt : receipts) {
+            dataset.addValue(receipt.getAmount(), "Balance", receipt.getTime().atZone(ZoneId.systemDefault()).format(formatter));
+        }
+        JFreeChart lineChart = ChartFactory.createLineChart(
+                "Account Balance Over Time",
+                "Date",
+                "Balance",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true, true, false);
+        int width = 640;
+        int height = 480;
+        File lineChartFile = new File(filePath);
+        try {
+            ChartUtils.saveChartAsJPEG(lineChartFile, lineChart, width, height);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateHtmlReport(String htmlFilePath, String chartFilePath) {
+        String htmlContent = "<html>" +
+                "<head><title>Account Report</title></head>" +
+                "<body>" +
+                "<h1>Account Report for " + getName() + " " + getLastName() + "</h1>" +
+                "<h2>Balance Over Time</h2>" +
+                "<img src=\"" + chartFilePath + "\" alt=\"Balance Chart\">" +
+                "</body>" +
+                "</html>";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(htmlFilePath))) {
+            writer.write(htmlContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateReport(String chartFilePath, String htmlFilePath) {
+        generateBalanceChart(chartFilePath);
+        generateHtmlReport(htmlFilePath, chartFilePath);
     }
 }
