@@ -62,14 +62,14 @@ public class AdminData {
         System.out.println(Color.WHITE + "Enter the number of the request you want to see or enter -1 to return to last menu" + Color.RESET);
         String selection = InputManager.getInput();
         if ("-1".equals(selection)) {
-            Menu.printAdminMenu();
+            Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
             return;
         }
         while (!InputManager.isInputValid(selection, requestList.size())) {
             System.out.println(Color.RED + "Please enter a number between 1 and " + requestList.size() + " or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
-                Menu.printAdminMenu();
+                Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
                 return;
             }
         }
@@ -102,7 +102,7 @@ public class AdminData {
             case "1" -> showTicketsByStatus();
             case "2" -> showTicketsByType();
             case "3" -> showTicketsByUser();
-            default -> Menu.printAdminMenu();
+            default -> Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
         }
     }
 
@@ -125,14 +125,14 @@ public class AdminData {
         System.out.println(Color.WHITE + "Enter the number of the ticket you want to see or enter -1 to return to last menu" + Color.RESET);
         String selection = InputManager.getInput();
         if ("-1".equals(selection)) {
-            Menu.printAdminMenu();
+            Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
             return;
         }
         while (!InputManager.isInputValid(selection, tickets.size())) {
             System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
-                Menu.printAdminMenu();
+                Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
                 return;
             }
         }

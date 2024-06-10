@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Setup.userSetup();
         adminData.adminSetup();
-        Menu.printSelectRuleMenu();
+        Menu.printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
     }
 
     public static UserData getUsers() {

@@ -21,7 +21,7 @@ public class InputManager {
     public static void handleSelectRuleInput() {
         String selection = getSelection(3);
         if ("1".equals(selection)) {
-            Menu.printSignOrLoginMenu();
+            Menu.printMenu(OptionEnums.SignOrLogin.values(), InputManager::handleSignOrLogin);
             return;
         } else if ("2".equals(selection)) {
             Menu.printAdminLoginMenu();
@@ -45,10 +45,10 @@ public class InputManager {
             case "1" -> Main.getAdminData().showAuthenticationRequests();
             case "2" -> {
                 Main.getAdminData().displayTicketsMenu();
-                Menu.printAdminMenu();
+                Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
             }
-            case "3" -> Menu.printAdminUserMenu();
-            default -> Menu.printSelectRuleMenu();
+            case "3" -> Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
+            default -> Menu.printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
         }
     }
 
@@ -61,27 +61,27 @@ public class InputManager {
         if ("2".equals(selection)) {
             Menu.printSignUpMenu();
         }
-        Menu.printSelectRuleMenu();
+        Menu.printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
     }
 
     public static void handleUserMainMenuInput() {
         String selection = getSelection(8);
         switch (selection) {
             case "1" -> {
-                Menu.printManagementMenu();
-                Menu.printUserMainMenu();
+                Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
+                Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
             case "2" -> {
                 Menu.printContactsMenu();
-                Menu.printUserMainMenu();
+                Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "3" -> Menu.printTransferMenu();
-            case "4" -> Menu.printSupportMenu();
-            case "5" -> Menu.printSettingsMenu();
+            case "3" -> Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
+            case "4" -> Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
+            case "5" -> Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
             case "6" -> {
                 Menu.printAccountDetails();
                 generateReports();
-                Menu.printUserMainMenu();
+                Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
             case "7" -> Menu.userLogout();
             default -> Menu.endProgram();
@@ -90,9 +90,9 @@ public class InputManager {
 
     private static void generateReports() {
         String chartFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
-                               Main.getUsers().getCurrentUser().getLastName() + "_balance_chart.jpg";
+                Main.getUsers().getCurrentUser().getLastName() + "_balance_chart.jpg";
         String htmlFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
-                              Main.getUsers().getCurrentUser().getLastName() + "_account_report.html";
+                Main.getUsers().getCurrentUser().getLastName() + "_account_report.html";
         Main.getUsers().getCurrentUser().generateReport(chartFilePath, htmlFilePath);
         System.out.println(Color.GREEN + "Your account reports have been successfully generated" + Color.RESET);
     }
@@ -102,13 +102,13 @@ public class InputManager {
         switch (selection) {
             case "1" -> {
                 Ticket.submitNewTicket();
-                Menu.printSupportMenu();
+                Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
             }
             case "2" -> {
                 Main.getUsers().getCurrentUser().displayTickets();
-                Menu.printSupportMenu();
+                Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
             }
-            default -> Menu.printUserMainMenu();
+            default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
         }
     }
 
@@ -117,17 +117,17 @@ public class InputManager {
         switch (selection) {
             case "1" -> {
                 Main.getUsers().getCurrentUser().changePassword();
-                Menu.printSettingsMenu();
+                Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
             }
             case "2" -> {
                 Main.getUsers().getCurrentUser().changeCreditPassword();
-                Menu.printSettingsMenu();
+                Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
             }
             case "3" -> {
                 Main.getUsers().getCurrentUser().changeContactStatus();
-                Menu.printSettingsMenu();
+                Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
             }
-            default -> Menu.printUserMainMenu();
+            default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
         }
     }
 
@@ -136,17 +136,17 @@ public class InputManager {
         switch (selection) {
             case "1" -> {
                 Main.getUsers().transferByAccountID();
-                Menu.printTransferMenu();
+                Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
             }
             case "2" -> {
                 Main.getUsers().transferByContact();
-                Menu.printTransferMenu();
+                Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
             }
             case "3" -> {
                 Main.getUsers().transferByRecentUser();
-                Menu.printTransferMenu();
+                Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
             }
-            default -> Menu.printUserMainMenu();
+            default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
         }
     }
 
@@ -162,7 +162,7 @@ public class InputManager {
                 Main.getUsers().getCurrentUser().showAndEditContact();
                 Menu.printContactsMenu();
             }
-            default -> Menu.printUserMainMenu();
+            default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
         }
     }
 
@@ -171,16 +171,16 @@ public class InputManager {
         switch (selection) {
             case "1" -> {
                 Main.getUsers().getCurrentUser().printChargeAccount();
-                Menu.printManagementMenu();
+                Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
             }
             case "2" -> {
                 Main.getUsers().getCurrentUser().displayBalance();
-                Menu.printManagementMenu();
+                Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
             }
             case "3" -> {
-                Menu.printShowReceipts();
+                Menu.printMenu(OptionEnums.ShowReceiptsOption.values(), InputManager::handleShowReceipt);
             }
-            default -> Menu.printUserMainMenu();
+            default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
         }
     }
 
@@ -189,13 +189,13 @@ public class InputManager {
         switch (selection) {
             case "1" -> {
                 Main.getUsers().getCurrentUser().displayReceipts();
-                Menu.printManagementMenu();
+                Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
             }
             case "2" -> {
                 Main.getUsers().getCurrentUser().filterReceipt();
-                Menu.printManagementMenu();
+                Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
             }
-            default -> Menu.printManagementMenu();
+            default -> Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
         }
     }
 

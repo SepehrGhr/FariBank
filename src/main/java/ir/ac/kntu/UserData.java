@@ -25,7 +25,7 @@ public class UserData {
 
     public User findUserByPhoneNumber(String phoneNumber) {
         for (User user : allUsers) {
-            if (user.getPhoneNumber().equals(phoneNumber) && user.isAuthenticated()) {
+            if (user.getPhoneNumber().equals(phoneNumber)) {
                 return user;
             }
         }
@@ -61,7 +61,10 @@ public class UserData {
         User destination = findUserByAccountID(input);
         if (destination == null) {
             System.out.println(Color.RED + "There is no user with this account ID" + Color.RESET);
-            Menu.printTransferMenu();
+            Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
+        } else if (destination.equals(Main.getUsers().getCurrentUser())) {
+            System.out.println(Color.RED + "You cant transfer money to yourself!!" + Color.RESET);
+            Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
         } else {
             amount = transferMoney(destination);
             if (amount != -1) {
@@ -98,7 +101,7 @@ public class UserData {
     private boolean printConfirmation(User destination, String amount) {
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         System.out.println(Color.WHITE + "Your transfer's details:" + Color.RESET);
-        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + Color.RESET);
+        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + " + 500" + Color.BLUE + " (fee)" + Color.RESET);
         System.out.println(Color.WHITE + "Destination name : " + Color.BLUE + destination.getName() + " "
                 + destination.getLastName() + Color.RESET);
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
@@ -129,6 +132,10 @@ public class UserData {
         currentUser.displayAllContacts();
         Contact selected = currentUser.selectContactFromList();
         if (selected == null) {
+            return;
+        }
+        if (selected.getUser().equals(Main.getUsers().getCurrentUser())) {
+            System.out.println(Color.RED + "You cant transfer money to yourself!!" + Color.RESET);
             return;
         }
         if (selected.getUser().haveInContacts(selected) && selected.getUser().isContactsActivated()) {
@@ -168,12 +175,12 @@ public class UserData {
             case "1" -> {
                 showAllUsers();
                 selectUserToDisplay();
-                Menu.printAdminUserMenu();
+                Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "2" -> {
                 printSearchMethod();
             }
-            default -> Menu.printAdminMenu();
+            default -> Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
         }
     }
 
@@ -193,24 +200,24 @@ public class UserData {
             case "1" -> {
                 List<User> matched = searchByName();
                 printMatched(matched);
-                Menu.printAdminUserMenu();
+                Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "2" -> {
                 List<User> matched = searchByLastname();
                 printMatched(matched);
-                Menu.printAdminUserMenu();
+                Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "3" -> {
                 List<User> matched = searchByPhoneNumber();
                 printMatched(matched);
-                Menu.printAdminUserMenu();
+                Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
-            case "4" ->{
+            case "4" -> {
                 List<User> matched = combinedSearch();
                 printMatched(matched);
-                Menu.printAdminUserMenu();
+                Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
-            default -> Menu.printAdminMenu();
+            default -> Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
         }
     }
 
@@ -223,14 +230,14 @@ public class UserData {
         String phoneNumber = InputManager.getInput();
         String lookingFor = name + lastName + phoneNumber;
         List<User> matched = new ArrayList<>();
-        for(User user : allUsers){
-            if(lookingFor.equals(user.getName()+user.getLastName()+user.getPhoneNumber())){
+        for (User user : allUsers) {
+            if (lookingFor.equals(user.getName() + user.getLastName() + user.getPhoneNumber())) {
                 matched.add(user);
             }
         }
-        if(matched.size() == 0){
+        if (matched.size() == 0) {
             for (User user : allUsers) {
-                if (distance(lookingFor, user.getName()+user.getLastName()+user.getPhoneNumber()) < 7) {
+                if (distance(lookingFor, user.getName() + user.getLastName() + user.getPhoneNumber()) < 7) {
                     matched.add(user);
                 }
             }
@@ -239,11 +246,11 @@ public class UserData {
     }
 
     private void printMatched(List<User> matched) {
-        if(matched.size() == 0){
+        if (matched.size() == 0) {
             System.out.println(Color.RED + "No user with this information was found" + Color.RESET);
             return;
         }
-        for(User user : matched){
+        for (User user : matched) {
             System.out.println(user);
         }
     }
@@ -252,12 +259,12 @@ public class UserData {
         List<User> matched = new ArrayList<>();
         System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
         String phoneNumber = InputManager.getInput();
-        for(User user : allUsers){
-            if(phoneNumber.equals(user.getPhoneNumber())){
+        for (User user : allUsers) {
+            if (phoneNumber.equals(user.getPhoneNumber())) {
                 matched.add(user);
             }
         }
-        if(matched.size() == 0) {
+        if (matched.size() == 0) {
             for (User user : allUsers) {
                 if (distance(phoneNumber, user.getPhoneNumber()) < 2) {
                     matched.add(user);
@@ -271,12 +278,12 @@ public class UserData {
         List<User> matched = new ArrayList<>();
         System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
         String lastname = InputManager.getInput();
-        for(User user : allUsers){
-            if(lastname.equals(user.getLastName())){
+        for (User user : allUsers) {
+            if (lastname.equals(user.getLastName())) {
                 matched.add(user);
             }
         }
-        if(matched.size() == 0) {
+        if (matched.size() == 0) {
             for (User user : allUsers) {
                 if (distance(lastname, user.getLastName()) < 4) {
                     matched.add(user);
@@ -290,12 +297,12 @@ public class UserData {
         List<User> matched = new ArrayList<>();
         System.out.println(Color.WHITE + "Please enter the name your searching for" + Color.RESET);
         String name = InputManager.getInput();
-        for(User user : allUsers){
-            if(name.equals(user.getName())){
+        for (User user : allUsers) {
+            if (name.equals(user.getName())) {
                 matched.add(user);
             }
         }
-        if(matched.size() == 0) {
+        if (matched.size() == 0) {
             for (User user : allUsers) {
                 if (distance(name, user.getName()) < 4) {
                     matched.add(user);
@@ -309,14 +316,14 @@ public class UserData {
         System.out.println(Color.WHITE + "Enter the number of the user you want to see or enter -1 to return to last menu" + Color.RESET);
         String selection = InputManager.getInput();
         if ("-1".equals(selection)) {
-            Menu.printAdminUserMenu();
+            Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             return;
         }
         while (!InputManager.isInputValid(selection, allUsers.size())) {
             System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
-                Menu.printAdminUserMenu();
+                Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
                 return;
             }
         }
@@ -327,7 +334,7 @@ public class UserData {
     private void showAllUsers() {
         int count = 1;
         for (User user : allUsers) {
-            if(user.isAuthenticated()) {
+            if (user.isAuthenticated()) {
                 System.out.println(Color.WHITE + count + "-" + Color.BLUE + user.getName() + " " + user.getLastName());
                 count++;
             }
@@ -360,7 +367,7 @@ public class UserData {
         Main.getUsers().addUser(newUser);
     }
 
-    public void removeUser(User user){
+    public void removeUser(User user) {
         allUsers.remove(user);
     }
 }

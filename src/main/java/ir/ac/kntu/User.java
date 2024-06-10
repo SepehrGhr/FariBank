@@ -305,14 +305,14 @@ public class User {
                 Color.WHITE + "to return to last menu" + Color.RESET);
         String selection = InputManager.getInput();
         if ("-1".equals(selection)) {
-            Menu.printSupportMenu();
+            Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
             return;
         }
         while (!InputManager.isInputValid(selection, tickets.size())) {
             System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
             selection = InputManager.getInput();
             if ("-1".equals(selection)) {
-                Menu.printSupportMenu();
+                Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
                 return;
             }
         }
