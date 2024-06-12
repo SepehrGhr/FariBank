@@ -5,11 +5,19 @@ public class OptionEnums {
         ACCOUNT_MANAGEMENT,
         CONTACTS,
         TRANSFER_MONEY,
+        CHARGE_SIM,
         SUPPORT,
         SETTINGS,
         ACCOUNT_DETAILS,
         LOG_OUT,
         QUIT;
+    }
+
+    public enum ChargeSimOptions{
+        YOURSELF,
+        CONTACTS,
+        PHONE_NUMBER,
+        RETURN;
     }
 
     public enum SupportMenuOption {
@@ -40,7 +48,8 @@ public class OptionEnums {
 
     public enum ManagementMenuOption {
         CHARGE,
-        VIEW_BALANCE,
+        VIEW_ACCOUNT_BALANCE,
+        VIEW_SIM_CARD_BALANCE,
         VIEW_RECEIPTS,
         RETURN;
     }

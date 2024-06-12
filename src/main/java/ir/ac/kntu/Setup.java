@@ -2,10 +2,10 @@ package ir.ac.kntu;
 
 public class Setup {
     public static void userSetup() {
-        User test = new User("Sepehr", "Ghardashi", "09111262338", "5820175281", "Sepehr1384@");
-        User test2 = new User("Sina", "Najafi", "09121103946", "0250388109", "IloveMoney$420");
-        User test3 = new User("Hedie", "Tahmouresi", "09109056296", "0124523423", "H@Tah1384");
-        User test4 = new User("Sajad", "Eslami", "09300408447", "5820158237", "Saj@1234");
+        User test = new User("Sepehr", "Ghardashi", new PhoneNumber("09111262338", 0), "5820175281", "Sepehr1384@");
+        User test2 = new User("Sina", "Najafi", new PhoneNumber("09121103946", 0), "0250388109", "IloveMoney$420");
+        User test3 = new User("Hedie", "Tahmouresi", new PhoneNumber("09109056296", 0), "0124523423", "H@Tah1384");
+        User test4 = new User("Sajad", "Eslami", new PhoneNumber("09300408447", 0), "5820158237", "Saj@1234");
         test.setAuthenticated(true);
         test2.setAuthenticated(true);
         test3.setAuthenticated(true);

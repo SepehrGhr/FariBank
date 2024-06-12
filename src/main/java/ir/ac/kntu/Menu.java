@@ -62,8 +62,11 @@ public class Menu {
                 "one lowercase,uppercase,number and character)" + Color.RESET);
         String password = setPassword();
         System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
-        User newUser = new User(name, lastName, phoneNumber, securityNumber, password);
+        User newUser = Main.getUsers().unregisteredAlreadyExists(phoneNumber) ?
+                new User(name, lastName, Main.getUsers().getUnregistered(phoneNumber), securityNumber, password) :
+                new User(name, lastName, new PhoneNumber(phoneNumber, 0), securityNumber, password);
         Main.getUsers().addNewUserToDatabase(newUser);
+        System.out.println("done");
     }
 
     public static String setPassword() {
@@ -197,7 +200,7 @@ public class Menu {
         String input = InputManager.getInput();
         User toLoginUser = Main.getUsers().findUserByPhoneNumber(input);
         while (toLoginUser == null) {
-            System.out.println(Color.RED + "no user with this phone-number exists" + Color.RESET);
+            System.out.println(Color.RED + "no user with this phone number exists" + Color.RESET);
             input = InputManager.getInput();
             toLoginUser = Main.getUsers().findUserByPhoneNumber(input);
         }
@@ -207,7 +210,7 @@ public class Menu {
     public static void printAccountDetails() {
         User curUser = Main.getUsers().getCurrentUser();
         System.out.println(Color.CYAN + "*".repeat(30) + Color.RESET);
-        System.out.println(Color.WHITE + "Fullname : " + Color.BLUE + curUser.getName() + " " + curUser.getLastName() + Color.RESET);
+        System.out.println(Color.WHITE + "Full Name : " + Color.BLUE + curUser.getName() + " " + curUser.getLastName() + Color.RESET);
         System.out.println(Color.WHITE + "Phone Number: " + Color.BLUE + curUser.getPhoneNumber() + Color.RESET);
         System.out.println(Color.WHITE + "Security Number: " + Color.BLUE + curUser.getSecurityNumber() + Color.RESET);
         System.out.println(Color.WHITE + "Account ID: " + Color.BLUE + curUser.getAccount().getAccountID() + Color.RESET);

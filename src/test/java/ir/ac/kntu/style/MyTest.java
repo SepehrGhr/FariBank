@@ -11,7 +11,7 @@ public class MyTest {
 
     @BeforeEach
     public void setUp() {
-        user1 = new User("Sepehr", "Ghardashi", "09111262338", "5820175281", "Sepehr1384@");
+        user1 = new User("Sepehr", "Ghardashi", new PhoneNumber("09111262238", 0), "5820175281", "Sepehr1384@");
         user1.setAuthenticated(true);
         user1.setAccount();
         Main.getUsers().setCurrentUser(user1);
@@ -20,7 +20,7 @@ public class MyTest {
 
     @Test
     public void testCharge() {
-        user1.chargeAccount(5000);
+        user1.getAccount().chargeAccount(5000);
         assertEquals(5000, user1.getAccount().getBalance());
     }
 
@@ -51,7 +51,7 @@ public class MyTest {
 
     @Test
     public void testCreditCard() {
-        User user2 = new User("Milad", "Alavi", "09111234587", "5820192839", "Milad1@@");
+        User user2 = new User("Milad", "Alavi", new PhoneNumber("09111234578", 0), "5820192839", "Milad1@@");
         user2.setAuthenticated(true);
         user2.setAccount();
         assertEquals(4, user2.getAccount().getCreditCard().getPassword().length());
@@ -71,7 +71,7 @@ public class MyTest {
     @Test void testAuthenticationRequest(){
         AdminData admins = new AdminData();
         admins.adminSetup();
-        User user2 = new User("Milad", "Alavi", "09111234587", "5820192839", "Milad1@@");
+        User user2 = new User("Milad", "Alavi", new PhoneNumber("09111234587", 0), "5820192839", "Milad1@@");
         AuthenticationRequest request = new AuthenticationRequest(user2);
         assertFalse(request.isApproved());
         assertFalse(request.isChecked());

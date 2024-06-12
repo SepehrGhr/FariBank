@@ -60,4 +60,23 @@ public class Account {
         Matcher idMatcher = idPattern.matcher(accountID);
         return idMatcher.matches() && "0".equals(accountID.substring(0, 1));
     }
+
+    public void printChargeAccount() {
+        System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account (Maximum 12 digits)" + Color.RESET);
+        String input = InputManager.getInput();
+        while (!InputManager.chargeAmountValidity(input)) {
+            System.out.println(Color.RED + "Please enter a valid number (Maximum 12 digits , Minimum 1)" + Color.RESET);
+            input = InputManager.getInput();
+        }
+        chargeAccount(Long.parseLong(input));
+    }
+
+    public void chargeAccount(long amount) {
+        setBalance(getBalance() + amount);
+        ChargeReceipt.createChargeReceipt(amount, getBalance());
+    }
+
+    public void displayBalance() {
+        System.out.println(Color.WHITE + "Your current balance is " + Color.GREEN + getBalance() + "$" + Color.RESET);
+    }
 }

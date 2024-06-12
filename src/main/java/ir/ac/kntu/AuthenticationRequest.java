@@ -43,7 +43,7 @@ public class AuthenticationRequest {
             System.out.println(Color.WHITE + "Please enter another phone number" + Color.RESET);
             phoneNumber = Menu.setPhoneNumber();
         }
-        Main.getUsers().getCurrentUser().setPhoneNumber(phoneNumber);
+        Main.getUsers().getCurrentUser().setPhoneNumber(new PhoneNumber(phoneNumber, 0));
         System.out.println(Color.YELLOW + "Please enter your security number" + Color.RESET);
         String securityNumber = Menu.setSecurityNumber();
         while ("".equals(securityNumber)) {

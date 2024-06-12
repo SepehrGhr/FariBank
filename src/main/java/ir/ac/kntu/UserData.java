@@ -6,9 +6,11 @@ import java.util.List;
 public class UserData {
     private List<User> allUsers;
     private User currentUser;
+    private List<PhoneNumber> unregistereds;
 
     public UserData() {
         allUsers = new ArrayList<>();
+        unregistereds = new ArrayList<>();
     }
 
     public void setCurrentUser(User currentUser) {
@@ -21,6 +23,33 @@ public class UserData {
 
     public void addUser(User newUser) {
         allUsers.add(newUser);
+    }
+
+    public void addUnregisteredNumber(PhoneNumber phoneNumber){
+        unregistereds.add(phoneNumber);
+    }
+
+    public void removeUnregisteredNumber(String phoneNumber){
+        unregistereds.removeIf(number -> number.getNumber().equals(phoneNumber));
+    }
+
+    public boolean unregisteredAlreadyExists(String phoneNumber){
+        for(PhoneNumber number: unregistereds){
+            if(phoneNumber.equals(number.getNumber())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public PhoneNumber getUnregistered(String phoneNumber){
+        for(PhoneNumber number: unregistereds){
+            if(number.getNumber().equals(phoneNumber)){
+                unregistereds.remove(number);
+                return number;
+            }
+        }
+        return null;
     }
 
     public User findUserByPhoneNumber(String phoneNumber) {
@@ -369,5 +398,34 @@ public class UserData {
 
     public void removeUser(User user) {
         allUsers.remove(user);
+    }
+
+    public void chargeSimByNumber() {
+        System.out.println(Color.WHITE + "Please enter the phone number you want to charge" + Color.RESET);
+        String phoneNumber = InputManager.getInput();
+        while (!Menu.checkPhoneNumberValidity(phoneNumber)) {
+            System.out.println(Color.RED + "Please enter your phone number correctly" + Color.RESET);
+            phoneNumber = InputManager.getInput();
+        }
+        for(User user: allUsers){
+            if(user.getPhoneNumber().equals(phoneNumber)){
+                user.getSimCard().printChargeSimCard();
+                return;
+            }
+        }
+        handleUnregisteredNumber(phoneNumber);
+        System.out.println("done");
+    }
+
+    private void handleUnregisteredNumber(String phoneNumber) {
+        for(PhoneNumber number: unregistereds){
+            if(number.getNumber().equals(phoneNumber)){
+                number.printChargeSimCard();
+                return;
+            }
+        }
+        PhoneNumber newNumber = new PhoneNumber(phoneNumber, 0);
+        unregistereds.add(newNumber);
+        newNumber.printChargeSimCard();
     }
 }

@@ -76,25 +76,40 @@ public class InputManager {
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
             case "3" -> Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
-            case "4" -> Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
-            case "5" -> Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
-            case "6" -> {
+            case "4" -> Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
+            case "5" -> Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
+            case "6" -> Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
+            case "7" -> {
                 Menu.printAccountDetails();
-                generateReports();
+                Main.getUsers().getCurrentUser().generateReport();
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "7" -> Menu.userLogout();
+            case "8" -> Menu.userLogout();
             default -> Menu.endProgram();
         }
     }
 
-    private static void generateReports() {
-        String chartFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
-                Main.getUsers().getCurrentUser().getLastName() + "_balance_chart.jpg";
-        String htmlFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
-                Main.getUsers().getCurrentUser().getLastName() + "_account_report.html";
-        Main.getUsers().getCurrentUser().generateReport(chartFilePath, htmlFilePath);
-        System.out.println(Color.GREEN + "Your account reports have been successfully generated" + Color.RESET);
+    private static void handleChargeMethod() {
+        String selection = getSelection(4);
+        switch (selection) {
+            case "1" -> {
+                Main.getUsers().getCurrentUser().getSimCard().printChargeSimCard();
+                Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
+            }
+            case "2" -> {
+                Main.getUsers().getCurrentUser().displayAllContacts();
+                Contact selected = Main.getUsers().getCurrentUser().selectContactFromList();
+                if(selected != null){
+                    selected.getUser().getSimCard().printChargeSimCard();
+                }
+                Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
+            }
+            case "3" -> {
+                Main.getUsers().chargeSimByNumber();
+                Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
+            }
+            default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
+        }
     }
 
     public static void handleSupportInput() {
@@ -167,17 +182,21 @@ public class InputManager {
     }
 
     public static void handleManagementInput() {
-        String selection = getSelection(4);
+        String selection = getSelection(5);
         switch (selection) {
             case "1" -> {
-                Main.getUsers().getCurrentUser().printChargeAccount();
+                Main.getUsers().getCurrentUser().getAccount().printChargeAccount();
                 Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
             }
             case "2" -> {
-                Main.getUsers().getCurrentUser().displayBalance();
+                Main.getUsers().getCurrentUser().getAccount().displayBalance();
                 Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
             }
             case "3" -> {
+                Main.getUsers().getCurrentUser().getSimCard().displayBalance();
+                Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
+            }
+            case "4" -> {
                 Menu.printMenu(OptionEnums.ShowReceiptsOption.values(), InputManager::handleShowReceipt);
             }
             default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);

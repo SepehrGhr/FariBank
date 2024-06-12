@@ -1,20 +1,6 @@
 package ir.ac.kntu;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtils;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import java.awt.BasicStroke;
-import java.awt.Font;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.Instant;
@@ -27,7 +13,7 @@ import java.util.regex.Pattern;
 public class User {
     private String name;
     private String lastName;
-    private String phoneNumber;
+    private PhoneNumber phoneNumber;
     private String securityNumber;
     private String password;
     private List<Contact> contacts;
@@ -38,7 +24,7 @@ public class User {
     private boolean authenticated = false;
     private boolean contactsActivated = true;
 
-    public User(String name, String lastName, String phoneNumber, String securityNumber, String password) {
+    public User(String name, String lastName, PhoneNumber phoneNumber, String securityNumber, String password) {
         this.name = name;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -51,6 +37,10 @@ public class User {
     }
 
     public String getPhoneNumber() {
+        return phoneNumber.getNumber();
+    }
+
+    public PhoneNumber getSimCard(){
         return phoneNumber;
     }
 
@@ -102,7 +92,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -116,25 +106,6 @@ public class User {
 
     public void addReceipt(Receipt newReceipt) {
         receipts.add(newReceipt);
-    }
-
-    public void printChargeAccount() {
-        System.out.println(Color.WHITE + "Please enter the amount your trying to charge your account (Maximum 12 digits)" + Color.RESET);
-        String input = InputManager.getInput();
-        while (!InputManager.chargeAmountValidity(input)) {
-            System.out.println(Color.RED + "Please enter a valid number (Maximum 12 digits , Minimum 1)" + Color.RESET);
-            input = InputManager.getInput();
-        }
-        chargeAccount(Long.parseLong(input));
-    }
-
-    public void chargeAccount(long amount) {
-        account.setBalance(account.getBalance() + amount);
-        ChargeReceipt.createChargeReceipt(amount, account.getBalance());
-    }
-
-    public void displayBalance() {
-        System.out.println(Color.WHITE + "Your current balance is " + Color.GREEN + account.getBalance() + "$" + Color.RESET);
     }
 
     public void addNewContact(Contact newContact) {
@@ -395,102 +366,28 @@ public class User {
         }
     }
 
-    public void generateBalanceChart(String filePath) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        for (Receipt receipt : receipts) {
-            dataset.addValue(receipt.getAmount(), "Balance", receipt.getTime().atZone(ZoneId.systemDefault()).format(formatter));
-        }
-        JFreeChart lineChart = ChartFactory.createLineChart(
-                "Account Balance Over Time",
-                "Date",
-                "Balance",
-                dataset,
-                PlotOrientation.VERTICAL,
-                true, true, false);
-        StandardChartTheme chartTheme = new StandardChartTheme("JFree/Shadow", true);
-        chartTheme.apply(lineChart);
-        CategoryPlot plot = setChartBackground(lineChart);
-        LineAndShapeRenderer renderer = setRenderer();
-        plot.setRenderer(renderer);
-        setFonts(plot, lineChart);
-        lineChart.setAntiAlias(true);
-        int width = 640;
-        int height = 480;
-        File lineChartFile = new File(filePath);
-        try {
-            ChartUtils.saveChartAsJPEG(lineChartFile, lineChart, width, height);
-        } catch (IOException e) {
-            System.out.println(Color.RED + "Creating chart was not possible" + Color.RED);
-        }
+    public void generateReport() {
+        String chartFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
+                Main.getUsers().getCurrentUser().getLastName() + "_balance_chart.jpg";
+        String htmlFilePath = Main.getUsers().getCurrentUser().getName() + "_" +
+                Main.getUsers().getCurrentUser().getLastName() + "_account_report.html";
+        ChartHelper chartHelper = new ChartHelper();
+        chartHelper.generateBalanceChart(chartFilePath);
+        chartHelper.generateHtmlReport(htmlFilePath, chartFilePath, Main.getUsers().getCurrentUser());
     }
 
-    private void setFonts(CategoryPlot plot, JFreeChart lineChart) {
-        Font titleFont = new Font("SansSerif", Font.BOLD, 18);
-        Font labelFont = new Font("SansSerif", Font.PLAIN, 12);
-        lineChart.getTitle().setFont(titleFont);
-        plot.getDomainAxis().setLabelFont(labelFont);
-        plot.getRangeAxis().setLabelFont(labelFont);
-        plot.getDomainAxis().setTickLabelFont(labelFont);
-        plot.getRangeAxis().setTickLabelFont(labelFont);
-    }
-
-    private LineAndShapeRenderer setRenderer() {
-        LineAndShapeRenderer renderer = new LineAndShapeRenderer();
-        renderer.setSeriesPaint(0, new java.awt.Color(0, 122, 204));
-        renderer.setSeriesStroke(0, new BasicStroke(2.0f));
-        return renderer;
-    }
-
-    private CategoryPlot setChartBackground(JFreeChart lineChart) {
-        CategoryPlot plot = lineChart.getCategoryPlot();
-        plot.setBackgroundPaint(java.awt.Color.WHITE);
-        plot.setDomainGridlinePaint(java.awt.Color.GRAY);
-        plot.setRangeGridlinePaint(java.awt.Color.GRAY);
-        plot.setOutlineVisible(false);
-        return plot;
-    }
-
-    public void generateHtmlReport(String htmlFilePath, String chartFilePath) {
-        StringBuilder htmlContent = new StringBuilder();
-        htmlContent.append("<!DOCTYPE html>")
-                .append("<html lang=\"en\">").append("<head>").append("<meta charset=\"UTF-8\">")
-                .append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
-                .append("<title>Account Report</title>").append("<style>")
-                .append("body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; }")
-                .append("h1 { text-align: center; color: #333; }")
-                .append(".balance, .transactions { margin: 20px 0; }")
-                .append(".balance p { font-size: 1.2em; color: #333; }")
-                .append(".transactions table { width: 100%; border-collapse: collapse; margin-top: 10px; }")
-                .append(".transactions th, .transactions td { padding: 10px; border: 1px solid #ddd; text-align: left; }")
-                .append(".transactions th { background-color: #f0f0f0; color: #333; }")
-                .append("img { display: block; margin: 0 auto; max-width: 100%; height: auto; }")
-                .append("</style>").append("</head>").append("<body>")
-                .append("<h1>Account Report for ").append(getName()).append(" ").append(getLastName()).append("</h1>")
-                .append("<div class=\"balance\">")
-                .append("<h2>Current Balance</h2>")
-                .append("<p>$").append(getAccount().getBalance()).append("</p>").append("</div>")
-                .append("<div class=\"transactions\">").append("<h2>Transactions</h2>").append("<table>")
-                .append("<tr>").append("<th>Date</th>").append("<th>Amount</th>").append("</tr>");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
+    public void addReceiptsToHTML(StringBuilder htmlContent, DateTimeFormatter formatter) {
         for (Receipt receipt : receipts) {
             htmlContent.append("<tr>")
                     .append("<td>").append(formatter.format(receipt.getTime())).append("</td>")
                     .append("<td>").append(receipt.getAmount()).append("</td>")
                     .append("</tr>");
         }
-        htmlContent.append("</table>").append("</div>").append("<div class=\"chart\">")
-                .append("<h2>Balance Over Time</h2>").append("<img src=\"").append(chartFilePath).append("\" alt=\"Balance Chart\">")
-                .append("</div>").append("</body>").append("</html>");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(htmlFilePath))) {
-            writer.write(htmlContent.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void generateReport(String chartFilePath, String htmlFilePath) {
-        generateBalanceChart(chartFilePath);
-        generateHtmlReport(htmlFilePath, chartFilePath);
+    public void addReceiptsToChart(DefaultCategoryDataset dataset, DateTimeFormatter formatter) {
+        for (Receipt receipt : receipts) {
+            dataset.addValue(receipt.getAmount(), "Balance", receipt.getTime().atZone(ZoneId.systemDefault()).format(formatter));
+        }
     }
 }
