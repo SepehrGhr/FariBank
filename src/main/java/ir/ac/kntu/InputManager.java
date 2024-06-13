@@ -19,13 +19,15 @@ public class InputManager {
     }
 
     public static void handleSelectRuleInput() {
-        String selection = getSelection(3);
+        String selection = getSelection(4);
         if ("1".equals(selection)) {
             Menu.printMenu(OptionEnums.SignOrLogin.values(), InputManager::handleSignOrLogin);
             return;
         } else if ("2".equals(selection)) {
             Menu.printAdminLoginMenu();
             return;
+        } else if("3".equals(selection)){
+            Menu.printManagerLogin();
         }
         Menu.endProgram();
     }
@@ -52,6 +54,23 @@ public class InputManager {
         }
     }
 
+    public static void handleManagerMenuInput(){
+        String selection = getSelection(4);
+        switch (selection) {
+            case "1" -> {}
+            case "2" -> {}
+            case "3" -> {}
+            default -> {
+                managerLogout();
+            }
+        }
+    }
+
+    private static void managerLogout() {
+        Main.getManagerData().setCurrentManager(null);
+        Menu.printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
+    }
+
     public static void handleSignOrLogin() {
         String selection = getSelection(3);
         if ("1".equals(selection)) {
@@ -65,7 +84,7 @@ public class InputManager {
     }
 
     public static void handleUserMainMenuInput() {
-        String selection = getSelection(8);
+        String selection = getSelection(9);
         switch (selection) {
             case "1" -> {
                 Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);

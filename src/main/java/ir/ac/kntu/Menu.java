@@ -66,7 +66,6 @@ public class Menu {
                 new User(name, lastName, Main.getUsers().getUnregistered(phoneNumber), securityNumber, password) :
                 new User(name, lastName, new PhoneNumber(phoneNumber, 0), securityNumber, password);
         Main.getUsers().addNewUserToDatabase(newUser);
-        System.out.println("done");
     }
 
     public static String setPassword() {
@@ -159,7 +158,7 @@ public class Menu {
         } else {
             if (Main.getAdminData().getRequests().get(loggingIn).isChecked() && !Main.getAdminData().getRequests().get(loggingIn).isApproved()) {
                 Main.getAdminData().getRequests().get(loggingIn).showErrorMassage();
-                AuthenticationRequest.editInformation();
+                Main.getAdminData().getRequests().get(loggingIn).editInformation();
                 Menu.userLogout();
             } else {
                 System.out.println(Color.RED + "We are sorry but your authentication request has not been checked yet, please come back later");
@@ -216,5 +215,24 @@ public class Menu {
         System.out.println(Color.WHITE + "Account ID: " + Color.BLUE + curUser.getAccount().getAccountID() + Color.RESET);
         System.out.println(Color.WHITE + "CreditCard Number: " + Color.BLUE + curUser.getAccount().getCreditCard().getCardNumber() + Color.RESET);
         System.out.println(Color.CYAN + "*".repeat(30) + Color.RESET);
+    }
+
+    public static void printManagerLogin() {
+        System.out.println(Color.WHITE + "Please enter your username");
+        String username = InputManager.getInput();
+        Manager loggingIn = Main.getManagerData().findManagerByUsername(username);
+        if (loggingIn == null) {
+            System.out.println(Color.RED + "There is no manager with this username" + Color.RESET);
+            printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
+        } else {
+            System.out.println(Color.WHITE + "Please enter your password" + Color.RESET);
+            String password = InputManager.getInput();
+            while (!password.equals(loggingIn.getPassword())) {
+                System.out.println(Color.RED + "Entered password is incorrect , please try again" + Color.RESET);
+                password = InputManager.getInput();
+            }
+            printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleAdminInput);
+            Main.getManagerData().setCurrentManager(loggingIn);
+        }
     }
 }

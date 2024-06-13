@@ -75,7 +75,7 @@ public class AdminData {
         }
         AuthenticationRequest selected = requestList.get(Integer.parseInt(selection) - 1);
         selected.showUserInformation();
-        AuthenticationRequest.chooseAcceptOrReject(selected);
+        selected.chooseAcceptOrReject();
     }
 
     public void addNewTicket(Ticket newTicket) {

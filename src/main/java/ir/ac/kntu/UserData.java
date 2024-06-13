@@ -25,14 +25,6 @@ public class UserData {
         allUsers.add(newUser);
     }
 
-    public void addUnregisteredNumber(PhoneNumber phoneNumber){
-        unregistereds.add(phoneNumber);
-    }
-
-    public void removeUnregisteredNumber(String phoneNumber){
-        unregistereds.removeIf(number -> number.getNumber().equals(phoneNumber));
-    }
-
     public boolean unregisteredAlreadyExists(String phoneNumber){
         for(PhoneNumber number: unregistereds){
             if(phoneNumber.equals(number.getNumber())){
@@ -392,7 +384,8 @@ public class UserData {
     }
 
     public void addNewUserToDatabase(User newUser) {
-        AuthenticationRequest.newAuthenticationRequest(newUser);
+        AuthenticationRequest newRequest = new AuthenticationRequest(newUser);
+        Main.getAdminData().addAuthenticationRequest(newRequest);
         Main.getUsers().addUser(newUser);
     }
 
@@ -414,7 +407,6 @@ public class UserData {
             }
         }
         handleUnregisteredNumber(phoneNumber);
-        System.out.println("done");
     }
 
     private void handleUnregisteredNumber(String phoneNumber) {

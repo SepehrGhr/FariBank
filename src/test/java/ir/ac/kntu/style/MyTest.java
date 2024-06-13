@@ -75,7 +75,7 @@ public class MyTest {
         AuthenticationRequest request = new AuthenticationRequest(user2);
         assertFalse(request.isApproved());
         assertFalse(request.isChecked());
-        AuthenticationRequest.setupAccepted(request);
+        request.setupAccepted();
         assertTrue(request.isChecked());
         assertTrue(request.isApproved());
         assertTrue(request.getUser().isAuthenticated());

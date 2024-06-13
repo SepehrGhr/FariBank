@@ -11,7 +11,7 @@ public class AuthenticationRequest {
         this.user = user;
     }
 
-    public static void editInformation() {
+    public void editInformation() {
         String selection = InputManager.getInput();
         while (!InputManager.isInputValid(selection, 2)) {
             System.out.println(Color.RED + "Please enter a number between 1 and 2" + Color.RESET);
@@ -19,7 +19,7 @@ public class AuthenticationRequest {
         }
         switch (selection) {
             case "1" -> {
-                getNewInformation();
+                Main.getAdminData().getRequests().get(Main.getUsers().getCurrentUser()).getNewInformation();
             }
             case "2" -> Menu.userLogout();
             default -> {
@@ -28,16 +28,14 @@ public class AuthenticationRequest {
         }
     }
 
-
-
-    private static void getNewInformation() {
+    private void getNewInformation() {
         Main.getAdminData().removeRequest(Main.getUsers().getCurrentUser());
         Main.getUsers().removeUser(Main.getUsers().getCurrentUser());
-        System.out.println(Color.YELLOW + "Please enter your name" + Color.RESET);
+        System.out.println(Color.WHITE + "Please enter your name" + Color.RESET);
         Main.getUsers().getCurrentUser().setName(Menu.setUserName());
-        System.out.println(Color.YELLOW + "Please enter your last name" + Color.RESET);
+        System.out.println(Color.WHITE + "Please enter your last name" + Color.RESET);
         Main.getUsers().getCurrentUser().setLastName(Menu.setUserName());
-        System.out.println(Color.YELLOW + "Please enter your phone number" + Color.RESET);
+        System.out.println(Color.WHITE + "Please enter your phone number" + Color.RESET);
         String phoneNumber = Menu.setPhoneNumber();
         while ("".equals(phoneNumber)) {
             System.out.println(Color.WHITE + "Please enter another phone number" + Color.RESET);
@@ -55,8 +53,13 @@ public class AuthenticationRequest {
                 "one lowercase,uppercase,number and character)" + Color.RESET);
         Main.getUsers().getCurrentUser().setPassword(Menu.setPassword());
         System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
-        newAuthenticationRequest(Main.getUsers().getCurrentUser());
+        addNewAuthenticationRequest(Main.getUsers().getCurrentUser());
         Main.getUsers().addUser(Main.getUsers().getCurrentUser());
+    }
+
+    private void addNewAuthenticationRequest(User currentUser) {
+        AuthenticationRequest newRequest = new AuthenticationRequest(Main.getUsers().getCurrentUser());
+        Main.getAdminData().addAuthenticationRequest(newRequest);
     }
 
     public void setChecked(boolean checked) {
@@ -71,7 +74,7 @@ public class AuthenticationRequest {
         this.errorMassage = errorMassage;
     }
 
-    public static void chooseAcceptOrReject(AuthenticationRequest selected) {
+    public void chooseAcceptOrReject() {
         System.out.println(Color.WHITE + "enter 1 to accept and 2 to reject" + Color.RESET);
         String selection = InputManager.getInput();
         while (!InputManager.isInputValid(selection, 2)) {
@@ -79,22 +82,22 @@ public class AuthenticationRequest {
             selection = InputManager.getInput();
         }
         if ("1".equals(selection)) {
-            setupAccepted(selected);
+            this.setupAccepted();
             System.out.println(Color.GREEN + "Selected request has been successfully accepted" + Color.RESET);
         } else if ("2".equals(selection)) {
-            selected.setChecked(true);
+            this.setChecked(true);
             String massage = setRejectReason();
-            selected.setErrorMassage(massage);
+            this.setErrorMassage(massage);
             System.out.println(Color.GREEN + "Selected request has been successfully rejected" + Color.RESET);
         }
         Main.getAdminData().showAuthenticationRequests();
     }
 
-    public static void setupAccepted(AuthenticationRequest selected) {
-        selected.setApproved(true);
-        selected.setChecked(true);
-        selected.getUser().setAccount();
-        selected.getUser().setAuthenticated(true);
+    public void setupAccepted() {
+        this.setApproved(true);
+        this.setChecked(true);
+        this.getUser().setAccount();
+        this.getUser().setAuthenticated(true);
     }
 
     private static String setRejectReason() {
@@ -112,11 +115,6 @@ public class AuthenticationRequest {
 
     public boolean isApproved() {
         return approved;
-    }
-
-    public static void newAuthenticationRequest(User newUser) {
-        AuthenticationRequest newRequest = new AuthenticationRequest(newUser);
-        Main.getAdminData().addAuthenticationRequest(newRequest);
     }
 
     public void showErrorMassage() {

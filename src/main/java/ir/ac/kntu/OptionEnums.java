@@ -63,7 +63,15 @@ public class OptionEnums {
     public enum SelectRuleOption {
         USER,
         ADMIN,
+        MANAGER,
         QUIT;
+    }
+
+    public enum ManagerMenu {
+        SETTINGS,
+        USER_MANAGEMENT,
+        AUTO_TRANSACTION,
+        LOG_OUT;
     }
 
     public enum AdminMenu {
