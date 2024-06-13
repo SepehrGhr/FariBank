@@ -1,6 +1,7 @@
 package ir.ac.kntu;
 
 import org.jfree.data.category.DefaultCategoryDataset;
+
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.Instant;
@@ -20,6 +21,8 @@ public class User {
     private List<User> recentUsers;
     private List<Ticket> tickets;
     private List<Receipt> receipts;
+
+    private List<Fund> funds;
     private Account account;
     private boolean authenticated = false;
     private boolean contactsActivated = true;
@@ -30,17 +33,18 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.securityNumber = securityNumber;
         this.password = password;
-        contacts = new ArrayList<>();
-        recentUsers = new ArrayList<>();
-        tickets = new ArrayList<>();
-        receipts = new ArrayList<>();
+        this.contacts = new ArrayList<>();
+        this.recentUsers = new ArrayList<>();
+        this.tickets = new ArrayList<>();
+        this.receipts = new ArrayList<>();
+        this.funds = new ArrayList<>();
     }
 
     public String getPhoneNumber() {
         return phoneNumber.getNumber();
     }
 
-    public PhoneNumber getSimCard(){
+    public PhoneNumber getSimCard() {
         return phoneNumber;
     }
 
@@ -106,6 +110,10 @@ public class User {
 
     public void addReceipt(Receipt newReceipt) {
         receipts.add(newReceipt);
+    }
+
+    public void addFund(Fund newFund){
+        funds.add(newFund);
     }
 
     public void addNewContact(Contact newContact) {
@@ -293,7 +301,7 @@ public class User {
 
     @Override
     public String toString() {
-        return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "Fullname : " + Color.BLUE +
+        return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "FullName : " + Color.BLUE +
                 name + " " + lastName + '\n' + Color.WHITE + "Phone number : " + Color.BLUE +
                 phoneNumber + '\n' + Color.WHITE + "Account ID : " + Color.BLUE + account.getAccountID() +
                 '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
@@ -389,5 +397,32 @@ public class User {
         for (Receipt receipt : receipts) {
             dataset.addValue(receipt.getAmount(), "Balance", receipt.getTime().atZone(ZoneId.systemDefault()).format(formatter));
         }
+    }
+
+    public void showAndSelectFunds() {
+        if (funds.size() == 0) {
+            System.out.println(Color.RED + "You don't have any funds yet!" + Color.RESET);
+            return;
+        }
+        int count = 1;
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        for (Fund fund : funds) {
+            System.out.println(Color.WHITE + count + "-" + fund.getType() + Color.RESET);
+        }
+        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
+        Fund selected = selectFundFromList();
+        if (selected == null){
+            return;
+        }
+        selected.openManagement();
+    }
+
+    public Fund selectFundFromList() {
+        System.out.println(Color.WHITE + "Enter the number of the fund you want to select or enter -1 to return to last menu" + Color.RESET);
+        String selection = getMenuSelection(funds.size());
+        if ("-1".equals(selection)) {
+            return null;
+        }
+        return funds.get(Integer.parseInt(selection) - 1);
     }
 }

@@ -84,27 +84,72 @@ public class InputManager {
     }
 
     public static void handleUserMainMenuInput() {
-        String selection = getSelection(9);
+        String selection = getSelection(10);
         switch (selection) {
             case "1" -> {
                 Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "2" -> {
+            case "2" ->{
+                Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
+            }
+            case "3" -> {
                 Menu.printContactsMenu();
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "3" -> Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
-            case "4" -> Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
-            case "5" -> Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
-            case "6" -> Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
-            case "7" -> {
+            case "4" -> Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
+            case "5" -> Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
+            case "6" -> Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
+            case "7" -> Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
+            case "8" -> {
                 Menu.printAccountDetails();
                 Main.getUsers().getCurrentUser().generateReport();
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "8" -> Menu.userLogout();
+            case "9" -> Menu.userLogout();
             default -> Menu.endProgram();
+        }
+    }
+
+    private static void handleFundMenuInput() {
+        String selection = getSelection(3);
+        switch (selection) {
+            case "1" -> {
+                Main.getUsers().getCurrentUser().showAndSelectFunds();
+                Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
+            }
+            case "2" -> {
+                printAddFundMenu();
+                Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
+            }
+            default -> Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
+        }
+    }
+
+    private static void printAddFundMenu() {
+        System.out.println(Color.WHITE + "Please select the type of your new fund" + Color.RESET);
+        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Saving Fund" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Profit Fund" + Color.RESET);
+        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Remaining Fund" + Color.RESET);
+        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
+        handleAddFundMenuInput();
+    }
+
+    private static void handleAddFundMenuInput() {
+        String selection = getSelection(4);
+        switch (selection) {
+            case "1" -> {
+                SavingFund newFund = new SavingFund(Main.getUsers().getCurrentUser());
+                Main.getUsers().getCurrentUser().addFund(newFund);
+                System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
+            }
+            case "2" -> {
+
+            }
+            case "3" -> {
+
+            }
+            default -> Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
         }
     }
 

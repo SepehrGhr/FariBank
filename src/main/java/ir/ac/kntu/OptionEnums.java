@@ -3,6 +3,7 @@ package ir.ac.kntu;
 public class OptionEnums {
     public enum UserMainMenuOption {
         ACCOUNT_MANAGEMENT,
+        FUNDS_MANAGEMENT,
         CONTACTS,
         TRANSFER_MONEY,
         CHARGE_SIM,
@@ -11,6 +12,19 @@ public class OptionEnums {
         ACCOUNT_DETAILS,
         LOG_OUT,
         QUIT;
+    }
+
+    public enum FundManagementOptions{
+        VIEW_FUNDS,
+        ADD_NEW_FUND,
+        RETURN;
+    }
+
+    public enum SelectedFundMenu{
+        DEPOSIT,
+        WITHDRAW,
+        VIEW_BALANCE,
+        RETURN;
     }
 
     public enum ChargeSimOptions{
