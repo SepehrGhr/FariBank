@@ -28,7 +28,7 @@ public class AuthenticationRequest {
         }
     }
 
-    private void getNewInformation() {
+    public void getNewInformation() {
         Main.getAdminData().removeRequest(Main.getUsers().getCurrentUser());
         Main.getUsers().removeUser(Main.getUsers().getCurrentUser());
         System.out.println(Color.WHITE + "Please enter your name" + Color.RESET);
@@ -53,11 +53,11 @@ public class AuthenticationRequest {
                 "one lowercase,uppercase,number and character)" + Color.RESET);
         Main.getUsers().getCurrentUser().setPassword(Menu.setPassword());
         System.out.println(Color.GREEN + "Your information has been successfully registered and will be checked soon" + Color.RESET);
-        addNewAuthenticationRequest(Main.getUsers().getCurrentUser());
+        addNewAuthenticationRequest();
         Main.getUsers().addUser(Main.getUsers().getCurrentUser());
     }
 
-    private void addNewAuthenticationRequest(User currentUser) {
+    private void addNewAuthenticationRequest() {
         AuthenticationRequest newRequest = new AuthenticationRequest(Main.getUsers().getCurrentUser());
         Main.getAdminData().addAuthenticationRequest(newRequest);
     }

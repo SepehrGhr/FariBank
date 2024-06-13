@@ -129,7 +129,7 @@ public class InputManager {
     private static void printAddFundMenu() {
         System.out.println(Color.WHITE + "Please select the type of your new fund" + Color.RESET);
         System.out.println(Color.WHITE + "1-" + Color.BLUE + "Saving Fund" + Color.RESET);
-        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Profit Fund" + Color.RESET);
+        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Interest Fund" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Remaining Fund" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Return" + Color.RESET);
         handleAddFundMenuInput();
@@ -144,13 +144,43 @@ public class InputManager {
                 System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
             }
             case "2" -> {
-
+                int monthCount = Integer.parseInt(getInterestMonthCount());
+                long amount = getInterestStartAmount();
+                if(amount == -1){
+                    break;
+                }
+                InterestFund newFund = new InterestFund(Main.getUsers().getCurrentUser(), monthCount, amount);
+                Main.getUsers().getCurrentUser().addFund(newFund);
+                Main.getManagerData().addNewInterestFund(newFund);
+                System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
             }
             case "3" -> {
 
             }
             default -> Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
         }
+    }
+
+    private static long getInterestStartAmount() {
+        System.out.println(Color.WHITE + "Please enter the amount you want to invest (Maximum 12 digits)" + Color.RESET);
+        String amount = InputManager.getInput();
+        while (!InputManager.chargeAmountValidity(amount)) {
+            System.out.println(Color.RED + "Please enter a valid number (Maximum 12 digits , Minimum 1)" + Color.RESET);
+            amount = InputManager.getInput();
+        }
+        if(Long.parseLong(amount) <= Main.getUsers().getCurrentUser().getAccount().getBalance()) {
+            Main.getUsers().getCurrentUser().getAccount().setBalance(Main.getUsers().getCurrentUser().getAccount().getBalance() - Long.parseLong(amount));
+            return Long.parseLong(amount);
+        } else{
+            System.out.println(Color.RED + "Your account balance is not enough for this amount!!" + Color.RESET);
+            return -1;
+        }
+    }
+
+    private static String getInterestMonthCount() {
+        System.out.println(Color.WHITE + "Please enter the number of months you want to let your money rest(Maximum 24)" + Color.RESET);
+        System.out.println(Color.WHITE + "You cant deposit or withdraw from your fund in this time span" + Color.RESET);
+        return getSelection(24);
     }
 
     private static void handleChargeMethod() {

@@ -408,6 +408,7 @@ public class User {
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         for (Fund fund : funds) {
             System.out.println(Color.WHITE + count + "-" + fund.getType() + Color.RESET);
+            count++;
         }
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         Fund selected = selectFundFromList();
@@ -424,5 +425,9 @@ public class User {
             return null;
         }
         return funds.get(Integer.parseInt(selection) - 1);
+    }
+
+    public void removeFund(Fund fund){
+        funds.remove(fund);
     }
 }
