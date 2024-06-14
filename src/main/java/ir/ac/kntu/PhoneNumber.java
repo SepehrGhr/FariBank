@@ -42,7 +42,7 @@ public class PhoneNumber {
         long currentBalance = Main.getUsers().getCurrentUser().getAccount().getBalance();
         if(currentBalance > Long.parseLong(amount) + 150){
             phoneNumber.charge(Long.parseLong(amount));
-            Main.getUsers().getCurrentUser().getAccount().setBalance(currentBalance - (Long.parseLong(amount) + 150));
+            Main.getUsers().getCurrentUser().getAccount().withdrawMoney(Long.parseLong(amount) + 150, Main.getUsers().getCurrentUser());
             System.out.println(Color.GREEN + "Selected number has been charged successfully!!" + Color.RESET);
         } else{
             System.out.println(Color.RED + "Your account balance is not enough!" + Color.RESET);

@@ -24,8 +24,10 @@ public class User {
 
     private List<Fund> funds;
     private Account account;
+    private RemainderFund remainderFund;
     private boolean authenticated = false;
     private boolean contactsActivated = true;
+    private boolean hasRemainderFund;
 
     public User(String name, String lastName, PhoneNumber phoneNumber, String securityNumber, String password) {
         this.name = name;
@@ -38,6 +40,7 @@ public class User {
         this.tickets = new ArrayList<>();
         this.receipts = new ArrayList<>();
         this.funds = new ArrayList<>();
+        this.hasRemainderFund = false;
     }
 
     public String getPhoneNumber() {
@@ -66,6 +69,22 @@ public class User {
 
     public void setAccount() {
         this.account = new Account();
+    }
+
+    public RemainderFund getRemainderFund() {
+        return remainderFund;
+    }
+
+    public void setRemainderFund(RemainderFund remainderFund) {
+        this.remainderFund = remainderFund;
+    }
+
+    public boolean isHasRemainderFund() {
+        return hasRemainderFund;
+    }
+
+    public void setHasRemainderFund(boolean hasRemainderFund) {
+        this.hasRemainderFund = hasRemainderFund;
     }
 
     public String getName() {

@@ -134,7 +134,7 @@ public class UserData {
 
     private void updateBalances(User destination, String amount) {
         destination.getAccount().setBalance(destination.getAccount().getBalance() + Long.parseLong(amount));
-        currentUser.getAccount().setBalance(currentUser.getAccount().getBalance() - (Long.parseLong(amount) + 500));
+        currentUser.getAccount().withdrawMoney(Long.parseLong(amount) + 500, currentUser);
         System.out.println(Color.GREEN + "The money has been transferred successfully!!" + Color.RESET);
     }
 

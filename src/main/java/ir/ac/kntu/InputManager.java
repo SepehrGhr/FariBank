@@ -60,9 +60,7 @@ public class InputManager {
             case "1" -> {}
             case "2" -> {}
             case "3" -> {}
-            default -> {
-                managerLogout();
-            }
+            default -> managerLogout();
         }
     }
 
@@ -155,7 +153,15 @@ public class InputManager {
                 System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
             }
             case "3" -> {
-
+                if(Main.getUsers().getCurrentUser().isHasRemainderFund()){
+                    System.out.println(Color.RED + "You cant have more than one remainder fund at once!" + Color.RESET);
+                    break;
+                }
+                RemainderFund newFund = new RemainderFund(Main.getUsers().getCurrentUser());
+                Main.getUsers().getCurrentUser().addFund(newFund);
+                Main.getUsers().getCurrentUser().setHasRemainderFund(true);
+                Main.getUsers().getCurrentUser().setRemainderFund(newFund);
+                System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
             }
             default -> Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
         }

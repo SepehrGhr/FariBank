@@ -79,4 +79,12 @@ public class Account {
     public void displayBalance() {
         System.out.println(Color.WHITE + "Your current balance is " + Color.GREEN + getBalance() + "$" + Color.RESET);
     }
+
+    public void withdrawMoney(long amount, User currentUser) {
+        if(!currentUser.isHasRemainderFund()){
+            currentUser.getAccount().setBalance(currentUser.getAccount().getBalance() - amount);
+            return;
+        }
+        currentUser.getRemainderFund().handleAccountWithdraw(amount);
+    }
 }
