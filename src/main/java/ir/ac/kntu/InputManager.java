@@ -62,6 +62,7 @@ public class InputManager {
                 Menu.printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
             }
             case "2" -> {
+
             }
             case "3" -> {
                 Menu.printMenu(OptionEnums.ManagerAutoTransMenu.values(), InputManager::handleAutoTransInput);
@@ -233,7 +234,6 @@ public class InputManager {
                 Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
             }
             case "2" -> {
-                Main.getUsers().getCurrentUser().displayAllContacts();
                 Contact selected = Main.getUsers().getCurrentUser().selectContactFromList();
                 if (selected != null) {
                     selected.getUser().getSimCard().printChargeSimCard();
@@ -309,7 +309,6 @@ public class InputManager {
                 Menu.printContactsMenu();
             }
             case "2" -> {
-                Main.getUsers().getCurrentUser().displayAllContacts();
                 Main.getUsers().getCurrentUser().showAndEditContact();
                 Menu.printContactsMenu();
             }

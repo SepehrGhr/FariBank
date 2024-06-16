@@ -236,8 +236,6 @@ public class UserData {
 
     public void transferByContact() {
         long amount = 0;
-        System.out.println(Color.WHITE + "Please select the contact you want to transfer money to" + Color.RESET);
-        currentUser.displayAllContacts();
         Contact selected = currentUser.selectContactFromList();
         if (selected == null) {
             return;
@@ -261,13 +259,10 @@ public class UserData {
     }
 
     public void transferByRecentUser() {
-        System.out.println(Color.WHITE + "Please select the user you want to transfer money to" + Color.RESET);
-        currentUser.displayRecentUsers();
         User selected = currentUser.selectRecentUserFromList();
-        if (selected == null) {
-            return;
+        if (selected != null) {
+            doTransfer(selected, true, true);
         }
-        doTransfer(selected, true, true);
     }
 
     private void doTransfer(User selected, boolean fromFari, boolean isAccountID) {
@@ -285,8 +280,11 @@ public class UserData {
         String selection = InputManager.getSelection(3);
         switch (selection) {
             case "1" -> {
-                showAllUsers();
-                selectUserToDisplay();
+                User selected = Display.pageShow(allUsers, user -> System.out.println(Color.BLUE + user.getName() + " " +
+                        user.getLastName() + Color.RESET));
+                if(selected != null) {
+                    System.out.println(selected);
+                }
                 Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "2" -> {
@@ -362,8 +360,10 @@ public class UserData {
             System.out.println(Color.RED + "No user with this information was found" + Color.RESET);
             return;
         }
-        for (User user : matched) {
-            System.out.println(user);
+        User selected = Display.pageShow(matched, user -> System.out.println(Color.BLUE + user.getName() + " " +
+                user.getLastName() + Color.RESET));
+        if(selected != null) {
+            System.out.println(selected);
         }
     }
 
@@ -422,35 +422,6 @@ public class UserData {
             }
         }
         return matched;
-    }
-
-    private void selectUserToDisplay() {
-        System.out.println(Color.WHITE + "Enter the number of the user you want to see or enter -1 to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
-        if ("-1".equals(selection)) {
-            Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
-            return;
-        }
-        while (!InputManager.isInputValid(selection, allUsers.size())) {
-            System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
-            selection = InputManager.getInput();
-            if ("-1".equals(selection)) {
-                Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
-                return;
-            }
-        }
-        User selected = allUsers.get(Integer.parseInt(selection) - 1);
-        System.out.println(selected.toString());
-    }
-
-    private void showAllUsers() {
-        int count = 1;
-        for (User user : allUsers) {
-            if (user.isAuthenticated()) {
-                System.out.println(Color.WHITE + count + "-" + Color.BLUE + user.getName() + " " + user.getLastName());
-                count++;
-            }
-        }
     }
 
     public int distance(String str1, String str2) {

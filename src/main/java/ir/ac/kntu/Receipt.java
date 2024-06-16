@@ -32,11 +32,11 @@ public class Receipt {
         return time.toString().substring(0, 10) + " " + time.toString().substring(11, 19);
     }
 
-    public static void printSimpleReceipt(Receipt receipt, int count) {
-        if (receipt instanceof ChargeReceipt) {
-            System.out.println(Color.WHITE + count + "-" + Color.GREEN + receipt.timeToString(receipt.getTime()) + Color.RESET);
+    public void printSimpleReceipt() {
+        if (this instanceof ChargeReceipt) {
+            System.out.println(Color.GREEN + this.timeToString(this.getTime()) + Color.RESET);
         } else {
-            System.out.println(Color.WHITE + count + "-" + Color.YELLOW + receipt.timeToString(receipt.getTime()) + Color.RESET);
+            System.out.println(Color.YELLOW + this.timeToString(this.getTime()) + Color.RESET);
         }
     }
 

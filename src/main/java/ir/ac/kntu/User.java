@@ -148,30 +148,15 @@ public class User {
         return false;
     }
 
-    public void displayAllContacts() {
-        if (contacts.size() == 0) {
-            System.out.println(Color.RED + "You don't have any contacts yet!" + Color.RESET);
-            return;
-        }
-        int count = 1;
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (Contact contact : contacts) {
-            System.out.println(Color.WHITE + count + "-" + Color.BLUE + contact.getName() + " " + contact.getLastName());
-            count++;
-        }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-    }
-
     public void showAndEditContact() {
         if (contacts.size() == 0) {
             return;
         }
         Contact selectedContact = selectContactFromList();
-        if (selectedContact == null) {
-            return;
+        if (selectedContact != null) {
+            System.out.println(selectedContact);
+            editContactMenu(selectedContact);
         }
-        System.out.println(selectedContact);
-        editContactMenu(selectedContact);
     }
 
     private void editContactMenu(Contact selectedContact) {
@@ -190,12 +175,11 @@ public class User {
     }
 
     public Contact selectContactFromList() {
-        System.out.println(Color.WHITE + "Enter the number of the contact you want to see or enter -1 to return to last menu" + Color.RESET);
-        String selection = getMenuSelection(contacts.size());
-        if ("-1".equals(selection)) {
+        if (contacts.size() == 0) {
+            System.out.println(Color.RED + "You don't have any contacts yet!" + Color.RESET);
             return null;
         }
-        return contacts.get(Integer.parseInt(selection) - 1);
+        return Display.pageShow(contacts, contact-> System.out.println(Color.BLUE + contact.getName() + " " + contact.getLastName()));
     }
 
     public boolean haveInContacts(Contact selected) {
@@ -207,28 +191,13 @@ public class User {
         return false;
     }
 
-    public void displayRecentUsers() {
+    public User selectRecentUserFromList() {
         if (recentUsers.size() == 0) {
             System.out.println(Color.RED + "You haven't transferred money to anyone yet" + Color.RESET);
-            return;
-        }
-        int count = 1;
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (User recentUser : recentUsers) {
-            System.out.println(Color.WHITE + count + "-" + Color.BLUE + recentUser.getName() + " " + recentUser.getLastName());
-            count++;
-        }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-    }
-
-    public User selectRecentUserFromList() {
-        System.out.println(Color.WHITE + "Enter the number of the user you want to transfer money or enter " + Color.RED +
-                "-1 " + Color.WHITE + "to return to last menu" + Color.RESET);
-        String selection = getMenuSelection(recentUsers.size());
-        if ("-1".equals(selection)) {
             return null;
         }
-        return recentUsers.get(Integer.parseInt(selection) - 1);
+        return Display.pageShow(recentUsers, user -> System.out.println(Color.BLUE + user.getName() + " " +
+                user.getLastName() + Color.RESET));
     }
 
     private String getMenuSelection(int size) {
@@ -288,41 +257,17 @@ public class User {
             System.out.println(Color.RED + "You don't have any tickets yet!" + Color.RESET);
             return;
         }
-        int count = 1;
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (Ticket ticket : tickets) {
-            System.out.println(Color.WHITE + count + "-" + Color.BLUE + ticket.getType().toString() + Color.RESET);
-            count++;
+        Ticket selected = Display.pageShow(tickets, ticket-> System.out.println(Color.BLUE + ticket.getType().toString()+ Color.RESET));
+        if(selected != null){
+            System.out.println(selected);
         }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        selectTicket();
-    }
-
-    private void selectTicket() {
-        System.out.println(Color.WHITE + "Enter the number of the ticket you want to see or enter " + Color.RED + "-1 " +
-                Color.WHITE + "to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
-        if ("-1".equals(selection)) {
-            Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
-            return;
-        }
-        while (!InputManager.isInputValid(selection, tickets.size())) {
-            System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
-            selection = InputManager.getInput();
-            if ("-1".equals(selection)) {
-                Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
-                return;
-            }
-        }
-        Ticket selected = tickets.get(Integer.parseInt(selection) - 1);
-        System.out.println(selected.toString());
     }
 
     @Override
     public String toString() {
         return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "FullName : " + Color.BLUE +
                 name + " " + lastName + '\n' + Color.WHITE + "Phone number : " + Color.BLUE +
-                phoneNumber + '\n' + Color.WHITE + "Account ID : " + Color.BLUE + account.getAccountID() +
+                getPhoneNumber() + '\n' + Color.WHITE + "Account ID : " + Color.BLUE + account.getAccountID() +
                 '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
     }
 
@@ -340,15 +285,8 @@ public class User {
             System.out.println(Color.RED + "There is no receipts for you yet!" + Color.RESET);
             return;
         }
-        int count = 1;
         Collections.reverse(receipts);
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (Receipt receipt : receipts) {
-            Receipt.printSimpleReceipt(receipt, count);
-            count++;
-        }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        Receipt selected = selectReceipt(receipts);
+        Receipt selected = Display.pageShow(receipts, Receipt::printSimpleReceipt);
         Collections.reverse(receipts);
         if (selected == null) {
             return;
@@ -356,38 +294,18 @@ public class User {
         System.out.println(selected);
     }
 
-    private Receipt selectReceipt(List<Receipt> receipts) {
-        System.out.println(Color.WHITE + "Enter the number of the receipt you want to see or enter " + Color.RED + "-1 "
-                + Color.WHITE + "to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
-        if ("-1".equals(selection)) {
-            return null;
-        }
-        while (!InputManager.isInputValid(selection, receipts.size())) {
-            System.out.println(Color.RED + "Please enter a valid number or enter -1" + Color.RESET);
-            selection = InputManager.getInput();
-            if ("-1".equals(selection)) {
-                return null;
-            }
-        }
-        return receipts.get(Integer.parseInt(selection) - 1);
-    }
-
     public void filterReceipt() {
         System.out.println(Color.WHITE + "Please enter the start date for your filter in YYYY-MM-DD format" + Color.RESET);
         Instant start = Receipt.getDateInput();
         System.out.println(Color.WHITE + "Please enter the end date for your filter in YYYY-MM-DD format" + Color.RESET);
         Instant end = Receipt.getDateInput();
-        int count = 1;
         List<Receipt> matchedReceipts = new ArrayList<>();
         for (Receipt receipt : receipts) {
             if (receipt.getTime().isAfter(start) && end.isAfter(receipt.getTime())) {
                 matchedReceipts.add(receipt);
-                Receipt.printSimpleReceipt(receipt, count);
-                count++;
             }
         }
-        Receipt selected = selectReceipt(matchedReceipts);
+        Receipt selected = Display.pageShow(matchedReceipts, Receipt::printSimpleReceipt);
         if (selected != null) {
             System.out.println(selected);
         }

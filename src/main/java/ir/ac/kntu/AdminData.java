@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AdminData {
-    //private List<AuthenticationRequest> authenticationRequests;
-    private Map<User, AuthenticationRequest> requests;
-    private List<Admin> admins;
-    private List<Ticket> tickets;
+    private final Map<User, AuthenticationRequest> requests;
+    private final List<Admin> admins;
+    private final List<Ticket> tickets;
 
 
     public AdminData() {
