@@ -1,16 +1,20 @@
 package ir.ac.kntu;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 public class UserData {
     private List<User> allUsers;
+    private List<User> foreignUsers;
     private User currentUser;
     private List<PhoneNumber> unregistereds;
 
     public UserData() {
-        allUsers = new ArrayList<>();
-        unregistereds = new ArrayList<>();
+        this.allUsers = new ArrayList<>();
+        this.foreignUsers = new ArrayList<>();
+        this.unregistereds = new ArrayList<>();
     }
 
     public void setCurrentUser(User currentUser) {
@@ -25,18 +29,18 @@ public class UserData {
         allUsers.add(newUser);
     }
 
-    public boolean unregisteredAlreadyExists(String phoneNumber){
-        for(PhoneNumber number: unregistereds){
-            if(phoneNumber.equals(number.getNumber())){
+    public boolean unregisteredAlreadyExists(String phoneNumber) {
+        for (PhoneNumber number : unregistereds) {
+            if (phoneNumber.equals(number.getNumber())) {
                 return true;
             }
         }
         return false;
     }
 
-    public PhoneNumber getUnregistered(String phoneNumber){
-        for(PhoneNumber number: unregistereds){
-            if(number.getNumber().equals(phoneNumber)){
+    public PhoneNumber getUnregistered(String phoneNumber) {
+        for (PhoneNumber number : unregistereds) {
+            if (number.getNumber().equals(phoneNumber)) {
                 unregistereds.remove(number);
                 return number;
             }
@@ -72,57 +76,135 @@ public class UserData {
     }
 
     public void transferByAccountID() {
-        long amount = 0;
-        System.out.println(Color.WHITE + "Please enter the account ID you want to transfer money to" + Color.RESET);
-        String input = InputManager.getInput();
-        while (!Account.accountIDValidity(input)) {
-            System.out.println(Color.RED + "Please enter your account ID correctly (13 digits and starts with 0)" + Color.RESET);
-            input = InputManager.getInput();
+        System.out.println(Color.WHITE + "Please enter the account ID/card number you want to transfer money to" + Color.RESET);
+        String input = getAccIdInput();
+        User destination;
+        boolean fromFariBank;
+        boolean isAccountID;
+        if (input.length() == 12) {
+            destination = findUserByAccountID(input).getKey();
+            fromFariBank = findUserByAccountID(input).getValue();
+            isAccountID = true;
+        } else {
+            destination = findUserByCardNumber(input).getKey();
+            fromFariBank = findUserByCardNumber(input).getValue();
+            isAccountID = false;
         }
-        User destination = findUserByAccountID(input);
         if (destination == null) {
-            System.out.println(Color.RED + "There is no user with this account ID" + Color.RESET);
+            System.out.println(Color.RED + "There is no user with this account ID/card number" + Color.RESET);
             Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
         } else if (destination.equals(Main.getUsers().getCurrentUser())) {
             System.out.println(Color.RED + "You cant transfer money to yourself!!" + Color.RESET);
             Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
         } else {
-            amount = transferMoney(destination);
-            if (amount != -1) {
-                TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), destination, Method.ACCOUNT);
-                Main.getUsers().getCurrentUser().addReceipt(newReceipt);
-                destination.addReceipt(newReceipt);
-                System.out.println(newReceipt);
-            }
+            doTransfer(destination, fromFariBank, isAccountID);
         }
     }
 
-    private long transferMoney(User destination) {
-        System.out.println(Color.WHITE + "Please enter the amount you want to transfer (Maximum : 10 million)");
+    private Entry<User, Boolean> findUserByCardNumber(String cardNumber) {
+        for (User user : allUsers) {
+            if (user.isAuthenticated() && user.getAccount().getCreditCard().getCardNumber().equals(cardNumber)) {
+                return new SimpleEntry<>(user, true);
+            }
+        }
+        for (User user : foreignUsers) {
+            if (user.isAuthenticated() && user.getAccount().getCreditCard().getCardNumber().equals(cardNumber)) {
+                return new SimpleEntry<>(user, false);
+            }
+        }
+        return new SimpleEntry<>(null, false);
+    }
+
+    private String getAccIdInput() {
+        String input = InputManager.getInput();
+        while (!Main.getUsers().getCurrentUser().getAccount().cardNumberOrIDValidity(input)) {
+            System.out.println(Color.RED + "Please enter your account ID/card number correctly" + Color.RESET);
+            input = InputManager.getInput();
+        }
+        return input;
+    }
+
+    private long transferMoney(User destination, boolean fromFari, boolean isAccountID) {
+        System.out.println(Color.WHITE + "Please enter the amount you want to transfer (Maximum : 8 million)");
         String amount = InputManager.getInput();
-        while (!InputManager.chargeAmountValidity(amount) || amount.length() > 8 || Long.parseLong(amount) > 10000000) {
+        while (!InputManager.chargeAmountValidity(amount) || amount.length() > 8 || Long.parseLong(amount) > 8000000) {
             System.out.println(Color.RED + "Please enter a valid amount (Maximum : 10 million)" + Color.RESET);
             amount = InputManager.getInput();
         }
-        boolean confirmation = printConfirmation(destination, amount);
+        String method = selectTransferMethod(fromFari, isAccountID);
+        long amountAfterFee = handleMethodLimits(Long.parseLong(amount), method, destination);
+        if (amountAfterFee == -1) {
+            return -1;
+        }
+        boolean confirmation = printConfirmation(destination, amountAfterFee);
         if (!confirmation) {
             return -1;
         }
-        if (Long.parseLong(amount) + 500 > currentUser.getAccount().getBalance()) {
+        if (amountAfterFee > currentUser.getAccount().getBalance()) {
             System.out.println(Color.RED + "Your balance is not enough. Current Balance : " +
-                    Color.GREEN + currentUser.getAccount().getBalance() + "$ " + Color.RED + "required balance:"
-                    + Color.GREEN + (Long.parseLong(amount) + 500) + Color.RESET);
+                    Color.GREEN + currentUser.getAccount().getBalance() + Color.RED + "required balance:"
+                    + Color.GREEN + amountAfterFee + Color.RESET);
             return -1;
         }
-        updateBalances(destination, amount);
+        updateBalances(destination, amount, amountAfterFee);
         currentUser.addToRecentUsers(destination);
         return Long.parseLong(amount);
     }
 
-    private boolean printConfirmation(User destination, String amount) {
+    private long handleMethodLimits(long amount, String method, User destination) {
+        if (method.equals("FariToFari")) {
+            return amount + Main.getManagerData().getFeeRate().getFariFee();
+        }
+        if (method.equals("Paya")) {
+            if (amount > 5000000) {
+                System.out.println(Color.RED + "The maximum transfer amount for Paya method id 5 Million" + Color.RESET);
+                return -1;
+            }
+            Paya newPaya = new Paya(destination, Main.getUsers().getCurrentUser(), amount);
+            Main.getManagerData().addNewPaya(newPaya);
+            System.out.println(Color.GREEN + "Your Paya transfer request has been submitted and will be done in less than 48 hours!"
+                                        + Color.RESET);
+            return -1;
+        }
+        if (method.equals("Pol")) {
+            if (amount > 5000000) {
+                System.out.println(Color.RED + "The maximum transfer amount for Pol method id 5 Million" + Color.RESET);
+                return -1;
+            }
+            return amount + (long) (amount * Main.getManagerData().getFeeRate().getPolFee());
+        }
+        if (amount > 100000) {
+            System.out.println(Color.RED + "The maximum transfer amount for non-fari bank cart to card is 100000" + Color.RESET);
+            return -1;
+        }
+        return amount + Main.getManagerData().getFeeRate().getCardFee();
+    }
+
+    private String selectTransferMethod(boolean fromFari, boolean isAccountID) {
+        if (fromFari) {
+            return "FariToFari";
+        }
+        String selection;
+        if (isAccountID) {
+            System.out.println(Color.WHITE + "Please select your transfer method" + Color.RESET);
+            System.out.println(Color.WHITE + "1-Paya " + Color.BLUE + "(will take some time)" + Color.RESET);
+            System.out.println(Color.WHITE + "2-Pol" + Color.RESET);
+            selection = InputManager.getSelection(2);
+        } else {
+            System.out.println(Color.WHITE + "Please select your transfer method" + Color.RESET);
+            System.out.println(Color.WHITE + "1-Paya " + Color.BLUE + "(will take some time)" + Color.RESET);
+            System.out.println(Color.WHITE + "2-Pol" + Color.RESET);
+            System.out.println(Color.WHITE + "3-Card to card" + Color.RESET);
+            selection = InputManager.getSelection(3);
+        }
+        String[] options = {"Paya", "Pol", "Card to card"};
+        return options[Integer.parseInt(selection) - 1];
+    }
+
+    private boolean printConfirmation(User destination, long amount) {
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         System.out.println(Color.WHITE + "Your transfer's details:" + Color.RESET);
-        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + " + 500" + Color.BLUE + " (fee)" + Color.RESET);
+        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + Color.RESET);
         System.out.println(Color.WHITE + "Destination name : " + Color.BLUE + destination.getName() + " "
                 + destination.getLastName() + Color.RESET);
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
@@ -132,16 +214,21 @@ public class UserData {
         return "1".equals(selection);
     }
 
-    private void updateBalances(User destination, String amount) {
+    private void updateBalances(User destination, String amount, long amountAfterFee) {
         destination.getAccount().setBalance(destination.getAccount().getBalance() + Long.parseLong(amount));
-        currentUser.getAccount().withdrawMoney(Long.parseLong(amount) + 500, currentUser);
+        currentUser.getAccount().withdrawMoney(amountAfterFee, currentUser);
         System.out.println(Color.GREEN + "The money has been transferred successfully!!" + Color.RESET);
     }
 
-    public User findUserByAccountID(String accountID) {
+    public Entry<User, Boolean> findUserByAccountID(String accountID) {
         for (User user : allUsers) {
             if (user.isAuthenticated() && user.getAccount().getAccountID().equals(accountID)) {
-                return user;
+                return new SimpleEntry<>(user, true);
+            }
+        }
+        for (User user : foreignUsers) {
+            if (user.isAuthenticated() && user.getAccount().getAccountID().equals(accountID)) {
+                return new SimpleEntry<>(user, false);
             }
         }
         return null;
@@ -160,7 +247,7 @@ public class UserData {
             return;
         }
         if (selected.getUser().haveInContacts(selected) && selected.getUser().isContactsActivated()) {
-            amount = transferMoney(selected.getUser());
+            amount = transferMoney(selected.getUser(), true, true);
             if (amount != -1) {
                 TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), selected.getUser(), Method.CONTACT);
                 Main.getUsers().getCurrentUser().addReceipt(newReceipt);
@@ -174,14 +261,18 @@ public class UserData {
     }
 
     public void transferByRecentUser() {
-        long amount = 0;
         System.out.println(Color.WHITE + "Please select the user you want to transfer money to" + Color.RESET);
         currentUser.displayRecentUsers();
         User selected = currentUser.selectRecentUserFromList();
         if (selected == null) {
             return;
         }
-        amount = transferMoney(selected);
+        doTransfer(selected, true, true);
+    }
+
+    private void doTransfer(User selected, boolean fromFari, boolean isAccountID) {
+        long amount;
+        amount = transferMoney(selected, fromFari, isAccountID);
         if (amount != -1) {
             TransferReceipt newReceipt = new TransferReceipt(amount, Main.getUsers().getCurrentUser(), selected, Method.ACCOUNT);
             Main.getUsers().getCurrentUser().addReceipt(newReceipt);
@@ -400,8 +491,8 @@ public class UserData {
             System.out.println(Color.RED + "Please enter your phone number correctly" + Color.RESET);
             phoneNumber = InputManager.getInput();
         }
-        for(User user: allUsers){
-            if(user.getPhoneNumber().equals(phoneNumber)){
+        for (User user : allUsers) {
+            if (user.getPhoneNumber().equals(phoneNumber)) {
                 user.getSimCard().printChargeSimCard();
                 return;
             }
@@ -410,8 +501,8 @@ public class UserData {
     }
 
     private void handleUnregisteredNumber(String phoneNumber) {
-        for(PhoneNumber number: unregistereds){
-            if(number.getNumber().equals(phoneNumber)){
+        for (PhoneNumber number : unregistereds) {
+            if (number.getNumber().equals(phoneNumber)) {
                 number.printChargeSimCard();
                 return;
             }

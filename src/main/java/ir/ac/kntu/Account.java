@@ -54,11 +54,11 @@ public class Account {
         balances.add(getBalance());
     }
 
-    public static boolean accountIDValidity(String accountID) {
-        String idRegex = "\\d{13}";
+    public boolean cardNumberOrIDValidity(String idOrNumber) {
+        String idRegex = "\\d+";
         Pattern idPattern = Pattern.compile(idRegex);
-        Matcher idMatcher = idPattern.matcher(accountID);
-        return idMatcher.matches() && "0".equals(accountID.substring(0, 1));
+        Matcher idMatcher = idPattern.matcher(idOrNumber);
+        return idMatcher.matches()  && (idOrNumber.length() == 12 || idOrNumber.length() == 16);
     }
 
     public void printChargeAccount() {

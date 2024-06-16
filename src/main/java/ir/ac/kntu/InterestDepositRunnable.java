@@ -17,7 +17,7 @@ public class InterestDepositRunnable implements Runnable {
                 if (dayOfMonth == 1) {
                     Main.getManagerData().depositMonthlyInterest();
                 }
-                Thread.sleep(24 * 60 * 60 * 1000 / 18000);
+                Thread.sleep(24 * 60 * 60 * 1000 / 6000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();

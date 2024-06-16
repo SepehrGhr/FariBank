@@ -32,7 +32,7 @@ public class PhoneNumber {
             System.out.println(Color.RED + "Please enter a valid number (Maximum 12 digits , Minimum 1)" + Color.RESET);
             amount = InputManager.getInput();
         }
-        if(!printConfirmation(this, amount)){
+        if (!printConfirmation(this, amount)) {
             return;
         }
         checkIsBalanceEnough(this, amount);
@@ -40,11 +40,12 @@ public class PhoneNumber {
 
     private void checkIsBalanceEnough(PhoneNumber phoneNumber, String amount) {
         long currentBalance = Main.getUsers().getCurrentUser().getAccount().getBalance();
-        if(currentBalance > Long.parseLong(amount) + 150){
+        if (currentBalance > Long.parseLong(amount) + Main.getManagerData().getFeeRate().getSimCardFee()) {
             phoneNumber.charge(Long.parseLong(amount));
-            Main.getUsers().getCurrentUser().getAccount().withdrawMoney(Long.parseLong(amount) + 150, Main.getUsers().getCurrentUser());
+            Main.getUsers().getCurrentUser().getAccount().withdrawMoney(Long.parseLong(amount) +
+                    Main.getManagerData().getFeeRate().getSimCardFee(), Main.getUsers().getCurrentUser());
             System.out.println(Color.GREEN + "Selected number has been charged successfully!!" + Color.RESET);
-        } else{
+        } else {
             System.out.println(Color.RED + "Your account balance is not enough!" + Color.RESET);
         }
     }
@@ -52,7 +53,8 @@ public class PhoneNumber {
     private boolean printConfirmation(PhoneNumber destination, String amount) {
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         System.out.println(Color.WHITE + "Your Transaction details:" + Color.RESET);
-        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + " + 150" + Color.BLUE + " (fee)" + Color.RESET);
+        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + " + "
+                + Main.getManagerData().getFeeRate().getSimCardFee() + Color.WHITE + " (fee)" + Color.RESET);
         System.out.println(Color.WHITE + "Destination number : " + Color.BLUE + destination.getNumber() + Color.RESET);
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         System.out.println(Color.WHITE + "Enter " + Color.GREEN + "1 " + Color.WHITE + "to confirm and " + Color.RED +

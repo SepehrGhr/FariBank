@@ -231,7 +231,7 @@ public class Menu {
                 System.out.println(Color.RED + "Entered password is incorrect , please try again" + Color.RESET);
                 password = InputManager.getInput();
             }
-            printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleAdminInput);
+            printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
             Main.getManagerData().setCurrentManager(loggingIn);
         }
     }

@@ -1,9 +1,9 @@
 package ir.ac.kntu;
 
 public class Main {
-    private static UserData users = new UserData();
-    private static AdminData adminData = new AdminData();
-    private static ManagerData managerData = new ManagerData();
+    private static final UserData users = new UserData();
+    private static final AdminData adminData = new AdminData();
+    private static final ManagerData managerData = new ManagerData();
 
     public static void main(String[] args) {
         Setup.userSetup();

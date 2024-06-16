@@ -88,6 +88,27 @@ public class OptionEnums {
         LOG_OUT;
     }
 
+    public enum ManagerAutoTransMenu {
+        PAYA_TRANSFERS,
+        INTEREST_FUNDS,
+        RETURN;
+    }
+
+    public enum ManagerSettingMenu {
+        CHANGE_FEE_RATES,
+        CHANGE_INTEREST_RATE,
+        RETURN;
+    }
+
+    public enum ManagerChangeFee {
+        PAYA_FEE,
+        POL_FEE,
+        FARI_FEE,
+        CARD_FEE,
+        SIMCARD_FEE,
+        RETURN;
+    }
+
     public enum AdminMenu {
         AUTHENTICATION_REQUESTS,
         TICKETS,

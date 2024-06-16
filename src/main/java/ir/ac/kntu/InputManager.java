@@ -26,7 +26,7 @@ public class InputManager {
         } else if ("2".equals(selection)) {
             Menu.printAdminLoginMenu();
             return;
-        } else if("3".equals(selection)){
+        } else if ("3".equals(selection)) {
             Menu.printManagerLogin();
         }
         Menu.endProgram();
@@ -54,13 +54,44 @@ public class InputManager {
         }
     }
 
-    public static void handleManagerMenuInput(){
+    public static void handleManagerMenuInput() {
         String selection = getSelection(4);
         switch (selection) {
-            case "1" -> {}
-            case "2" -> {}
-            case "3" -> {}
+            case "1" -> {
+                Menu.printMenu(OptionEnums.ManagerSettingMenu.values(), InputManager::handleManagerSetting);
+                Menu.printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
+            }
+            case "2" -> {
+            }
+            case "3" -> {
+                Menu.printMenu(OptionEnums.ManagerAutoTransMenu.values(), InputManager::handleAutoTransInput);
+                Menu.printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
+            }
             default -> managerLogout();
+        }
+    }
+
+    private static void handleAutoTransInput() {
+        String selection = getSelection(3);
+        switch (selection){
+            case "1" -> Main.getManagerData().doAllPayas();
+            case "2" -> Main.getManagerData().doAllInterests();
+            default -> {}
+        }
+    }
+
+    private static void handleManagerSetting() {
+        String selection = getSelection(3);
+        switch (selection){
+            case "1" -> {
+                Main.getManagerData().getCurrentManager().changeFeeMenu();
+                Menu.printMenu(OptionEnums.ManagerSettingMenu.values(), InputManager::handleManagerSetting);
+            }
+            case "2" -> {
+                Main.getManagerData().getCurrentManager().changeInterestRate();
+                Menu.printMenu(OptionEnums.ManagerSettingMenu.values(), InputManager::handleManagerSetting);
+            }
+            default -> {}
         }
     }
 
@@ -83,28 +114,33 @@ public class InputManager {
 
     public static void handleUserMainMenuInput() {
         String selection = getSelection(10);
-        switch (selection) {
-            case "1" -> {
+        OptionEnums.UserMainMenuOption[] options = OptionEnums.UserMainMenuOption.values();
+        String selected = options[Integer.parseInt(selection) - 1].toString();
+        switch (selected) {
+            case "ACCOUNT_MANAGEMENT" -> {
                 Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "2" ->{
+            case "FUNDS_MANAGEMENT" -> {
                 Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
             }
-            case "3" -> {
+            case "CONTACTS" -> {
                 Menu.printContactsMenu();
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "4" -> Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
-            case "5" -> Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
-            case "6" -> Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
-            case "7" -> Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
-            case "8" -> {
+            case "TRANSFER_MONEY" ->
+                    Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
+            case "CHARGE_SIM" ->
+                    Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);
+            case "SUPPORT" -> Menu.printMenu(OptionEnums.SupportMenuOption.values(), InputManager::handleSupportInput);
+            case "SETTINGS" ->
+                    Menu.printMenu(OptionEnums.SettingsMenuOption.values(), InputManager::handleSettingsInput);
+            case "ACCOUNT_DETAILS" -> {
                 Menu.printAccountDetails();
                 Main.getUsers().getCurrentUser().generateReport();
                 Menu.printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
             }
-            case "9" -> Menu.userLogout();
+            case "LOG_OUT" -> Menu.userLogout();
             default -> Menu.endProgram();
         }
     }
@@ -144,7 +180,7 @@ public class InputManager {
             case "2" -> {
                 int monthCount = Integer.parseInt(getInterestMonthCount());
                 long amount = getInterestStartAmount();
-                if(amount == -1){
+                if (amount == -1) {
                     break;
                 }
                 InterestFund newFund = new InterestFund(Main.getUsers().getCurrentUser(), monthCount, amount);
@@ -153,7 +189,7 @@ public class InputManager {
                 System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
             }
             case "3" -> {
-                if(Main.getUsers().getCurrentUser().isHasRemainderFund()){
+                if (Main.getUsers().getCurrentUser().isHasRemainderFund()) {
                     System.out.println(Color.RED + "You cant have more than one remainder fund at once!" + Color.RESET);
                     break;
                 }
@@ -174,10 +210,10 @@ public class InputManager {
             System.out.println(Color.RED + "Please enter a valid number (Maximum 12 digits , Minimum 1)" + Color.RESET);
             amount = InputManager.getInput();
         }
-        if(Long.parseLong(amount) <= Main.getUsers().getCurrentUser().getAccount().getBalance()) {
+        if (Long.parseLong(amount) <= Main.getUsers().getCurrentUser().getAccount().getBalance()) {
             Main.getUsers().getCurrentUser().getAccount().setBalance(Main.getUsers().getCurrentUser().getAccount().getBalance() - Long.parseLong(amount));
             return Long.parseLong(amount);
-        } else{
+        } else {
             System.out.println(Color.RED + "Your account balance is not enough for this amount!!" + Color.RESET);
             return -1;
         }
@@ -199,7 +235,7 @@ public class InputManager {
             case "2" -> {
                 Main.getUsers().getCurrentUser().displayAllContacts();
                 Contact selected = Main.getUsers().getCurrentUser().selectContactFromList();
-                if(selected != null){
+                if (selected != null) {
                     selected.getUser().getSimCard().printChargeSimCard();
                 }
                 Menu.printMenu(OptionEnums.ChargeSimOptions.values(), InputManager::handleChargeMethod);

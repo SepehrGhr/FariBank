@@ -1,7 +1,7 @@
 package ir.ac.kntu;
 
 public class InterestFund extends Fund{
-    private int mustReceiveCount;
+    private final int mustReceiveCount;
     private boolean canWithdraw;
     private int receivedCount;
 
@@ -16,7 +16,7 @@ public class InterestFund extends Fund{
     }
 
     private void setInterestAmount(long balance) {
-        interestAmount =(long)(balance * 0.27) / 12;
+        interestAmount =(long)(balance * Main.getManagerData().getInterestRate()) / 12;
     }
 
     public int getMustReceiveCount() {
