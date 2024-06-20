@@ -32,9 +32,9 @@ public class AuthenticationRequest {
         Main.getAdminData().removeRequest(Main.getUsers().getCurrentUser());
         Main.getUsers().removeUser(Main.getUsers().getCurrentUser());
         System.out.println(Color.WHITE + "Please enter your name" + Color.RESET);
-        Main.getUsers().getCurrentUser().setName(Menu.setUserName());
+        Main.getUsers().getCurrentUser().setName(InputManager.setUserName());
         System.out.println(Color.WHITE + "Please enter your last name" + Color.RESET);
-        Main.getUsers().getCurrentUser().setLastName(Menu.setUserName());
+        Main.getUsers().getCurrentUser().setLastName(InputManager.setUserName());
         System.out.println(Color.WHITE + "Please enter your phone number" + Color.RESET);
         String phoneNumber = Menu.setPhoneNumber();
         while ("".equals(phoneNumber)) {

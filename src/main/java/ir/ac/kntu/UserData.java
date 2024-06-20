@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map.Entry;
 
 public class UserData {
-    private List<User> allUsers;
-    private List<User> foreignUsers;
+    private final List<User> allUsers;
+    private final List<User> foreignUsers;
     private User currentUser;
-    private List<PhoneNumber> unregistereds;
+    private final List<PhoneNumber> unregistereds;
 
     public UserData() {
         this.allUsers = new ArrayList<>();
@@ -92,10 +92,10 @@ public class UserData {
         }
         if (destination == null) {
             System.out.println(Color.RED + "There is no user with this account ID/card number" + Color.RESET);
-            Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
         } else if (destination.equals(Main.getUsers().getCurrentUser())) {
             System.out.println(Color.RED + "You cant transfer money to yourself!!" + Color.RESET);
-            Menu.printMenu(OptionEnums.TransferMenuOption.values(), InputManager::handleTransferMethod);
+        } else if (destination.isBlocked()) {
+            System.out.println(Color.RED + "Selected user's account is blocked and you cant transfer money to them" + Color.RESET);
         } else {
             doTransfer(destination, fromFariBank, isAccountID);
         }
@@ -243,6 +243,9 @@ public class UserData {
         if (selected.getUser().equals(Main.getUsers().getCurrentUser())) {
             System.out.println(Color.RED + "You cant transfer money to yourself!!" + Color.RESET);
             return;
+        } else if (selected.getUser().isBlocked()) {
+            System.out.println(Color.RED + "Selected user's account is blocked and you cant transfer money to them" + Color.RESET);
+            return;
         }
         if (selected.getUser().haveInContacts(selected) && selected.getUser().isContactsActivated()) {
             amount = transferMoney(selected.getUser(), true, true);
@@ -260,6 +263,10 @@ public class UserData {
 
     public void transferByRecentUser() {
         User selected = currentUser.selectRecentUserFromList();
+        if(selected != null && selected.isBlocked()){
+            System.out.println(Color.RED + "Selected user's account is blocked and you cant transfer money to them" + Color.RESET);
+            return;
+        }
         if (selected != null) {
             doTransfer(selected, true, true);
         }
@@ -481,5 +488,9 @@ public class UserData {
         PhoneNumber newNumber = new PhoneNumber(phoneNumber, 0);
         unregistereds.add(newNumber);
         newNumber.printChargeSimCard();
+    }
+
+    public void addAllUsers(List<Object> everyone) {
+        everyone.addAll(allUsers);
     }
 }

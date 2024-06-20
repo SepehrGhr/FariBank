@@ -1,5 +1,7 @@
 package ir.ac.kntu;
 
+import javax.print.DocFlavor;
+
 public class OptionEnums {
     public enum UserMainMenuOption {
         ACCOUNT_MANAGEMENT,
@@ -86,6 +88,25 @@ public class OptionEnums {
         USER_MANAGEMENT,
         AUTO_TRANSACTION,
         LOG_OUT;
+    }
+
+    public enum ManagerUserManageMenu {
+        VIEW_USERS,
+        EDIT_USERS,
+        RETURN;
+    }
+
+    public enum ManagerViewUserMenu{
+        VIEW_ALL,
+        VIEW_BY_FILTER,
+        RETURN;
+    }
+
+    public enum EditUserMenu {
+        CHANGE_NAME,
+        CHANGE_LASTNAME,
+        BLOCK_OR_UNBLOCK,
+        RETURN;
     }
 
     public enum ManagerAutoTransMenu {

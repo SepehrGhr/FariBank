@@ -21,13 +21,13 @@ public class User {
     private List<User> recentUsers;
     private List<Ticket> tickets;
     private List<Receipt> receipts;
-
     private List<Fund> funds;
     private Account account;
     private RemainderFund remainderFund;
     private boolean authenticated = false;
     private boolean contactsActivated = true;
-    private boolean hasRemainderFund;
+    private boolean hasRemainderFund = false;
+    private boolean blocked = false;
 
     public User(String name, String lastName, PhoneNumber phoneNumber, String securityNumber, String password) {
         this.name = name;
@@ -40,7 +40,6 @@ public class User {
         this.tickets = new ArrayList<>();
         this.receipts = new ArrayList<>();
         this.funds = new ArrayList<>();
-        this.hasRemainderFund = false;
     }
 
     public String getPhoneNumber() {
@@ -57,6 +56,14 @@ public class User {
 
     public boolean isAuthenticated() {
         return authenticated;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 
     public void setAuthenticated(boolean authenticated) {
@@ -131,7 +138,7 @@ public class User {
         receipts.add(newReceipt);
     }
 
-    public void addFund(Fund newFund){
+    public void addFund(Fund newFund) {
         funds.add(newFund);
     }
 
@@ -179,7 +186,7 @@ public class User {
             System.out.println(Color.RED + "You don't have any contacts yet!" + Color.RESET);
             return null;
         }
-        return Display.pageShow(contacts, contact-> System.out.println(Color.BLUE + contact.getName() + " " + contact.getLastName()));
+        return Display.pageShow(contacts, contact -> System.out.println(Color.BLUE + contact.getName() + " " + contact.getLastName()));
     }
 
     public boolean haveInContacts(Contact selected) {
@@ -257,8 +264,8 @@ public class User {
             System.out.println(Color.RED + "You don't have any tickets yet!" + Color.RESET);
             return;
         }
-        Ticket selected = Display.pageShow(tickets, ticket-> System.out.println(Color.BLUE + ticket.getType().toString()+ Color.RESET));
-        if(selected != null){
+        Ticket selected = Display.pageShow(tickets, ticket -> System.out.println(Color.BLUE + ticket.getType().toString() + Color.RESET));
+        if (selected != null) {
             System.out.println(selected);
         }
     }
@@ -268,6 +275,15 @@ public class User {
         return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "FullName : " + Color.BLUE +
                 name + " " + lastName + '\n' + Color.WHITE + "Phone number : " + Color.BLUE +
                 getPhoneNumber() + '\n' + Color.WHITE + "Account ID : " + Color.BLUE + account.getAccountID() +
+                '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
+    }
+
+    public String fullInfo() {
+        return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "FullName : " + Color.BLUE +
+                name + " " + lastName + '\n' + Color.WHITE + "Phone number : " + Color.BLUE +
+                getPhoneNumber() + '\n' + Color.WHITE + "Password: " + Color.BLUE + password + '\n' +
+                Color.WHITE + "Security Number: " + Color.BLUE + securityNumber + '\n' + Color.WHITE +
+                "Account ID : " + Color.BLUE + account.getAccountID() +
                 '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
     }
 
@@ -349,7 +365,7 @@ public class User {
         }
         System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
         Fund selected = selectFundFromList();
-        if (selected == null){
+        if (selected == null) {
             return;
         }
         selected.openManagement();
@@ -364,7 +380,7 @@ public class User {
         return funds.get(Integer.parseInt(selection) - 1);
     }
 
-    public void removeFund(Fund fund){
+    public void removeFund(Fund fund) {
         funds.remove(fund);
     }
 }

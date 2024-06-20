@@ -182,4 +182,8 @@ public class AdminData {
         addAdmin(new Admin("Sep", "Sepehr", "12345"));
         addAdmin(new Admin("Ali", "Ali12", "Ali123"));
     }
+
+    public void addAllAdmins(List<Object> everyone) {
+        everyone.addAll(admins);
+    }
 }

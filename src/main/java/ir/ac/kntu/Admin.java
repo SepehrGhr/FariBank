@@ -22,4 +22,14 @@ public class Admin {
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String toString() {
+        return Color.CYAN + "*".repeat(35) + '\n' +
+                Color.YELLOW + "Admin: " + '\n' +
+                Color.WHITE + "Name: " + Color.BLUE + name + '\n' +
+                Color.WHITE + "Username: " + Color.BLUE + username + '\n' +
+                Color.WHITE + "Password: " + Color.BLUE + password + '\n' +
+                Color.CYAN + "*".repeat(35) + Color.RESET;
+    }
 }

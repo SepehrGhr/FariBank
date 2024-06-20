@@ -41,9 +41,9 @@ public class Menu {
 
     public static void printSignUpMenu() {
         System.out.println(Color.WHITE + "-Please enter your name-" + Color.RESET);
-        String name = setUserName();
+        String name = InputManager.setUserName();
         System.out.println(Color.WHITE + "-Please enter your last name-" + Color.RESET);
-        String lastName = setUserName();
+        String lastName = InputManager.setUserName();
         System.out.println(Color.WHITE + "-Please enter your phone number-" + Color.RESET);
         String phoneNumber = setPhoneNumber();
         if ("".equals(phoneNumber)) {
@@ -125,34 +125,25 @@ public class Menu {
         return numberMatcher.matches() && "09".equals(phoneNumber.substring(0, 2));
     }
 
-    public static String setUserName() {
-        String name = InputManager.getInput();
-        while (!checkStringValidity(name)) {
-            System.out.println(Color.RED + "Please enter your name correctly" + Color.RESET);
-            name = InputManager.getInput();
-        }
-        return name;
-
-    }
-
-    public static boolean checkStringValidity(String name) {
-        String regex = "[a-zA-z]+";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(name);
-        return matcher.matches();
-    }
-
     public static void printUserLoginMenu() {
         System.out.println(Color.WHITE + "-Please enter your username (Phone number)-" + Color.RESET);
         User loggingIn = getUsername();
         System.out.println(Color.WHITE + "-Please enter your password-" + Color.RESET);
         getPasswordInput(loggingIn);
-        System.out.println(Color.GREEN + "You have successfully logged in!" + Color.RESET);
+        if(!loggingIn.isBlocked()) {
+            System.out.println(Color.GREEN + "You have successfully logged in!" + Color.RESET);
+        }
         Main.getUsers().setCurrentUser(loggingIn);
         showMenuAfterLogin(loggingIn);
     }
 
     private static void showMenuAfterLogin(User loggingIn) {
+        if (loggingIn.isBlocked()){
+            System.out.println(Color.RED + "You access to bank has been blocked by a manager!" + Color.RESET);
+            System.out.println(Color.WHITE + "enter any key to log out" + Color.RESET);
+            InputManager.getInput();
+            userLogout();
+        }
         if (loggingIn.isAuthenticated()) {
             printMenu(OptionEnums.UserMainMenuOption.values(), InputManager::handleUserMainMenuInput);
         } else {
@@ -231,8 +222,8 @@ public class Menu {
                 System.out.println(Color.RED + "Entered password is incorrect , please try again" + Color.RESET);
                 password = InputManager.getInput();
             }
-            printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
             Main.getManagerData().setCurrentManager(loggingIn);
+            printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
         }
     }
 }

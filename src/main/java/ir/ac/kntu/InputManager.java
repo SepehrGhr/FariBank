@@ -62,13 +62,35 @@ public class InputManager {
                 Menu.printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
             }
             case "2" -> {
-
+                Menu.printMenu(OptionEnums.ManagerUserManageMenu.values(), InputManager::handleManagerUserManage);
+                Menu.printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
             }
             case "3" -> {
                 Menu.printMenu(OptionEnums.ManagerAutoTransMenu.values(), InputManager::handleAutoTransInput);
                 Menu.printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);
             }
             default -> managerLogout();
+        }
+    }
+
+    private static void handleManagerUserManage() {
+        String selection = getSelection(3);
+        switch (selection) {
+            case "1" -> Menu.printMenu(OptionEnums.ManagerViewUserMenu.values(), InputManager::handleManagerViewUser);
+            case "2" -> {}
+            default -> {}
+        }
+    }
+
+    private static void handleManagerViewUser() {
+        String selection = getSelection(3);
+        switch (selection) {
+            case "1" -> {
+                Main.getManagerData().showListOfEveryone();
+                Menu.printMenu(OptionEnums.ManagerViewUserMenu.values(), InputManager::handleManagerViewUser);
+            }
+            case "2" -> {}
+            default -> {}
         }
     }
 
@@ -358,5 +380,21 @@ public class InputManager {
         Pattern numPattern = Pattern.compile(numberRegex);
         Matcher numMatcher = numPattern.matcher(input);
         return numMatcher.matches() && input.length() < 13 && Long.parseLong(input) != 0;
+    }
+
+    public static String setUserName() {
+        String name = InputManager.getInput();
+        while (!checkStringValidity(name)) {
+            System.out.println(Color.RED + "Please enter your name correctly" + Color.RESET);
+            name = InputManager.getInput();
+        }
+        return name;
+    }
+
+    public static boolean checkStringValidity(String name) {
+        String regex = "[a-zA-z]+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
     }
 }
