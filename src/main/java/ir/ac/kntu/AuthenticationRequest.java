@@ -23,7 +23,6 @@ public class AuthenticationRequest {
             }
             case "2" -> Menu.userLogout();
             default -> {
-                break;
             }
         }
     }
@@ -59,6 +58,8 @@ public class AuthenticationRequest {
 
     private void addNewAuthenticationRequest() {
         AuthenticationRequest newRequest = new AuthenticationRequest(Main.getUsers().getCurrentUser());
+        Ticket newTicket = new Ticket("", Type.AUTHENTICATION, Main.getUsers().getCurrentUser());
+        Main.getAdminData().addNewTicket(newTicket);
         Main.getAdminData().addAuthenticationRequest(newRequest);
     }
 
@@ -74,23 +75,20 @@ public class AuthenticationRequest {
         this.errorMassage = errorMassage;
     }
 
-    public void chooseAcceptOrReject() {
+    public void chooseAcceptOrReject(Ticket selected) {
         System.out.println(Color.WHITE + "enter 1 to accept and 2 to reject" + Color.RESET);
-        String selection = InputManager.getInput();
-        while (!InputManager.isInputValid(selection, 2)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 2" + Color.RESET);
-            selection = InputManager.getInput();
-        }
+        String selection = InputManager.getSelection(2);
         if ("1".equals(selection)) {
             this.setupAccepted();
             System.out.println(Color.GREEN + "Selected request has been successfully accepted" + Color.RESET);
         } else if ("2".equals(selection)) {
             this.setChecked(true);
             String massage = setRejectReason();
+            selected.setAdminMessage(massage);
             this.setErrorMassage(massage);
             System.out.println(Color.GREEN + "Selected request has been successfully rejected" + Color.RESET);
         }
-        Main.getAdminData().showAuthenticationRequests();
+        selected.setStatus(Status.CLOSED);
     }
 
     public void setupAccepted() {

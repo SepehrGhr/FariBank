@@ -28,6 +28,7 @@ public class InputManager {
             return;
         } else if ("3".equals(selection)) {
             Menu.printManagerLogin();
+            Menu.printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
         }
         Menu.endProgram();
     }
@@ -42,15 +43,17 @@ public class InputManager {
     }
 
     public static void handleAdminInput() {
-        String selection = getSelection(4);
+        String selection = getSelection(3);
         switch (selection) {
-            case "1" -> Main.getAdminData().showAuthenticationRequests();
-            case "2" -> {
+            case "1" -> {
                 Main.getAdminData().displayTicketsMenu();
                 Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
             }
-            case "3" -> Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
-            default -> Menu.printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
+            case "2" -> Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
+            default -> {
+                Main.getAdminData().setCurrentAdmin(null);
+                Menu.printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
+            }
         }
     }
 
@@ -77,7 +80,7 @@ public class InputManager {
         String selection = getSelection(3);
         switch (selection) {
             case "1" -> Menu.printMenu(OptionEnums.ManagerViewUserMenu.values(), InputManager::handleManagerViewUser);
-            case "2" -> {}
+            case "2" -> Menu.printMenu(OptionEnums.ManagerAddMenu.values(), Main.getManagerData()::handleManagerAdd);
             default -> {}
         }
     }
@@ -89,7 +92,9 @@ public class InputManager {
                 Main.getManagerData().showListOfEveryone();
                 Menu.printMenu(OptionEnums.ManagerViewUserMenu.values(), InputManager::handleManagerViewUser);
             }
-            case "2" -> {}
+            case "2" -> {
+                Main.getManagerData().showListWithFilter();
+            }
             default -> {}
         }
     }
@@ -98,7 +103,10 @@ public class InputManager {
         String selection = getSelection(3);
         switch (selection){
             case "1" -> Main.getManagerData().doAllPayas();
-            case "2" -> Main.getManagerData().doAllInterests();
+            case "2" -> {
+                Main.getManagerData().depositMonthlyInterest();
+                System.out.println(Color.GREEN + "a monthly interest has been successfully deposited to all users with active interest fund" + Color.RESET);
+            }
             default -> {}
         }
     }

@@ -9,6 +9,7 @@ public class AdminData {
     private final Map<User, AuthenticationRequest> requests;
     private final List<Admin> admins;
     private final List<Ticket> tickets;
+    private Admin currentAdmin;
 
 
     public AdminData() {
@@ -19,6 +20,14 @@ public class AdminData {
 
     public void addAdmin(Admin newAdmin) {
         admins.add(newAdmin);
+    }
+
+    public Admin getCurrentAdmin() {
+        return currentAdmin;
+    }
+
+    public void setCurrentAdmin(Admin currentAdmin) {
+        this.currentAdmin = currentAdmin;
     }
 
     public Admin findAdminByUsername(String input) {
@@ -42,45 +51,9 @@ public class AdminData {
         requests.put(newRequest.getUser(), newRequest);
     }
 
-    public void showAuthenticationRequests() {
-        int count = 1;
-        List<AuthenticationRequest> requestList = new ArrayList<>();
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (Map.Entry<User, AuthenticationRequest> set : requests.entrySet()) {
-            if (!set.getValue().isChecked()) {
-                System.out.println(Color.WHITE + count + "-" + Color.BLUE + set.getKey().getPhoneNumber() + Color.RESET);
-                requestList.add(set.getValue());
-                count++;
-            }
-        }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        editAuthenticationMenu(requestList);
-    }
-
-    private void editAuthenticationMenu(List<AuthenticationRequest> requestList) {
-        System.out.println(Color.WHITE + "Enter the number of the request you want to see or enter -1 to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
-        if ("-1".equals(selection)) {
-            Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
-            return;
-        }
-        while (!InputManager.isInputValid(selection, requestList.size())) {
-            System.out.println(Color.RED + "Please enter a number between 1 and " + requestList.size() + " or enter -1" + Color.RESET);
-            selection = InputManager.getInput();
-            if ("-1".equals(selection)) {
-                Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
-                return;
-            }
-        }
-        AuthenticationRequest selected = requestList.get(Integer.parseInt(selection) - 1);
-        selected.showUserInformation();
-        selected.chooseAcceptOrReject();
-    }
-
     public void addNewTicket(Ticket newTicket) {
         tickets.add(newTicket);
     }
-
 
     public void displayTicketsMenu() {
         System.out.println(Color.WHITE + "Please select the filter you want to use" + Color.RESET);
@@ -92,90 +65,80 @@ public class AdminData {
     }
 
     private void selectTicketFilter() {
-        String selection = InputManager.getInput();
-        while (!InputManager.isInputValid(selection, 4)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 4" + Color.RESET);
-            selection = InputManager.getInput();
-        }
+        String selection = InputManager.getSelection(4);
+        List<Ticket> allowedTickets = getCurrentAdminTickets();
         switch (selection) {
-            case "1" -> showTicketsByStatus();
-            case "2" -> showTicketsByType();
-            case "3" -> showTicketsByUser();
+            case "1" -> showTicketsByStatus(allowedTickets);
+            case "2" -> showTicketsByType(allowedTickets);
+            case "3" -> showTicketsByUser(allowedTickets);
             default -> Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
         }
     }
 
-    private void showTicketsByUser() {
-        if(tickets.size() == 0){
+    private List<Ticket> getCurrentAdminTickets() {
+        List<Ticket> allowedTickets = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            if (currentAdmin.isAllowed(ticket.getType())) {
+                allowedTickets.add(ticket);
+            }
+        }
+        return allowedTickets;
+    }
+
+    private void showTicketsByUser(List<Ticket> allowedTickets) {
+        if (allowedTickets.size() == 0) {
             System.out.println(Color.RED + "There is no ticket currently" + Color.RESET);
             return;
         }
-        int count = 1;
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (Ticket ticket : tickets) {
-            System.out.println(Color.WHITE + count + "-" + Color.BLUE + ticket.getSubmitter().getPhoneNumber() + Color.RESET);
-            count++;
-        }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        selectTicket();
-    }
-
-    private void selectTicket() {
-        System.out.println(Color.WHITE + "Enter the number of the ticket you want to see or enter -1 to return to last menu" + Color.RESET);
-        String selection = InputManager.getInput();
-        if ("-1".equals(selection)) {
-            Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
-            return;
-        }
-        while (!InputManager.isInputValid(selection, tickets.size())) {
-            System.out.println(Color.RED + "Please enter a number from the list or enter -1" + Color.RESET);
-            selection = InputManager.getInput();
-            if ("-1".equals(selection)) {
-                Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
-                return;
-            }
-        }
-        Ticket selected = tickets.get(Integer.parseInt(selection) - 1);
-        System.out.println(selected.toString());
-        submitAdminMessage(selected);
+        Ticket selected = Display.pageShow(allowedTickets, ticket -> System.out.println(Color.BLUE + ticket.getSubmitter().getPhoneNumber() + Color.RESET));
+        handleSelectedTicket(selected);
     }
 
     private void submitAdminMessage(Ticket selected) {
         System.out.println(Color.WHITE + "Please enter your message for them" + Color.RESET);
         String adminMessage = InputManager.getInput();
         selected.setAdminMessage(adminMessage);
-        selected.setStatus(Status.CLOSED);
+        selected.setStatus(chooseNewStatus());
         System.out.println(Color.GREEN + "Your message has been submitted and ticket status has been updated" + Color.RESET);
     }
 
-    private void showTicketsByType() {
-        if(tickets.size() == 0){
-            System.out.println(Color.RED + "There is no ticket currently" + Color.RESET);
-            return;
-        }
-        int count = 1;
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (Ticket ticket : tickets) {
-            System.out.println(Color.WHITE + count + "-" + Color.BLUE + ticket.getType().toString() + Color.RESET);
-            count++;
-        }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        selectTicket();
+    private Status chooseNewStatus() {
+        Menu.printMenu(Status.values(), Main.getAdminData()::getCurrentAdmin);
+        String selection = InputManager.getSelection(3);
+        Status[] options = Status.values();
+        return options[Integer.parseInt(selection) - 1];
     }
 
-    private void showTicketsByStatus() {
-        if(tickets.size() == 0){
+    private void showTicketsByType(List<Ticket> allowedTickets) {
+        if (allowedTickets.size() == 0) {
             System.out.println(Color.RED + "There is no ticket currently" + Color.RESET);
             return;
         }
-        int count = 1;
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        for (Ticket ticket : tickets) {
-            System.out.println(Color.WHITE + count + "-" + Color.BLUE + ticket.getStatus().toString() + Color.RESET);
-            count++;
+        Ticket selected = Display.pageShow(allowedTickets, ticket -> System.out.println(Color.BLUE + ticket.getType().toString() + Color.RESET));
+        handleSelectedTicket(selected);
+    }
+
+    private void handleSelectedTicket(Ticket selected) {
+        if (selected == null) {
+            Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
+            return;
         }
-        System.out.println(Color.CYAN + "*".repeat(35) + Color.RESET);
-        selectTicket();
+        System.out.println(selected);
+        if (selected.getType().equals(Type.AUTHENTICATION)) {
+            AuthenticationRequest selectedReq = requests.get(selected.getSubmitter());
+            selectedReq.chooseAcceptOrReject(selected);
+            return;
+        }
+        submitAdminMessage(selected);
+    }
+
+    private void showTicketsByStatus(List<Ticket> allowedTickets) {
+        if (allowedTickets.size() == 0) {
+            System.out.println(Color.RED + "There is no ticket currently" + Color.RESET);
+            return;
+        }
+        Ticket selected = Display.pageShow(allowedTickets, ticket -> System.out.println(Color.BLUE + ticket.getStatus().toString() + Color.RESET));
+        handleSelectedTicket(selected);
     }
 
     public void adminSetup() {
@@ -185,5 +148,28 @@ public class AdminData {
 
     public void addAllAdmins(List<Object> everyone) {
         everyone.addAll(admins);
+    }
+
+    public List<Admin> searchByName(String name) {
+        List<Admin> matched = new ArrayList<>();
+        for (Admin admin : admins) {
+            if (name.equals(admin.getName())) {
+                matched.add(admin);
+            }
+        }
+        return matched;
+    }
+
+    public void addAdminsToList(List<Object> matched) {
+        matched.addAll(admins);
+    }
+
+    public boolean nameAlreadyExists(String name) {
+        for (Admin admin : admins) {
+            if (admin.getUsername().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

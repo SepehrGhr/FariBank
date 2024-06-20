@@ -7,6 +7,7 @@ public class Manager {
     private String name;
     private String password;
     private int level;
+    private boolean blocked = false;
 
     public Manager(String name, String password, int level) {
         this.name = name;
@@ -22,8 +23,20 @@ public class Manager {
         return password;
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
     public int getLevel() {
         return level;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void changeFeeMenu() {
@@ -151,10 +164,14 @@ public class Manager {
         System.out.println(Color.WHITE + "Please enter" + Color.BLUE + " 1 " + Color.WHITE + "to change block status or"
                 + Color.BLUE + " 2 " + Color.WHITE + "to remain the same" + Color.RESET);
         String selection = InputManager.getSelection(2);
-        if("1".equals(selection)){
+        if ("1".equals(selection)) {
             selected.setBlocked(!selected.isBlocked());
             System.out.println(Color.GREEN + "selected user's status was changed successfully" + Color.RESET);
         }
+    }
+
+    private boolean canEditOrBlock(Manager toBlock) {
+        return this.level < toBlock.getLevel();
     }
 
     private void changeUserLastname(User selected) {
@@ -179,8 +196,102 @@ public class Manager {
     }
 
     public void editManagerMenu(Manager selected) {
+        if (!this.canEditOrBlock(selected)) {
+            System.out.println(Color.RED + "You cant edit the information of your higher-ups" + Color.RESET);
+            return;
+        }
+        Menu.printMenu(OptionEnums.EditManagerMenu.values(), Main.getManagerData().getCurrentManager()::getName);
+        String selection = InputManager.getSelection(3);
+        OptionEnums.EditManagerMenu[] options = OptionEnums.EditManagerMenu.values();
+        String selectedOption = options[Integer.parseInt(selection) - 1].toString();
+        switch (selectedOption) {
+            case "CHANGE_NAME" -> this.changeUsername(selected);
+            case "BLOCK_OR_UNBLOCK" -> this.blockManager(selected);
+            default -> {
+            }
+        }
+    }
+
+    private void blockManager(Manager selected) {
+        if (selected.isBlocked()) {
+            System.out.println(Color.RED + "this manager is currently blocked" + Color.RESET);
+        } else {
+            System.out.println(Color.GREEN + "this manager is currently not blocked" + Color.RESET);
+        }
+        System.out.println(Color.WHITE + "Please enter" + Color.BLUE + " 1 " + Color.WHITE + "to change block status or"
+                + Color.BLUE + " 2 " + Color.WHITE + "to remain the same" + Color.RESET);
+        String selection = InputManager.getSelection(2);
+        if ("1".equals(selection)) {
+            selected.setBlocked(!selected.isBlocked());
+            System.out.println(Color.GREEN + "selected manager's status was changed successfully" + Color.RESET);
+        }
+    }
+
+    private void changeUsername(Manager selected) {
+        System.out.println(Color.WHITE + "Please enter the new username" + Color.RESET);
+        String username = InputManager.setUserName();
+        selected.setName(username);
+        System.out.println(Color.GREEN + "Selected manager's name has been successfully changed" + Color.RESET);
+    }
+
+    private void changeUsername(Admin selected) {
+        System.out.println(Color.WHITE + "Please enter the new username" + Color.RESET);
+        String username = InputManager.setUserName();
+        selected.setUsername(username);
+        System.out.println(Color.GREEN + "Selected manager's name has been successfully changed" + Color.RESET);
     }
 
     public void editAdminMenu(Admin selected) {
+        Menu.printMenu(OptionEnums.EditAdminMenu.values(), this::getName);
+        String selection = InputManager.getSelection(4);
+        OptionEnums.EditAdminMenu[] options = OptionEnums.EditAdminMenu.values();
+        OptionEnums.EditAdminMenu selectedOption = options[Integer.parseInt(selection) - 1];
+        switch (selectedOption) {
+            case CHANGE_NAME -> this.changeUsername(selected);
+            case BLOCK_OR_UNBLOCK -> blockAdmin(selected);
+            case MODIFY_RESPONSIBILITIES -> modifyResponsibility(selected);
+            default -> {
+            }
+        }
+    }
+
+    private void modifyResponsibility(Admin selected) {
+        Type[] options = Type.values();
+        int count = 1;
+        for (Type type : options) {
+            if (selected.isAllowed(type)) {
+                System.out.println(Color.WHITE + count + "-" + Color.GREEN + type.toString() + Color.RESET);
+            } else {
+                System.out.println(Color.WHITE + count + "-" + Color.RED + type.toString() + Color.RESET);
+            }
+            count++;
+        }
+        System.out.println(Color.WHITE + "please select the responsibility you want to change" + Color.RESET);
+        String selection = InputManager.getSelection(8);
+        changeResponsibility(selected, options[Integer.parseInt(selection) - 1]);
+        System.out.println(Color.GREEN + "Selected responsibility has been successfully changed for the selected admin" + Color.RESET);
+    }
+
+    private void changeResponsibility(Admin selected, Type type) {
+        if(selected.isAllowed(type)){
+            selected.removeAllowed(type);
+        } else {
+            selected.addAllowed(type);
+        }
+    }
+
+    private void blockAdmin(Admin selected) {
+        if (selected.isBlocked()) {
+            System.out.println(Color.RED + "this admin is currently blocked" + Color.RESET);
+        } else {
+            System.out.println(Color.GREEN + "this admin is currently not blocked" + Color.RESET);
+        }
+        System.out.println(Color.WHITE + "Please enter" + Color.BLUE + " 1 " + Color.WHITE + "to change block status or"
+                + Color.BLUE + " 2 " + Color.WHITE + "to remain the same" + Color.RESET);
+        String selection = InputManager.getSelection(2);
+        if ("1".equals(selection)) {
+            selected.setBlocked(!selected.isBlocked());
+            System.out.println(Color.GREEN + "selected admin's status was changed successfully" + Color.RESET);
+        }
     }
 }

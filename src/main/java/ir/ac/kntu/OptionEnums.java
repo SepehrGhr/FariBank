@@ -1,6 +1,7 @@
 package ir.ac.kntu;
 
 import javax.print.DocFlavor;
+import java.security.PublicKey;
 
 public class OptionEnums {
     public enum UserMainMenuOption {
@@ -92,7 +93,13 @@ public class OptionEnums {
 
     public enum ManagerUserManageMenu {
         VIEW_USERS,
-        EDIT_USERS,
+        ADD_MANAGER_OR_ADMIN,
+        RETURN;
+    }
+
+    public enum ManagerAddMenu {
+        MANAGER,
+        ADMIN,
         RETURN;
     }
 
@@ -109,6 +116,18 @@ public class OptionEnums {
         RETURN;
     }
 
+    public enum EditManagerMenu {
+        CHANGE_NAME,
+        BLOCK_OR_UNBLOCK,
+        RETURN;
+    }
+
+    public enum EditAdminMenu {
+        CHANGE_NAME,
+        BLOCK_OR_UNBLOCK,
+        MODIFY_RESPONSIBILITIES,
+        RETURN;
+    }
     public enum ManagerAutoTransMenu {
         PAYA_TRANSFERS,
         INTEREST_FUNDS,
@@ -131,7 +150,6 @@ public class OptionEnums {
     }
 
     public enum AdminMenu {
-        AUTHENTICATION_REQUESTS,
         TICKETS,
         USERS,
         LOG_OUT;
@@ -147,6 +165,12 @@ public class OptionEnums {
         LOGIN,
         SIGN_UP,
         RETURN;
+    }
+
+    public enum Rules{
+        USER,
+        MANAGER,
+        ADMIN;
     }
 }
 

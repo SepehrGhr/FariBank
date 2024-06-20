@@ -315,17 +315,20 @@ public class UserData {
         String selection = InputManager.getSelection(5);
         switch (selection) {
             case "1" -> {
-                List<User> matched = searchByName();
+                System.out.println(Color.WHITE + "Please enter the name your searching for" + Color.RESET);
+                List<User> matched = searchByName(InputManager.getInput());
                 printMatched(matched);
                 Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "2" -> {
-                List<User> matched = searchByLastname();
+                System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
+                List<User> matched = searchByLastname(InputManager.getInput());
                 printMatched(matched);
                 Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "3" -> {
-                List<User> matched = searchByPhoneNumber();
+                System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
+                List<User> matched = searchByPhoneNumber(InputManager.getInput());
                 printMatched(matched);
                 Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
@@ -374,10 +377,8 @@ public class UserData {
         }
     }
 
-    private List<User> searchByPhoneNumber() {
+    public List<User> searchByPhoneNumber(String phoneNumber) {
         List<User> matched = new ArrayList<>();
-        System.out.println(Color.WHITE + "Please enter the phone number your searching for" + Color.RESET);
-        String phoneNumber = InputManager.getInput();
         for (User user : allUsers) {
             if (phoneNumber.equals(user.getPhoneNumber())) {
                 matched.add(user);
@@ -393,10 +394,8 @@ public class UserData {
         return matched;
     }
 
-    private List<User> searchByLastname() {
+    public List<User> searchByLastname(String lastname) {
         List<User> matched = new ArrayList<>();
-        System.out.println(Color.WHITE + "Please enter the lastname your searching for" + Color.RESET);
-        String lastname = InputManager.getInput();
         for (User user : allUsers) {
             if (lastname.equals(user.getLastName())) {
                 matched.add(user);
@@ -412,10 +411,8 @@ public class UserData {
         return matched;
     }
 
-    private List<User> searchByName() {
+    public List<User> searchByName(String name) {
         List<User> matched = new ArrayList<>();
-        System.out.println(Color.WHITE + "Please enter the name your searching for" + Color.RESET);
-        String name = InputManager.getInput();
         for (User user : allUsers) {
             if (name.equals(user.getName())) {
                 matched.add(user);
@@ -454,6 +451,8 @@ public class UserData {
 
     public void addNewUserToDatabase(User newUser) {
         AuthenticationRequest newRequest = new AuthenticationRequest(newUser);
+        Ticket newTicket = new Ticket("", Type.AUTHENTICATION, newUser);
+        Main.getAdminData().addNewTicket(newTicket);
         Main.getAdminData().addAuthenticationRequest(newRequest);
         Main.getUsers().addUser(newUser);
     }
@@ -492,5 +491,9 @@ public class UserData {
 
     public void addAllUsers(List<Object> everyone) {
         everyone.addAll(allUsers);
+    }
+
+    public void addUsersToList(List<Object> matched) {
+        matched.addAll(allUsers);
     }
 }

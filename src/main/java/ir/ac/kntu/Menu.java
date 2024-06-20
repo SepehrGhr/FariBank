@@ -35,6 +35,12 @@ public class Menu {
                 System.out.println(Color.RED + "Entered password is incorrect , please try again" + Color.RESET);
                 password = InputManager.getInput();
             }
+            if(loggingIn.isBlocked()){
+                System.out.println(Color.RED + "You cant access the bank now because you have been blocked by a manager" + Color.RESET);
+                printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
+                return;
+            }
+            Main.getAdminData().setCurrentAdmin(loggingIn);
             printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
         }
     }
@@ -214,13 +220,16 @@ public class Menu {
         Manager loggingIn = Main.getManagerData().findManagerByUsername(username);
         if (loggingIn == null) {
             System.out.println(Color.RED + "There is no manager with this username" + Color.RESET);
-            printMenu(OptionEnums.SelectRuleOption.values(), InputManager::handleSelectRuleInput);
         } else {
             System.out.println(Color.WHITE + "Please enter your password" + Color.RESET);
             String password = InputManager.getInput();
             while (!password.equals(loggingIn.getPassword())) {
                 System.out.println(Color.RED + "Entered password is incorrect , please try again" + Color.RESET);
                 password = InputManager.getInput();
+            }
+            if(loggingIn.isBlocked()){
+                System.out.println(Color.RED + "You cant access the bank cause you have been blocked by another manager." + Color.RESET);
+                return;
             }
             Main.getManagerData().setCurrentManager(loggingIn);
             printMenu(OptionEnums.ManagerMenu.values(), InputManager::handleManagerMenuInput);

@@ -2,7 +2,7 @@ package ir.ac.kntu;
 
 enum Status {SUBMITTED, PENDING, CLOSED}
 
-enum Type {REPORT, CONTACTS, TRANSFER, SETTINGS}
+enum Type {REPORT, CONTACTS, TRANSFER, SETTINGS, AUTHENTICATION, FUNDS, CHARGE, CARD}
 
 public class Ticket {
     private String userMessage;
@@ -49,28 +49,16 @@ public class Ticket {
 
     public static void submitNewTicket() {
         printTicketTypes();
-        String selection = InputManager.getInput();
-        while (!InputManager.isInputValid(selection, 5)) {
-            System.out.println(Color.RED + "Please enter a number between 1 and 5" + Color.RESET);
-            selection = InputManager.getInput();
-        }
+        String selection = InputManager.getSelection(8);
         switch (selection) {
-            case "1":
-                createTicket(Type.REPORT);
-                break;
-            case "2":
-                createTicket(Type.CONTACTS);
-                break;
-            case "3":
-                createTicket(Type.TRANSFER);
-                break;
-            case "4":
-                createTicket(Type.SETTINGS);
-                break;
-            case "5":
-                return;
-            default:
-                break;
+            case "1" -> createTicket(Type.REPORT);
+            case "2" -> createTicket(Type.CONTACTS);
+            case "3" -> createTicket(Type.TRANSFER);
+            case "4" -> createTicket(Type.SETTINGS);
+            case "5" -> createTicket(Type.FUNDS);
+            case "6" -> createTicket(Type.CHARGE);
+            case "7" -> createTicket(Type.CARD);
+            default -> {}
         }
 
     }
@@ -97,16 +85,24 @@ public class Ticket {
         System.out.println(Color.WHITE + "2-" + Color.BLUE + "Contacts" + Color.RESET);
         System.out.println(Color.WHITE + "3-" + Color.BLUE + "Transfer" + Color.RESET);
         System.out.println(Color.WHITE + "4-" + Color.BLUE + "Settings" + Color.RESET);
-        System.out.println(Color.WHITE + "5-" + Color.BLUE + "Return" + Color.RESET);
+        System.out.println(Color.WHITE + "5-" + Color.BLUE + "Funds" + Color.RESET);
+        System.out.println(Color.WHITE + "6-" + Color.BLUE + "Charge" + Color.RESET);
+        System.out.println(Color.WHITE + "7-" + Color.BLUE + "Card" + Color.RESET);
+        System.out.println(Color.WHITE + "8-" + Color.BLUE + "Return" + Color.RESET);
         System.out.println(Color.WHITE + "Please enter the number of the option you want to select" + Color.RESET);
     }
 
     @Override
     public String toString() {
-        return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "Type : " +
-                Color.BLUE + type.toString() + '\n' + Color.WHITE + "Status : " +
-                Color.BLUE + status.toString() + '\n' + Color.WHITE + "User message : " +
-                Color.BLUE + userMessage + '\n' + Color.WHITE + "Admin message : " + Color.BLUE +
-                adminMessage + '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
+        if (type.equals(Type.AUTHENTICATION)) {
+            Main.getAdminData().getRequests().get(submitter).showUserInformation();
+        } else {
+            return Color.CYAN + "*".repeat(35) + '\n' + Color.WHITE + "Type : " +
+                    Color.BLUE + type.toString() + '\n' + Color.WHITE + "Status : " +
+                    Color.BLUE + status.toString() + '\n' + Color.WHITE + "User message : " +
+                    Color.BLUE + userMessage + '\n' + Color.WHITE + "Admin message : " + Color.BLUE +
+                    adminMessage + '\n' + Color.CYAN + "*".repeat(35) + Color.RESET;
+        }
+        return "";
     }
 }
