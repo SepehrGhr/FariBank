@@ -8,12 +8,6 @@ public class ChargeReceipt extends Receipt {
         this.newBalance = newBalance;
     }
 
-    public static void createChargeReceipt(long amount, long balance) {
-        ChargeReceipt newReceipt = new ChargeReceipt(amount, balance);
-        Main.getUsers().getCurrentUser().addReceipt(newReceipt);
-        System.out.println(newReceipt);
-    }
-
     @Override
     public String toString() {
         return super.toString() + Color.WHITE + "New balance : " + Color.GREEN + newBalance + '\n' +

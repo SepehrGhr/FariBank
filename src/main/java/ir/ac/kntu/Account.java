@@ -77,7 +77,9 @@ public class Account {
 
     public void chargeAccount(long amount) {
         setBalance(getBalance() + amount);
-        ChargeReceipt.createChargeReceipt(amount, getBalance());
+        ChargeReceipt newReceipt = new ChargeReceipt(amount, balance);
+        Main.getUsers().getCurrentUser().addReceipt(newReceipt);
+        System.out.println(newReceipt);
     }
 
     public void displayBalance() {

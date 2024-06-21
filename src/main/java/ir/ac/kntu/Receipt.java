@@ -35,8 +35,10 @@ public class Receipt {
     public void printSimpleReceipt() {
         if (this instanceof ChargeReceipt) {
             System.out.println(Color.GREEN + this.timeToString(this.getTime()) + Color.RESET);
-        } else {
+        } else if(this instanceof TransferReceipt) {
             System.out.println(Color.YELLOW + this.timeToString(this.getTime()) + Color.RESET);
+        } else {
+            System.out.println(Color.BLUE + this.timeToString(this.getTime()) + Color.RESET);
         }
     }
 

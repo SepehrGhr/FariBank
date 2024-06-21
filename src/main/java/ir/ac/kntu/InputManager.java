@@ -379,7 +379,7 @@ public class InputManager {
     }
 
     public static void handleShowReceipt() {
-        String selection = getSelection(3);
+        String selection = getSelection(4);
         switch (selection) {
             case "1" -> {
                 Main.getUsers().getCurrentUser().displayReceipts();
@@ -387,6 +387,10 @@ public class InputManager {
             }
             case "2" -> {
                 Main.getUsers().getCurrentUser().filterReceipt();
+                Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
+            }
+            case "3" -> {
+                Main.getUsers().getCurrentUser().generateReport();
                 Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);
             }
             default -> Menu.printMenu(OptionEnums.ManagementMenuOption.values(), InputManager::handleManagementInput);

@@ -71,6 +71,7 @@ public class OptionEnums {
     public enum ShowReceiptsOption {
         VIEW_ALL,
         FILTER_BY_TIME_SPAN,
+        VIEW_IN_HTML_FILE,
         RETURN;
     }
 

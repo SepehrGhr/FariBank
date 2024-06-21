@@ -220,6 +220,9 @@ public class ManagerData {
                         System.out.println(Color.RED + ((Manager) theOne).getName() + Color.RESET);
                     }
                 });
+        if(selected == null){
+            return;
+        }
         if (selected instanceof User) {
             System.out.println(((User) selected).fullInfo());
         } else if (selected instanceof Admin) {

@@ -43,7 +43,6 @@ public class Display {
                         Color.WHITE + (endIndex+3) + "-" + Color.CYAN + "Return\n" +
                         Color.YELLOW + "<>".repeat(20) + '\n' +
                         Color.WHITE + "Please select an option" + Color.RESET);
-
     }
 
     private static int fetchValidChoice(int minValid, int maxValid) {
