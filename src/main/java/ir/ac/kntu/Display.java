@@ -8,19 +8,7 @@ public class Display {
         while (true) {
             int startIndex = pageIndex * 5;
             int endIndex = Math.min(startIndex + 5, items.size());
-            System.out.println(Color.YELLOW + "<>".repeat(20));
-            for (int i = startIndex; i < endIndex; i++) {
-                T item = items.get(i);
-                System.out.print(Color.WHITE + (i+1) + "-");
-                itemPrinter.printItem(item);
-            }
-            System.out.println(
-                    Color.WHITE + (endIndex+1) +  "-" + Color.CYAN + "Next " +
-                            Color.WHITE + (endIndex+2) + "-" + Color.CYAN + "Previous " +
-                            Color.WHITE + (endIndex+3) + "-" + Color.CYAN + "Return\n" +
-                            Color.YELLOW + "<>".repeat(20) + '\n' +
-                            Color.WHITE + "Please select an option" + Color.RESET);
-
+            printItems(startIndex, endIndex, items, itemPrinter);
             int userChoice = fetchValidChoice(startIndex + 1, endIndex + 1);
             if (userChoice == endIndex + 1) {
                 if (endIndex < items.size()) {
@@ -40,6 +28,22 @@ public class Display {
                 return items.get(userChoice - 1);
             }
         }
+    }
+
+    private static <T> void printItems(int startIndex, int endIndex, List<T> items, ItemPrinter<T> itemPrinter) {
+        System.out.println(Color.YELLOW + "<>".repeat(20));
+        for (int i = startIndex; i < endIndex; i++) {
+            T item = items.get(i);
+            System.out.print(Color.WHITE + (i+1) + "-");
+            itemPrinter.printItem(item);
+        }
+        System.out.println(
+                Color.WHITE + (endIndex+1) +  "-" + Color.CYAN + "Next " +
+                        Color.WHITE + (endIndex+2) + "-" + Color.CYAN + "Previous " +
+                        Color.WHITE + (endIndex+3) + "-" + Color.CYAN + "Return\n" +
+                        Color.YELLOW + "<>".repeat(20) + '\n' +
+                        Color.WHITE + "Please select an option" + Color.RESET);
+
     }
 
     private static int fetchValidChoice(int minValid, int maxValid) {

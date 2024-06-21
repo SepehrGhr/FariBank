@@ -170,7 +170,7 @@ public class Manager {
         }
     }
 
-    private boolean canEditOrBlock(Manager toBlock) {
+    public boolean canEditOrBlock(Manager toBlock) {
         return this.level < toBlock.getLevel();
     }
 

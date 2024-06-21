@@ -29,7 +29,7 @@ public class UserData {
         allUsers.add(newUser);
     }
 
-    public void addForeignUser(User newUser){
+    public void addForeignUser(User newUser) {
         foreignUsers.add(newUser);
     }
 
@@ -155,15 +155,15 @@ public class UserData {
         return Long.parseLong(amount);
     }
 
-    private long handleMethodLimits(long amount, String method, User destination) {
-        if (method.equals("FariToFari")) {
+    public long handleMethodLimits(long amount, String method, User destination) {
+        if ("FariToFari".equals(method)) {
             return amount + Main.getManagerData().getFeeRate().getFariFee();
         }
-        if (method.equals("Paya")) {
-            handlePayaMethod(amount, destination);
+        if ("Paya".equals(method)) {
+            handlePayaMethod(amount, destination, false);
             return -1;
         }
-        if (method.equals("Pol")) {
+        if ("Pol".equals(method)) {
             if (amount > 5000000) {
                 System.out.println(Color.RED + "The maximum transfer amount for Pol method id 5 Million" + Color.RESET);
                 return -1;
@@ -177,17 +177,20 @@ public class UserData {
         return amount + Main.getManagerData().getFeeRate().getCardFee();
     }
 
-    private void handlePayaMethod(long amount, User destination) {
+    public void handlePayaMethod(long amount, User destination, boolean confirm) {
         if (amount > 5000000) {
             System.out.println(Color.RED + "The maximum transfer amount for Paya method is 5 Million" + Color.RESET);
             return;
-        } else if ( amount + Main.getManagerData().getFeeRate().getPayaFee() > currentUser.getAccount().getBalance()) {
+        } else if (amount + Main.getManagerData().getFeeRate().getPayaFee() > currentUser.getAccount().getBalance()) {
             System.out.println(Color.RED + "Your balance is not enough. Current Balance : " +
                     Color.GREEN + currentUser.getAccount().getBalance() + Color.RED + "required balance:"
                     + Color.GREEN + (amount + Main.getManagerData().getFeeRate().getPayaFee()) + Color.RESET);
             return;
         }
-        if(!printConfirmation(destination, amount, amount + Main.getManagerData().getFeeRate().getPayaFee())){
+        if (!confirm) {
+            confirm = printConfirmation(destination, amount, amount + Main.getManagerData().getFeeRate().getPayaFee());
+        }
+        if (!confirm) {
             return;
         }
         Paya newPaya = new Paya(destination, Main.getUsers().getCurrentUser(), amount);
@@ -221,7 +224,7 @@ public class UserData {
     private boolean printConfirmation(User destination, long amount, long amountAfterFee) {
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         System.out.println(Color.WHITE + "Your transfer's details:" + Color.RESET);
-        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + Color.WHITE + " + " + Color.RED + "(" + (amountAfterFee-amount) + ")" + Color.RESET);
+        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + Color.WHITE + " + " + Color.RED + "(" + (amountAfterFee - amount) + ")" + Color.RESET);
         System.out.println(Color.WHITE + "Destination name : " + Color.BLUE + destination.getName() + " "
                 + destination.getLastName() + Color.RESET);
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
@@ -280,7 +283,7 @@ public class UserData {
 
     public void transferByRecentUser() {
         User selected = currentUser.selectRecentUserFromList();
-        if(selected != null && selected.isBlocked()){
+        if (selected != null && selected.isBlocked()) {
             System.out.println(Color.RED + "Selected user's account is blocked and you cant transfer money to them" + Color.RESET);
             return;
         }
@@ -307,13 +310,14 @@ public class UserData {
             case "1" -> {
                 User selected = Display.pageShow(allUsers, user -> System.out.println(Color.BLUE + user.getName() + " " +
                         user.getLastName() + Color.RESET));
-                if(selected != null) {
+                if (selected != null) {
                     System.out.println(selected);
                 }
                 Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "2" -> {
-                Menu.printMenu(OptionEnums.SearchMethods.values(), Main.getUsers()::handleSearchMethod);
+                Menu.printMenu(OptionEnums.SearchMethods.values(), Main.getUsers()::getCurrentUser);
+                handleSearchMethod();
             }
             default -> Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
         }
@@ -380,7 +384,7 @@ public class UserData {
         }
         User selected = Display.pageShow(matched, user -> System.out.println(Color.BLUE + user.getName() + " " +
                 user.getLastName() + Color.RESET));
-        if(selected != null) {
+        if (selected != null) {
             System.out.println(selected);
         }
     }

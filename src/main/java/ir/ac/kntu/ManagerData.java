@@ -61,7 +61,10 @@ public class ManagerData {
 
     public void startScheduler(Paya newPaya) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        Runnable task = newPaya::doTransfer;
+        Runnable task = () -> {
+            newPaya.doTransfer();
+            scheduler.shutdown();
+        };
         scheduler.schedule(task, 30, TimeUnit.SECONDS);
     }
 
@@ -71,8 +74,8 @@ public class ManagerData {
 
     private void startInterestProcess() {
         InterestDepositRunnable interestRunnable = new InterestDepositRunnable();
-        Thread interestDepositThread = new Thread(interestRunnable);
-        interestDepositThread.start();
+        Thread interestThread = new Thread(interestRunnable);
+        interestThread.start();
     }
 
     public void setCurrentManager(Manager currentManager) {
@@ -137,19 +140,10 @@ public class ManagerData {
         Filter filter = selectFilter();
         List<Object> matched = new ArrayList<>();
         switch (filter) {
-            case NAME -> {
-                System.out.println(Color.WHITE + "Please enter the name your looking for" + Color.RESET);
-                String name = InputManager.getInput();
-                matched.addAll(Main.getUsers().searchByName(name));
-                matched.addAll(Main.getManagerData().searchByName(name));
-                matched.addAll(Main.getAdminData().searchByName(name));
-            }
+            case NAME -> addAllMatchingNames(matched);
+
             case LASTNAME -> {
-                System.out.println(Color.WHITE + "Please enter the lastname your looking for" + Color.RESET);
-                String lastname = InputManager.getInput();
-                matched.addAll(Main.getUsers().searchByLastname(lastname));
-                matched.addAll(Main.getManagerData().searchByName(lastname));
-                matched.addAll(Main.getAdminData().searchByName(lastname));
+                addMatchedLastnames(matched);
             }
             case USERNAME -> {
                 System.out.println(Color.WHITE + "Please enter the username your looking for" + Color.RESET);
@@ -157,9 +151,7 @@ public class ManagerData {
                 matched.addAll(Main.getManagerData().searchByName(username));
                 matched.addAll(Main.getAdminData().searchByName(username));
             }
-            case RULE -> {
-                matched.addAll(filterByRule());
-            }
+            case RULE -> matched.addAll(filterByRule());
             case PHONE_NUMBER -> {
                 System.out.println(Color.WHITE + "Please enter the phone number your looking for" + Color.RESET);
                 matched.addAll(Main.getUsers().searchByPhoneNumber(InputManager.getInput()));
@@ -168,6 +160,22 @@ public class ManagerData {
             }
         }
         displayListAfterFilter(matched);
+    }
+
+    private void addMatchedLastnames(List<Object> matched) {
+        System.out.println(Color.WHITE + "Please enter the lastname your looking for" + Color.RESET);
+        String lastname = InputManager.getInput();
+        matched.addAll(Main.getUsers().searchByLastname(lastname));
+        matched.addAll(Main.getManagerData().searchByName(lastname));
+        matched.addAll(Main.getAdminData().searchByName(lastname));
+    }
+
+    private void addAllMatchingNames(List<Object> matched) {
+        System.out.println(Color.WHITE + "Please enter the name your looking for" + Color.RESET);
+        String name = InputManager.getInput();
+        matched.addAll(Main.getUsers().searchByName(name));
+        matched.addAll(Main.getManagerData().searchByName(name));
+        matched.addAll(Main.getAdminData().searchByName(name));
     }
 
     private List<Object> filterByRule() {
@@ -258,6 +266,10 @@ public class ManagerData {
         Manager newManager = new Manager(name, password, currentManager.getLevel() + 1);
         managers.add(newManager);
         System.out.println(Color.GREEN + "New manager has been added successfully" + Color.RESET);
+    }
+
+    public void addNewManager(Manager newManager){
+        managers.add(newManager);
     }
 
     private boolean nameAlreadyExists(String name) {

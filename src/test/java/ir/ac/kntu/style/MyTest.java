@@ -68,7 +68,8 @@ public class MyTest {
         assertEquals(newAdmin, admins.findAdminByUsername("Amir1376"));
     }
 
-    @Test void testAuthenticationRequest(){
+    @Test
+    void testAuthenticationRequest() {
         AdminData admins = new AdminData();
         admins.adminSetup();
         User user2 = new User("Milad", "Alavi", new PhoneNumber("09111234587", 0), "5820192839", "Milad1@@");
@@ -80,4 +81,66 @@ public class MyTest {
         assertTrue(request.isApproved());
         assertTrue(request.getUser().isAuthenticated());
     }
+
+    @Test
+    void simCardCharge() {
+        assertEquals(0, user1.getSimCard().getBalance());
+        user1.getAccount().setBalance(100000);
+        user1.getSimCard().checkIsBalanceEnough(user1.getSimCard(), "10000");
+        assertEquals(89900, user1.getAccount().getBalance());
+        assertEquals(10000, user1.getSimCard().getBalance());
+        PhoneNumber newNumber = new PhoneNumber("09123451212", 0);
+        user1.getSimCard().checkIsBalanceEnough(newNumber, "10000");
+        assertEquals(10000, newNumber.getBalance());
+        assertEquals(79800, user1.getAccount().getBalance());
+    }
+
+    @Test
+    void polTransfer() {
+        user1.getAccount().setBalance(100000);
+        User user2 = new User("Amir", "Akbari", new PhoneNumber("09110408447", 0), "5820148237", "Saj@1234");
+        user2.setAuthenticated(true);
+        user2.setAccount();
+        Main.getUsers().addForeignUser(user2);
+        assertEquals(-1 , Main.getUsers().handleMethodLimits(6000000, "Pol", user2));
+    }
+
+    @Test
+    void payaTransfer() {
+        user1.getAccount().setBalance(100000);
+        User user2 = new User("Amir", "Akbari", new PhoneNumber("09110408447", 0), "5820148237", "Saj@1234");
+        user2.setAuthenticated(true);
+        user2.setAccount();
+        Main.getUsers().addForeignUser(user2);
+        Main.getUsers().handlePayaMethod(10000, user2, true);
+        assertEquals(88000, user1.getAccount().getBalance());
+//        try {
+//            Thread.sleep(40000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        assertEquals(10000, user2.getAccount().getBalance());
+    }
+
+    @Test
+    void managerBlock(){
+        Manager first = new Manager("Karim" , "1234" , 1);
+        Manager second = new Manager("Reza" , "2345" , 2);
+        assertTrue(first.canEditOrBlock(second));
+        assertFalse(second.canEditOrBlock(first));
+    }
+
+    @Test
+    void interestFund(){
+        InterestFund newFund = new InterestFund(user1, 2, 100000);
+        user1.addFund(newFund);
+        user1.getAccount().setBalance(10000);
+        Main.getManagerData().addNewInterestFund(newFund);
+        Manager first = new Manager("Karim" , "1234" , 1);
+        Main.getManagerData().addNewManager(first);
+        Main.getManagerData().depositMonthlyInterest();
+        Main.getManagerData().depositMonthlyInterest();
+        assertEquals(14500, user1.getAccount().getBalance());
+    }
+
 }

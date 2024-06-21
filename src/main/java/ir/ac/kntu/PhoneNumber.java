@@ -38,7 +38,7 @@ public class PhoneNumber {
         checkIsBalanceEnough(this, amount);
     }
 
-    private void checkIsBalanceEnough(PhoneNumber phoneNumber, String amount) {
+    public void checkIsBalanceEnough(PhoneNumber phoneNumber, String amount) {
         long currentBalance = Main.getUsers().getCurrentUser().getAccount().getBalance();
         if (currentBalance > Long.parseLong(amount) + Main.getManagerData().getFeeRate().getSimCardFee()) {
             phoneNumber.charge(Long.parseLong(amount));

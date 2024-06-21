@@ -125,6 +125,10 @@ public class AdminData {
         }
         System.out.println(selected);
         if (selected.getType().equals(Type.AUTHENTICATION)) {
+            if(selected.getStatus().equals(Status.CLOSED)){
+                System.out.println(Color.RED + "This request is already closed" + Color.RESET);
+                return;
+            }
             AuthenticationRequest selectedReq = requests.get(selected.getSubmitter());
             selectedReq.chooseAcceptOrReject(selected);
             return;

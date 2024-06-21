@@ -81,7 +81,8 @@ public class InputManager {
         switch (selection) {
             case "1" -> Menu.printMenu(OptionEnums.ManagerViewUserMenu.values(), InputManager::handleManagerViewUser);
             case "2" -> Menu.printMenu(OptionEnums.ManagerAddMenu.values(), Main.getManagerData()::handleManagerAdd);
-            default -> {}
+            default -> {
+            }
         }
     }
 
@@ -95,25 +96,27 @@ public class InputManager {
             case "2" -> {
                 Main.getManagerData().showListWithFilter();
             }
-            default -> {}
+            default -> {
+            }
         }
     }
 
     private static void handleAutoTransInput() {
         String selection = getSelection(3);
-        switch (selection){
+        switch (selection) {
             case "1" -> Main.getManagerData().doAllPayas();
             case "2" -> {
                 Main.getManagerData().depositMonthlyInterest();
                 System.out.println(Color.GREEN + "a monthly interest has been successfully deposited to all users with active interest fund" + Color.RESET);
             }
-            default -> {}
+            default -> {
+            }
         }
     }
 
     private static void handleManagerSetting() {
         String selection = getSelection(3);
-        switch (selection){
+        switch (selection) {
             case "1" -> {
                 Main.getManagerData().getCurrentManager().changeFeeMenu();
                 Menu.printMenu(OptionEnums.ManagerSettingMenu.values(), InputManager::handleManagerSetting);
@@ -122,7 +125,8 @@ public class InputManager {
                 Main.getManagerData().getCurrentManager().changeInterestRate();
                 Menu.printMenu(OptionEnums.ManagerSettingMenu.values(), InputManager::handleManagerSetting);
             }
-            default -> {}
+            default -> {
+            }
         }
     }
 
@@ -203,35 +207,41 @@ public class InputManager {
     private static void handleAddFundMenuInput() {
         String selection = getSelection(4);
         switch (selection) {
-            case "1" -> {
-                SavingFund newFund = new SavingFund(Main.getUsers().getCurrentUser());
-                Main.getUsers().getCurrentUser().addFund(newFund);
-                System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
-            }
-            case "2" -> {
-                int monthCount = Integer.parseInt(getInterestMonthCount());
-                long amount = getInterestStartAmount();
-                if (amount == -1) {
-                    break;
-                }
-                InterestFund newFund = new InterestFund(Main.getUsers().getCurrentUser(), monthCount, amount);
-                Main.getUsers().getCurrentUser().addFund(newFund);
-                Main.getManagerData().addNewInterestFund(newFund);
-                System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
-            }
-            case "3" -> {
-                if (Main.getUsers().getCurrentUser().isHasRemainderFund()) {
-                    System.out.println(Color.RED + "You cant have more than one remainder fund at once!" + Color.RESET);
-                    break;
-                }
-                RemainderFund newFund = new RemainderFund(Main.getUsers().getCurrentUser());
-                Main.getUsers().getCurrentUser().addFund(newFund);
-                Main.getUsers().getCurrentUser().setHasRemainderFund(true);
-                Main.getUsers().getCurrentUser().setRemainderFund(newFund);
-                System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
-            }
+            case "1" -> createNewSavingFund();
+            case "2" -> createNewInterestFund();
+            case "3" -> createNewRemainderFund();
             default -> Menu.printMenu(OptionEnums.FundManagementOptions.values(), InputManager::handleFundMenuInput);
         }
+    }
+
+    private static void createNewSavingFund() {
+        SavingFund newFund = new SavingFund(Main.getUsers().getCurrentUser());
+        Main.getUsers().getCurrentUser().addFund(newFund);
+        System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
+    }
+
+    private static void createNewRemainderFund() {
+        if (Main.getUsers().getCurrentUser().isHasRemainderFund()) {
+            System.out.println(Color.RED + "You cant have more than one remainder fund at once!" + Color.RESET);
+            return;
+        }
+        RemainderFund newFund = new RemainderFund(Main.getUsers().getCurrentUser());
+        Main.getUsers().getCurrentUser().addFund(newFund);
+        Main.getUsers().getCurrentUser().setHasRemainderFund(true);
+        Main.getUsers().getCurrentUser().setRemainderFund(newFund);
+        System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
+    }
+
+    private static void createNewInterestFund() {
+        int monthCount = Integer.parseInt(getInterestMonthCount());
+        long amount = getInterestStartAmount();
+        if (amount == -1) {
+            return;
+        }
+        InterestFund newFund = new InterestFund(Main.getUsers().getCurrentUser(), monthCount, amount);
+        Main.getUsers().getCurrentUser().addFund(newFund);
+        Main.getManagerData().addNewInterestFund(newFund);
+        System.out.println(Color.GREEN + "Your new fund has been successfully created!" + Color.RESET);
     }
 
     private static long getInterestStartAmount() {
