@@ -31,8 +31,8 @@ public class MyTest {
 
     @Test
     public void testDistance() {
-        assertEquals(2, Main.getUsers().distance("Sepehr", "sephr"));
-        assertEquals(3, Main.getUsers().distance("Careless", "Hopeless"));
+        assertEquals(2, Display.distance("Sepehr", "sephr"));
+        assertEquals(3, Display.distance("Careless", "Hopeless"));
     }
 
     @Test

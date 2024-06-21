@@ -41,6 +41,10 @@ public class Account {
         accountID = accID;
     }
 
+    public void setAccountID(String accID) {
+        accountID = accID;
+    }
+
     public String getAccountID() {
         return accountID;
     }

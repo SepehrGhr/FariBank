@@ -23,6 +23,10 @@ public class CreditCard {
         return cardNumber;
     }
 
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
     private String generateCardNumber() {
         String number = "5892";
         Random random = new Random();

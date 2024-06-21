@@ -29,6 +29,10 @@ public class UserData {
         allUsers.add(newUser);
     }
 
+    public void addForeignUser(User newUser){
+        foreignUsers.add(newUser);
+    }
+
     public boolean unregisteredAlreadyExists(String phoneNumber) {
         for (PhoneNumber number : unregistereds) {
             if (phoneNumber.equals(number.getNumber())) {
@@ -136,7 +140,7 @@ public class UserData {
         if (amountAfterFee == -1) {
             return -1;
         }
-        boolean confirmation = printConfirmation(destination, amountAfterFee);
+        boolean confirmation = printConfirmation(destination, Long.parseLong(amount), amountAfterFee);
         if (!confirmation) {
             return -1;
         }
@@ -156,14 +160,7 @@ public class UserData {
             return amount + Main.getManagerData().getFeeRate().getFariFee();
         }
         if (method.equals("Paya")) {
-            if (amount > 5000000) {
-                System.out.println(Color.RED + "The maximum transfer amount for Paya method id 5 Million" + Color.RESET);
-                return -1;
-            }
-            Paya newPaya = new Paya(destination, Main.getUsers().getCurrentUser(), amount);
-            Main.getManagerData().addNewPaya(newPaya);
-            System.out.println(Color.GREEN + "Your Paya transfer request has been submitted and will be done in less than 48 hours!"
-                                        + Color.RESET);
+            handlePayaMethod(amount, destination);
             return -1;
         }
         if (method.equals("Pol")) {
@@ -178,6 +175,26 @@ public class UserData {
             return -1;
         }
         return amount + Main.getManagerData().getFeeRate().getCardFee();
+    }
+
+    private void handlePayaMethod(long amount, User destination) {
+        if (amount > 5000000) {
+            System.out.println(Color.RED + "The maximum transfer amount for Paya method is 5 Million" + Color.RESET);
+            return;
+        } else if ( amount + Main.getManagerData().getFeeRate().getPayaFee() > currentUser.getAccount().getBalance()) {
+            System.out.println(Color.RED + "Your balance is not enough. Current Balance : " +
+                    Color.GREEN + currentUser.getAccount().getBalance() + Color.RED + "required balance:"
+                    + Color.GREEN + (amount + Main.getManagerData().getFeeRate().getPayaFee()) + Color.RESET);
+            return;
+        }
+        if(!printConfirmation(destination, amount, amount + Main.getManagerData().getFeeRate().getPayaFee())){
+            return;
+        }
+        Paya newPaya = new Paya(destination, Main.getUsers().getCurrentUser(), amount);
+        currentUser.getAccount().withdrawMoney(amount + Main.getManagerData().getFeeRate().getPayaFee(), currentUser);
+        Main.getManagerData().addNewPaya(newPaya);
+        System.out.println(Color.GREEN + "Your Paya transfer request has been submitted and will be done in less than 48 hours!"
+                + Color.RESET);
     }
 
     private String selectTransferMethod(boolean fromFari, boolean isAccountID) {
@@ -201,10 +218,10 @@ public class UserData {
         return options[Integer.parseInt(selection) - 1];
     }
 
-    private boolean printConfirmation(User destination, long amount) {
+    private boolean printConfirmation(User destination, long amount, long amountAfterFee) {
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
         System.out.println(Color.WHITE + "Your transfer's details:" + Color.RESET);
-        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + Color.RESET);
+        System.out.println(Color.WHITE + "Amount: " + Color.GREEN + amount + Color.WHITE + " + " + Color.RED + "(" + (amountAfterFee-amount) + ")" + Color.RESET);
         System.out.println(Color.WHITE + "Destination name : " + Color.BLUE + destination.getName() + " "
                 + destination.getLastName() + Color.RESET);
         System.out.println(Color.YELLOW + "<>".repeat(20) + Color.RESET);
@@ -268,7 +285,8 @@ public class UserData {
             return;
         }
         if (selected != null) {
-            doTransfer(selected, true, true);
+            boolean fromFari = allUsers.contains(selected);
+            doTransfer(selected, fromFari, true);
         }
     }
 
@@ -295,20 +313,10 @@ public class UserData {
                 Menu.printMenu(OptionEnums.AdminUserMenu.values(), Main.getUsers()::handleAdminUserInput);
             }
             case "2" -> {
-                printSearchMethod();
+                Menu.printMenu(OptionEnums.SearchMethods.values(), Main.getUsers()::handleSearchMethod);
             }
             default -> Menu.printMenu(OptionEnums.AdminMenu.values(), InputManager::handleAdminInput);
         }
-    }
-
-    private void printSearchMethod() {
-        System.out.println(Color.WHITE + "Please select your search method" + Color.RESET);
-        System.out.println(Color.WHITE + "1-" + Color.BLUE + "Name" + Color.RESET);
-        System.out.println(Color.WHITE + "2-" + Color.BLUE + "Lastname" + Color.RESET);
-        System.out.println(Color.WHITE + "3-" + Color.BLUE + "Phone Number" + Color.RESET);
-        System.out.println(Color.WHITE + "4-" + Color.BLUE + "Combination" + Color.RESET);
-        System.out.println(Color.WHITE + "5-" + Color.BLUE + "Return" + Color.RESET);
-        handleSearchMethod();
     }
 
     private void handleSearchMethod() {
@@ -357,7 +365,7 @@ public class UserData {
         }
         if (matched.size() == 0) {
             for (User user : allUsers) {
-                if (distance(lookingFor, user.getName() + user.getLastName() + user.getPhoneNumber()) < 7) {
+                if (Display.distance(lookingFor, user.getName() + user.getLastName() + user.getPhoneNumber()) < 7) {
                     matched.add(user);
                 }
             }
@@ -386,7 +394,7 @@ public class UserData {
         }
         if (matched.size() == 0) {
             for (User user : allUsers) {
-                if (distance(phoneNumber, user.getPhoneNumber()) < 2) {
+                if (Display.distance(phoneNumber, user.getPhoneNumber()) < 2) {
                     matched.add(user);
                 }
             }
@@ -403,7 +411,7 @@ public class UserData {
         }
         if (matched.size() == 0) {
             for (User user : allUsers) {
-                if (distance(lastname, user.getLastName()) < 4) {
+                if (Display.distance(lastname, user.getLastName()) < 4) {
                     matched.add(user);
                 }
             }
@@ -420,33 +428,12 @@ public class UserData {
         }
         if (matched.size() == 0) {
             for (User user : allUsers) {
-                if (distance(name, user.getName()) < 4) {
+                if (Display.distance(name, user.getName()) < 4) {
                     matched.add(user);
                 }
             }
         }
         return matched;
-    }
-
-    public int distance(String str1, String str2) {
-        int length1 = str1.length();
-        int length2 = str2.length();
-        int[][] distances = new int[length1 + 1][length2 + 1];
-        for (int i = 0; i <= length1; i++) {
-            for (int j = 0; j <= length2; j++) {
-                if (i == 0) {
-                    distances[i][j] = j;
-                } else if (j == 0) {
-                    distances[i][j] = i;
-                } else {
-                    int insertion = distances[i][j - 1] + 1;
-                    int deletion = distances[i - 1][j] + 1;
-                    int substitution = distances[i - 1][j - 1] + (str1.charAt(i - 1) == str2.charAt(j - 1) ? 0 : 1);
-                    distances[i][j] = Math.min(insertion, Math.min(deletion, substitution));
-                }
-            }
-        }
-        return distances[length1][length2];
     }
 
     public void addNewUserToDatabase(User newUser) {

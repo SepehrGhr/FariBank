@@ -21,7 +21,6 @@ public class Paya {
         if(this.done){
             return;
         }
-        transmitter.getAccount().withdrawMoney(amount + 2000, transmitter);
         destination.getAccount().setBalance(destination.getAccount().getBalance() + amount);
         transmitter.addToRecentUsers(destination);
         TransferReceipt newReceipt = new TransferReceipt(amount, transmitter, destination, Method.ACCOUNT);

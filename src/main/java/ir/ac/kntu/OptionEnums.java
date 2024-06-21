@@ -122,6 +122,14 @@ public class OptionEnums {
         RETURN;
     }
 
+    public enum SearchMethods {
+        NAME,
+        LASTNAME,
+        PHONE_NUMBER,
+        COMBINATION,
+        RETURN;
+    }
+
     public enum EditAdminMenu {
         CHANGE_NAME,
         BLOCK_OR_UNBLOCK,

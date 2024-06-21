@@ -6,20 +6,19 @@ public class Setup {
         User test2 = new User("Sina", "Najafi", new PhoneNumber("09121103946", 0), "0250388109", "IloveMoney$420");
         User test3 = new User("Hedie", "Tahmouresi", new PhoneNumber("09109056296", 0), "0124523423", "H@Tah1384");
         User test4 = new User("Sajad", "Eslami", new PhoneNumber("09300408447", 0), "5820158237", "Saj@1234");
-        User test5 = new User("Ali", "Alavi", new PhoneNumber("09123456789", 0), "5820158275", "Saj@1234");
         User test6 = new User("Amir", "Akbari", new PhoneNumber("09110408447", 0), "5820148237", "Saj@1234");
         test.setAuthenticated(true);
         test2.setAuthenticated(true);
         test3.setAuthenticated(true);
         test4.setAuthenticated(true);
-        test5.setAuthenticated(true);
         test6.setAuthenticated(true);
         test.setAccount();
         test2.setAccount();
         test3.setAccount();
         test4.setAccount();
-        test5.setAccount();
         test6.setAccount();
+        test6.getAccount().setAccountID("023123123000");
+        test6.getAccount().getCreditCard().setCardNumber("5892101523537385");
         test.addNewContact(new Contact(test3, "Hedieeee", "Tah", "09109056296"));
         test.addNewContact(new Contact(test2, "Sina", " ", "09121103946"));
         test3.addNewContact(new Contact(test, "Sep", "khals", "09111262338"));
@@ -27,7 +26,6 @@ public class Setup {
         Main.getUsers().addUser(test2);
         Main.getUsers().addUser(test3);
         Main.getUsers().addUser(test4);
-        Main.getUsers().addUser(test5);
-        Main.getUsers().addUser(test6);
+        Main.getUsers().addForeignUser(test6);
     }
 }
