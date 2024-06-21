@@ -44,7 +44,7 @@ public class PhoneNumber {
             phoneNumber.charge(Long.parseLong(amount));
             Main.getUsers().getCurrentUser().getAccount().withdrawMoney(Long.parseLong(amount) +
                     Main.getManagerData().getFeeRate().getSimCardFee(), Main.getUsers().getCurrentUser());
-            SimcardReceipt newReceipt = new SimcardReceipt(Long.parseLong(amount) , phoneNumber.getNumber());
+            SimcardReceipt newReceipt = new SimcardReceipt(Long.parseLong(amount), phoneNumber.getNumber());
             Main.getUsers().getCurrentUser().addReceipt(newReceipt);
             System.out.println(Color.GREEN + "Selected number has been charged successfully!!" + Color.RESET);
         } else {
