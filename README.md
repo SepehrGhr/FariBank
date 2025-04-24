@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![FariBank Logo](https://via.placeholder.com/300?text=FariBank)
-
 **A comprehensive banking system with multiple user roles, extensive account management, and financial services.**
 
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.java.com)
@@ -123,6 +121,14 @@ Built using Java with object-oriented design principles. The application follows
 - Fund management
 - Receipt processing
 - Transaction handling
+
+### Running Tests
+
+To run the application's tests, use the following command:
+
+```
+./gradlew clean test
+```
 
 ---
 
